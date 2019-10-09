@@ -319,14 +319,22 @@ namespace CoordinateConversionUtility_UnitTests
             }
         }
         [TestMethod]
-        public void Test_ConvertDDMtoDD()
+        public void Test_ConvertDDtoDDM()
         {
-            Assert.IsTrue(false);
+            string dd_CoordsInput = "47.8125*N,122.2917*W";
+            string expectedResult = "47*48.75'N,122*17.5'W";
+            CoordinateConverter cc = new CoordinateConverter();
+            string actualResult = cc.ConvertDDtoDDM(dd_CoordsInput);
+            Assert.AreEqual(expectedResult, actualResult);
         }
         [TestMethod]
-        public void Test_ConvertDDM_DMS()
+        public void Test_ConvertDMStoDDM()
         {
-            Assert.IsTrue(false);
+            string dms_CoordsInput = "47*48'45\"N,122*17'30\"W";
+            string expectedResult = "47*48.75'N,122*17.5'W";
+            CoordinateConverter cc = new CoordinateConverter();
+            string actualResult = cc.ConvertDMStoDDM(dms_CoordsInput);
+            Assert.AreEqual(expectedResult, actualResult);
         }
     }
 }
