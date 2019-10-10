@@ -1,16 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace CoordinateConversionUtility
 {
     public class CoordinateConverter
     {
-        //  Goal: Accept DDM (47*48.25,-122*45.71) and return a six-character Gridsquare (JJ00XX)
-        //  Goal: Accept a six-character Gridsquare and return a DDM (II99AA)
         private static List<string> alphabet = new List<string>(24)
         {
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
@@ -689,11 +685,9 @@ namespace CoordinateConversionUtility
             int lat_decimal_index = sbLatCoords.ToString().IndexOf(".");
             DDM_LatDegrees = Math.Abs(int.Parse(sbLatCoords.ToString().Substring(0, lat_decimal_index)));
             double temp_latMinutes = double.Parse(sbLatCoords.ToString().Substring(lat_decimal_index + 1, (sbLatCoords.Length - (lat_decimal_index + 1))));
-
             int lon_decimal_index = sbLonCoords.ToString().IndexOf(".");
             DDM_LonDegrees = Math.Abs(int.Parse(sbLonCoords.ToString().Substring(0, lon_decimal_index)));
             double temp_lonMinutes = double.Parse(sbLonCoords.ToString().Substring(lon_decimal_index + 1, (sbLonCoords.Length - (lon_decimal_index +1))));
-
             DDM_LatMinutes = Math.Round((temp_latMinutes / 10_000) * 60, 2);
             DDM_LonMinutes = Math.Round((temp_lonMinutes / 10_000) * 60, 2);
             LatDirection = temp_LatDirection;
@@ -724,89 +718,70 @@ namespace CoordinateConversionUtility
             // process: validate dms_coordinates
             // set: DD_Lattitude, DD_Longitude, DMS_LatDegrees
             // output: DD_Lattitude and DD_Longitude converted to DMS as a contactenated string
-
             string returnString = "";
             dms_coordinates.Trim();
             if (dms_coordinates.Length < 15 || 22 < dms_coordinates.Length) // 1*2'3"N,2*3'4"W || 12*34'56"N,123*45'07"W
             {
-                returnString = "Unable to process DD Coordinates that are less than 15 characters or more than 22 characters long.";
+                returnString = "Unable to process DD Coordinates that are less than 15 characters or more than 22 characters long.\n";
                 returnString += "Use format DD*MM'SS\"[NS],DDD*MM'SS\"[EW]";
             }
-            int temp_LatDirection = 1;
-            int temp_LonDirection = 1;
-            StringBuilder sbLatCoords = new StringBuilder();
-            StringBuilder sbLonCoords = new StringBuilder();
-            char period = char.Parse(".");
-            char comma = char.Parse(",");
-            char negSign = char.Parse("-");
+            int temp_LatDirection = 0;
+            int temp_LonDirection = 0;
+            char starDegrees = char.Parse("*");
+            char minutes = char.Parse("'");
+            char seconds = char.Parse("\"");
             char south = char.Parse("S");
             char west = char.Parse("W");
-            char starDegrees = char.Parse("*");
-            char Minutes = char.Parse("'");
-            char Seconds = char.Parse("\"");
-            int commaSeen = 0;
-
-            //  47*48'45"N => 47, 48, 45/60=Rnd(0.75)
-            //  122*17'30"W => 122, 17, 30/60=rnd(0.50)
-
-
-            // TODO: Revamp the IF statements within the foreach loop following notes on physical notepad
-
-            foreach (char item in dms_coordinates)
-            {
-                if (commaSeen == 1)
-                {   // Longitude coordinate region
-                    if (char.IsDigit(item) || item.Equals(period))
-                    {
-                        sbLonCoords.Append(item.ToString());
-                    }
-                    else if (item.Equals(west) || item.Equals(negSign))
-                    {
-                        sbLonCoords.Insert(0, negSign);
-                        temp_LonDirection = -1;
-                    }
-                }
-                else if (char.IsDigit(item) || item.Equals(period) || item.Equals(negSign) || item.Equals(south))
-                {   // Lattitude coordinate region
-                    if (item.Equals(south) || item.Equals(negSign))
-                    {
-                        sbLatCoords.Insert(0, negSign);
-                        temp_LatDirection = -1;
-                    }
-                    else
-                    {
-                        sbLatCoords.Append(item.ToString());
-                    }
-                }
-                else
-                {
-                    if (item.Equals(comma))
-                    {
-                        commaSeen += 1;
-                    }
-                }
-                if (commaSeen > 1)
-                {   
-                    throw new ArgumentOutOfRangeException($"Incorrect input. Use the following format: [-]DD*MM.mm'[NS],[-]DDD*MM.mm'[EW]");
-                }
+            char comma = char.Parse(",");
+            char negSign = char.Parse("-");
+            int commaIndex = dms_coordinates.IndexOf(comma);
+            string LatRegion = dms_coordinates.Substring(0, commaIndex - 1);   // isolate Lat Degrees e.x.:[+-]47
+            string LonRegion = dms_coordinates.Substring(commaIndex + 1, dms_coordinates.Length - commaIndex - 1); // isolate Lon Degrees e.x.: [+-]122
+            int sThing = LatRegion.IndexOf(south);
+            if (0 <= LatRegion.IndexOf(negSign) && LatRegion.IndexOf(negSign) < LatRegion.Length)
+            {   // LatRegion holds a negative number or an S so set temp_LatDirection to -1 else set to 1
+                temp_LatDirection = -1;
             }
-            // select appropriate portions of the SB to define and set Lat Degrees, Lat Minutes, Lon Degrees, and Lon Minutes props
-            int lat_decimal_index = sbLatCoords.ToString().IndexOf(".");
-            DDM_LatDegrees = Math.Abs(int.Parse(sbLatCoords.ToString().Substring(0, lat_decimal_index)));
-            double temp_latMinutes = double.Parse(sbLatCoords.ToString().Substring(lat_decimal_index + 1, (sbLatCoords.Length - (lat_decimal_index + 1))));
+            else if (LatRegion.IndexOf(south) >= 0 && temp_LatDirection == 0)
+            {   // LatRegion didn't have a negative sign but does have an S
+                temp_LonDirection = -1;
+            }
+            else
+            {
+                temp_LatDirection = 1;
+            }
+            int wThing = LonRegion.IndexOf(west);
+            if (0 <= LonRegion.IndexOf(negSign) && LonRegion.IndexOf(negSign) < LonRegion.Length)
+            {   // LonRegion holds a negative number or a W so set temp_LonDirection to a -1 else set to 1
+                temp_LonDirection = -1;
+            }
+            else if (LonRegion.IndexOf(west) >= 0 && temp_LonDirection == 0)
+            {   // LonRegion didn't have a negative sign but does have an W
+                temp_LonDirection = -1;
+            }
+            else
+            {
+                temp_LonDirection = 1;
+            }
+            string tempLatDegrees = LatRegion.Substring(0, LatRegion.IndexOf(starDegrees));
+            string tempLatMinutes = LatRegion.Substring(LatRegion.IndexOf(starDegrees) + 1, 2);
+            string tempLatSeconds = LatRegion.Substring(LatRegion.IndexOf(minutes) + 1, 2);
+            string tempLonDegrees = LonRegion.Substring(0, LonRegion.IndexOf(starDegrees));
+            string tempLonMinutes = LonRegion.Substring(LonRegion.IndexOf(starDegrees) + 1, 2);
+            string tempLonSeconds = LonRegion.Substring(LonRegion.IndexOf(minutes) + 1, 2);
 
-            int lon_decimal_index = sbLonCoords.ToString().IndexOf(".");
-            DDM_LonDegrees = Math.Abs(int.Parse(sbLonCoords.ToString().Substring(0, lon_decimal_index)));
-            double temp_lonMinutes = double.Parse(sbLonCoords.ToString().Substring(lon_decimal_index + 1, (sbLonCoords.Length - (lon_decimal_index + 1))));
-
-            DDM_LatMinutes = Math.Round((temp_latMinutes / 10_000) * 60, 2);
-            DDM_LonMinutes = Math.Round((temp_lonMinutes / 10_000) * 60, 2);
+            // set Properties for: Lat Degrees, Lat Minutes, Lat Seconds, Lon Degrees, Lon Minutes and Lon Seconds
+            DDM_LatDegrees = int.Parse(tempLatDegrees);
+            double tempLatMinutes2 = double.Parse(tempLatMinutes);
+            tempLatMinutes2 += double.Parse(tempLatSeconds) / 60;
+            DDM_LatMinutes = tempLatMinutes2;
+            DDM_LonDegrees = int.Parse(tempLonDegrees);
+            double tempLonMinutes2 = double.Parse(tempLonMinutes);
+            tempLonMinutes2 += double.Parse(tempLonSeconds) / 60;
+            DDM_LonMinutes = tempLonMinutes2;
             LatDirection = temp_LatDirection;
             LonDirection = temp_LonDirection;
-
-
             returnString = $"{DDM_LatDegrees}*{DDM_LatMinutes}'";
-
 
             if (LatDirection < 0)
             {
@@ -826,14 +801,6 @@ namespace CoordinateConversionUtility
                 returnString += "E";
             }
             return returnString;
-
-
-
-
-
-
-
-
         }
         public void ConvertDDtoGridsquare(string dd_coordinates)
         {
@@ -843,33 +810,6 @@ namespace CoordinateConversionUtility
         {
 
         }
-        //public void ConvertToDMS(string lat_dd, string lon_dd, out string degreesMinutesSeconds)
-        //{
-        //    // Use LatDMS and LonDMS. Degrees Minutes Seconds: 1 Degree = 15 Minutes, 1 Minute = 60 Seconds
-        //    // internally relies on LatDegrees, LatMinutes, LonDegrees, and LonMinutes as set by ValidateDDcoordinates() method
-        //    //LatDirection;
-        //    //LonDirection;
-        //    if (lat_dd.Length < 6 || lat_dd.Length > 10 || lon_dd.Length < 7 || lon_dd.Length > 11)
-        //    {
-        //        throw new ArgumentOutOfRangeException($"Unable to convert an DD to DMS. LatDD: {lat_dd}; LonDD: {lon_dd}.");
-        //    }
-        //    else
-        //    {
-        //        ValidateDDcoordinates($"{lat_dd},{lon_dd}");
-
-        //        LatDMS_Degrees = LatDegrees;
-        //        LatDMS_Minutes = (int)LatMinutes * 60;
-        //        LatDMS_Seconds = ((int)LatMinutes * 3600) - (60 * LatDMS_Minutes);  // yes LatMinutes and LatDMS_Minutes must both be used in the calculation
-
-        //        LonDMS_Degrees = LonDegrees;
-        //        LonDMS_Minutes = (int)LonMinutes * 60;
-        //        LonDMS_Seconds = ((int)LonMinutes * 3600) - (60 * LonDMS_Minutes);
-        //    }
-        //    degreesMinutesSeconds = $"{LatDMS_Degrees}*{LatDMS_Minutes}\"{LatDMS_Seconds}',{LonDMS_Degrees}*{LonDMS_Minutes}\"{LonDMS_Seconds}'";
-        //}
-
-
-
 
         public static bool GenerateTableLookups()
         {
