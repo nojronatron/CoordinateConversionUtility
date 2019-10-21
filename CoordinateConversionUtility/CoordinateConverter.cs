@@ -36,19 +36,19 @@ namespace CoordinateConversionUtility
         private double DD_Longitude { get; set; }           // decimal degrees Longitude e.g.: -122.2917 in 122.2917*W
         public int LatDirection { get; set; }               // 1 or -1: represents N or S, respectively
         public int LonDirection { get; set; }               // 1 or -1: represents E or W, respectively
-        public int DDM_LatDegrees { get; private set; }     // degree portion of DDM e.g.: 47 in 57*48.75"N
+        public int DDM_LatDegrees { get; private set; }     // degree portion of DDM e.g.: 47 in 47*48.75"N
         public double DDM_LatMinutes { get; private set; }  // decimal minutes portion of DDM e.g.: 48.75 in 47*48.75"N
         public int DDM_LonDegrees { get; private set; }     // degree portion of DDM e.g.: -122 in 122*17.5"W
         public double DDM_LonMinutes { get; private set; }  // decimal minutes portion of DDM e.g.: 17.5 in 122*17.5"W
         public int Remainder_Lat { get; private set; }      // stores carry-over remainder value for Lattitude calculations
         public int Remainder_Lon { get; private set; }      // stores carry-over remainder value for Longitude calculations
         public string Gridsquare { get; private set; }      // six-character representation of a validated Gridsquare coordinate
-        public void SetLatRemainder(int lat_remainder)
-        {   // should only be used for testing! Can cause unexpected results!
+        public void SetLatRemainder(int lat_remainder)  // should only be used for testing! Can cause unexpected results!
+        {   
             Remainder_Lat = lat_remainder;
         }
-        public void SetLonRemainder(int lon_remainder)
-        {   // should only be used for testing! Can cause unexpected results!
+        public void SetLonRemainder(int lon_remainder)  // should only be used for testing! Can cause unexpected results!
+        {   
             Remainder_Lon = lon_remainder;
         }
         public void SetGridsquare(string gridsquare)
@@ -547,14 +547,18 @@ namespace CoordinateConversionUtility
             // Sets: LatDirection; Remainder_Lat; Gridsquare (2nd character by concatenation)
             string gridsquareSecondChar = "-";
             int latDegreesLookupValue = DDM_LatDegrees;
-            if (DDM_LatDegrees < 0)
+            if (LonDirection == 0)
             {
-                LatDirection = -1;
+                if (DDM_LatDegrees < 0)
+                {
+                    LatDirection = -1;
+                }
+                if (DDM_LatDegrees >= 0)
+                {
+                    LatDirection = 1;
+                }
             }
-            if (DDM_LatDegrees >= 0)
-            {
-                LatDirection = 1;
-            }
+
             Remainder_Lat = latDegreesLookupValue % 10;
             if (Remainder_Lat != 0)
             {
@@ -569,7 +573,7 @@ namespace CoordinateConversionUtility
             }
             if (LatDirection < 0)
             {
-                if (Table4C2GLookupNegative.TryGetValue(latDegreesLookupValue, out string table4LookupResult))
+                if (Table4C2GLookupNegative.TryGetValue(Math.Abs(latDegreesLookupValue) * LatDirection, out string table4LookupResult))
                 {
                     gridsquareSecondChar = table4LookupResult;
                 }
@@ -590,14 +594,16 @@ namespace CoordinateConversionUtility
             // sets: LonDirection; Gridsquare (first character by concatination)
             int lonDegreesLookupValue = DDM_LonDegrees;
             string gridsquareFirstChar = "-";
-            //LonDirection = 1;
-            if (DDM_LonDegrees < 0)
-            {   // use this to check pos/neg degrees and adjust sign accordingly as a multiplier
-                LonDirection = -1;
-            }
-            else if (DDM_LonDegrees >= 0)
+            if (LonDirection == 0)
             {
-                LonDirection = 1;
+                if (DDM_LonDegrees < 0)
+                {   // use this to check pos/neg degrees and adjust sign accordingly as a multiplier
+                    LonDirection = -1;
+                }
+                else if (DDM_LonDegrees >= 0)
+                {
+                    LonDirection = 1;
+                }
             }
             Remainder_Lon = DDM_LonDegrees % 20;
             if (Remainder_Lon != 0)
@@ -606,7 +612,7 @@ namespace CoordinateConversionUtility
             }
             if (LonDirection < 0)
             {
-                if (Table1C2GLookupNegative.TryGetValue(lonDegreesLookupValue, out string table1LookupResult))
+                if (Table1C2GLookupNegative.TryGetValue(Math.Abs(lonDegreesLookupValue) * LonDirection, out string table1LookupResult))
                 {
                     gridsquareFirstChar = table1LookupResult;
                 }
@@ -681,6 +687,10 @@ namespace CoordinateConversionUtility
                     throw new ArgumentOutOfRangeException($"Incorrect input. Use the following format: [-]DD*MM.mm'[NS],[-]DDD*MM.mm'[EW]");
                 }
             }
+            //  DD is valid so set DD_Lattitude and DD_Longitude
+            DD_Lattitude = double.Parse(sbLatCoords.ToString());
+            DD_Longitude = double.Parse(sbLonCoords.ToString());
+
             // select appropriate portions of the SB to define and set Lat Degrees, Lat Minutes, Lon Degrees, and Lon Minutes props
             int lat_decimal_index = sbLatCoords.ToString().IndexOf(".");
             DDM_LatDegrees = Math.Abs(int.Parse(sbLatCoords.ToString().Substring(0, lat_decimal_index)));
@@ -802,13 +812,27 @@ namespace CoordinateConversionUtility
             }
             return returnString;
         }
-        public void ConvertDDtoGridsquare(string dd_coordinates)
+        public string ConvertDDtoGridsquare(string dd_latAndLonCoordinates)
         {
-
+            string DDM_Lat_Lon_String = ConvertDDtoDDM(dd_latAndLonCoordinates);
+            GetFirstGridsquareCharacter();
+            GetSecondGridsquareCharacter();
+            GetThirdGridsquareCharacter();
+            GetFourthGridsquareCharacter();
+            GetFifthGridsquareCharacter();
+            GetSixthGridsquareCharacter();
+            return Gridsquare;
         }
-        public void ConvertDMStoGridsquare(string dms_coordinates)
+        public string ConvertDMStoGridsquare(string dms_latAndLonCoordinates)
         {
-
+            string DMS_Lat_Lon_String = ConvertDMStoDDM(dms_latAndLonCoordinates);
+            GetFirstGridsquareCharacter();
+            GetSecondGridsquareCharacter();
+            GetThirdGridsquareCharacter();
+            GetFourthGridsquareCharacter();
+            GetFifthGridsquareCharacter();
+            GetSixthGridsquareCharacter();
+            return Gridsquare;
         }
 
         public static bool GenerateTableLookups()
