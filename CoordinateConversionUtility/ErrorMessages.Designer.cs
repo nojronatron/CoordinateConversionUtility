@@ -72,9 +72,9 @@ namespace CoordinateConversionUtility {
         /// <summary>
         ///   Looks up a localized string similar to &quot;Expected DDM Coordinate format is: D*m.m&apos;[N/S],D*m.m&apos;[E/W]&quot;.
         /// </summary>
-        internal static string ddmCoordinatesArgumentNull {
+        internal static string ddmCoordinatesInputError {
             get {
-                return ResourceManager.GetString("ddmCoordinatesArgumentNull", resourceCulture);
+                return ResourceManager.GetString("ddmCoordinatesInputError", resourceCulture);
             }
         }
         
@@ -89,15 +89,6 @@ namespace CoordinateConversionUtility {
         
         /// <summary>
         ///   Looks up a localized string similar to &quot;gridsquare is a six-character string in the format AA##aa.&quot;.
-        /// </summary>
-        internal static string gridsquareArgumentNull {
-            get {
-                return ResourceManager.GetString("gridsquareArgumentNull", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to $&quot;Gridsquare argument {gridsquare} is not valid.&quot;.
         /// </summary>
         internal static string gridsquareArgumentOutOfRange {
             get {

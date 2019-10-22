@@ -120,17 +120,14 @@
   <data name="ddCoordinatesArgumentNull" xml:space="preserve">
     <value>"Expected DD Coordinate format is: D.dddd*[N/S],D.dddd*[E/W]"</value>
   </data>
-  <data name="ddmCoordinatesArgumentNull" xml:space="preserve">
+  <data name="ddmCoordinatesInputError" xml:space="preserve">
     <value>"Expected DDM Coordinate format is: D*m.m'[N/S],D*m.m'[E/W]"</value>
   </data>
   <data name="dmsCoordinatesArgumentNull" xml:space="preserve">
     <value>"Expected DMS Coordinate format is: DD*MM'SS\"[N/S],DDD*MM'SS\"[E/W]"</value>
   </data>
-  <data name="gridsquareArgumentNull" xml:space="preserve">
-    <value>"gridsquare is a six-character string in the format AA##aa."</value>
-  </data>
   <data name="gridsquareArgumentOutOfRange" xml:space="preserve">
-    <value>$"Gridsquare argument {gridsquare} is not valid."</value>
+    <value>"gridsquare is a six-character string in the format AA##aa."</value>
   </data>
   <data name="tableGenerationFailed" xml:space="preserve">
     <value>"Table Generation Failed. See inner exception."</value>

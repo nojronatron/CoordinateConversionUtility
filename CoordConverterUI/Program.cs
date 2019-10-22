@@ -21,28 +21,35 @@ namespace CoordConverterUI
             string myGridsquare = "CN87ut";
 
             result = cc.ConvertDDMtoGridsquare(myDDM);
-            Console.WriteLine($"Converted DDM {myDDM} to gridsquare {result}. I hope it is correct!");
+            Console.WriteLine($"Converted DDM {myDDM} to gridsquare {result}.");
             Console.WriteLine();
 
             result = cc.ConvertDDtoGridsquare(myDD);
-            Console.WriteLine($"Converted DD {myDD} to gridsquare {result}. I hope it is correct!");
+            Console.WriteLine($"Converted DD {myDD} to gridsquare {result}.");
             Console.WriteLine();
 
             result = cc.ConvertDMStoGridsquare(myDMS);
-            Console.WriteLine($"Converted DMS {myDMS} to gridsquare {result}. I hope it is correct!");
+            Console.WriteLine($"Converted DMS {myDMS} to gridsquare {result}.");
             Console.WriteLine();
 
             result = cc.ConvertDDtoDDM(myDD);
-            Console.WriteLine($"Converted DD {myDD} to DDM {result}. I hope it is correct!");
+            Console.WriteLine($"Converted DD {myDD} to DDM {result}.");
             Console.WriteLine();
 
             result = cc.ConvertDMStoDDM(myDMS);
-            Console.WriteLine($"Converted DMS {myDMS} to DDM {result}. I hope it is correct!");
+            Console.WriteLine($"Converted DMS {myDMS} to DDM {result}.");
             Console.WriteLine();
 
             result = cc.ConvertGridsquareToDDM(myGridsquare);
-            Console.WriteLine($"Converted gridsquare {myGridsquare} to DDM {result}. I hope it is correct!");
+            Console.WriteLine($"Converted gridsquare {myGridsquare} to DDM {result}.");
             Console.WriteLine();
+
+            cc.AddLatDegreesRemainder();
+            cc.GetFirstGridsquareCharacter();
+            Console.WriteLine($"LatDirection is now {cc.LatDirection}.");
+            cc.ValidateDDMinput("");
+            cc.ValidateGridsquareInput("");
+            
 
 
             Console.WriteLine("Press <Enter> to exit. . .");
