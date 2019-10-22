@@ -65,9 +65,9 @@ namespace CoordinateConversionUtility_UnitTests
             {
                 // sets LonDirection and DDM_LonDegrees
                 cc.SetGridsquare(inputGridsquare);
-                cc.GetLonDegrees_FirstPortion();
+                cc.GetLonDegrees();
                 actualResults[0] = $"{cc.LonDirection}"; // cc.LonDirection.ToString();
-                actualResults[1] = $"{cc.DDM_LonDegrees}"; // cc.DDM_LonDegrees.ToString();
+                actualResults[1] = $"{cc.DDMlonDegrees}"; // cc.DDM_LonDegrees.ToString();
                 if (expectedResults[0].ToString() == actualResults[0].ToString())
                 {
                     if (expectedResults[1].ToString() == actualResults[1].ToString())
@@ -93,10 +93,10 @@ namespace CoordinateConversionUtility_UnitTests
             if (CoordinateConverter.GenerateTableLookups())
             {
                 cc.SetGridsquare(inputGridsquare);
-                cc.GetLonDegrees_FirstPortion();
-                cc.AddLonDegrees_SecondPortion();
+                cc.GetLonDegrees();
+                cc.AddLonDegreesRemainder();
                 actualResults[0] = $"{cc.LonDirection}";
-                actualResults[1] = $"{cc.DDM_LonDegrees}";
+                actualResults[1] = $"{cc.DDMlonDegrees}";
                 if (expectedResults[0].ToString() == actualResults[0].ToString())
                 {
                     if (expectedResults[1].ToString() == actualResults[1].ToString())
@@ -120,10 +120,10 @@ namespace CoordinateConversionUtility_UnitTests
             if (CoordinateConverter.GenerateTableLookups())
             {
                 cc.SetGridsquare(inputGridsquare);
-                cc.GetLonDegrees_FirstPortion();
-                cc.AddLonDegrees_SecondPortion();
+                cc.GetLonDegrees();
+                cc.AddLonDegreesRemainder();
                 cc.GetLonMinutes();
-                string actualResult = $"{cc.DDM_LonMinutes}";
+                string actualResult = $"{cc.DDMlonMinutes}";
                 Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
             }
             else
@@ -143,9 +143,9 @@ namespace CoordinateConversionUtility_UnitTests
             {
                 // sets LonDirection and DDM_LonDegrees
                 cc.SetGridsquare(inputGridsquare);
-                cc.GetLatDegrees_FirstPortion();
+                cc.GetLatDegrees();
                 actualResults[0] = $"{cc.LatDirection}"; // cc.LonDirection.ToString();
-                actualResults[1] = $"{cc.DDM_LatDegrees}"; // cc.DDM_LonDegrees.ToString();
+                actualResults[1] = $"{cc.DDMlatDegrees}"; // cc.DDM_LonDegrees.ToString();
                 if (expectedResults[0].ToString() == actualResults[0].ToString())
                 {
                     if (expectedResults[1].ToString() == actualResults[1].ToString())
@@ -171,10 +171,10 @@ namespace CoordinateConversionUtility_UnitTests
             if (CoordinateConverter.GenerateTableLookups())
             {
                 cc.SetGridsquare(inputGridsquare);
-                cc.GetLatDegrees_FirstPortion();
-                cc.AddLatDegrees_SecondPortion();
+                cc.GetLatDegrees();
+                cc.AddLatDegreesRemainder();
                 actualResults[0] = $"{cc.LatDirection}";
-                actualResults[1] = $"{cc.DDM_LatDegrees}";
+                actualResults[1] = $"{cc.DDMlatDegrees}";
                 if (expectedResults[0].ToString() == actualResults[0].ToString())
                 {
                     if (expectedResults[1].ToString() == actualResults[1].ToString())
@@ -198,10 +198,10 @@ namespace CoordinateConversionUtility_UnitTests
             if (CoordinateConverter.GenerateTableLookups())
             {
                 cc.SetGridsquare(inputGridsquare);
-                cc.GetLatDegrees_FirstPortion();
-                cc.AddLatDegrees_SecondPortion();
+                cc.GetLatDegrees();
+                cc.AddLatDegreesRemainder();
                 cc.GetLatMinutes();
-                string actualResult = $"{cc.DDM_LatMinutes}";
+                string actualResult = $"{cc.DDMlatMinutes}";
                 Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
             }
             else
@@ -235,32 +235,32 @@ namespace CoordinateConversionUtility_UnitTests
                         xrGridGood = cc.Gridsquare;
                     }
                 }
-                if (expectedResults.TryGetValue(cc.DDM_LatDegrees, out var dictDDMLatD))
+                if (expectedResults.TryGetValue(cc.DDMlatDegrees, out var dictDDMLatD))
                 {
                     if (dictDDMLatD == "DDM_LatDegrees")
                     {
-                        xrLatDGood = cc.DDM_LatDegrees;
+                        xrLatDGood = cc.DDMlatDegrees;
                     }
                 }
-                if (expectedResults.TryGetValue(Math.Abs(cc.DDM_LatMinutes), out var dictDDMLatM))
+                if (expectedResults.TryGetValue(Math.Abs(cc.DDMlatMinutes), out var dictDDMLatM))
                 {
                     if (dictDDMLatM == "DDM_LatDecimalMinutes")
                     {
-                        xrLatMGood = cc.DDM_LatMinutes;
+                        xrLatMGood = cc.DDMlatMinutes;
                     }
                 }
-                if (expectedResults.TryGetValue(cc.DDM_LonDegrees, out var dictDDMLonD))
+                if (expectedResults.TryGetValue(cc.DDMlonDegrees, out var dictDDMLonD))
                 {
                     if (dictDDMLonD == "DDM_LonDegrees")
                     {
-                        xrLonDGood = cc.DDM_LonDegrees;
+                        xrLonDGood = cc.DDMlonDegrees;
                     }
                 }
-                if (expectedResults.TryGetValue(Math.Abs(cc.DDM_LonMinutes), out var dictDDMLonM))
+                if (expectedResults.TryGetValue(Math.Abs(cc.DDMlonMinutes), out var dictDDMLonM))
                 {
                     if (dictDDMLonM == "DDM_LonDecimalMinutes")
                     {
-                        xrLonMGood = cc.DDM_LonMinutes;
+                        xrLonMGood = cc.DDMlonMinutes;
                     }
                 }
                 Console.WriteLine($"*** Tracked results ***");
@@ -333,25 +333,18 @@ namespace CoordinateConversionUtility_UnitTests
             string ddmCoordsInput = "47*48.75',-122*17.5'"; // comma index=9
             CoordinateConverter cc = new CoordinateConverter();
             //if (CoordinateConverter.GenerateTableLookups())
-            if (true)
+            if (cc.ValidateDDMinput(ddmCoordsInput))
             {
-                if (cc.ValidateDDMinput(ddmCoordsInput))
-                {
-                    passed = true;
-                }
-                else
-                {
-                    passed = false;
-                }
-                Console.WriteLine($"Gridsquare: (Not calculated)\n" +
-                                  $"DDM Lat Degrees: {cc.DDM_LatDegrees}\nDDM Lat Minutes: {cc.DDM_LatMinutes}\nLat Direction: {cc.LatDirection}\n" +
-                                  $"DDM Lon Degrees: {cc.DDM_LonDegrees}\nDDM Lon Minutes: {cc.DDM_LonMinutes}\nLon Direction: {cc.LonDirection}");
-                Assert.IsTrue(passed);
+                passed = true;
             }
             else
             {
-                Assert.Fail("GenerateTableLookups() returned false!");
+                passed = false;
             }
+            Console.WriteLine($"Gridsquare: (Not calculated)\n" +
+                              $"DDM Lat Degrees: {cc.DDMlatDegrees}\nDDM Lat Minutes: {cc.DDMlatMinutes}\nLat Direction: {cc.LatDirection}\n" +
+                              $"DDM Lon Degrees: {cc.DDMlonDegrees}\nDDM Lon Minutes: {cc.DDMlonMinutes}\nLon Direction: {cc.LonDirection}");
+            Assert.IsTrue(passed);
         }
         [TestMethod]
         public void Test_ConvertDDMtoGridsquare_PosNeg()
@@ -385,6 +378,61 @@ namespace CoordinateConversionUtility_UnitTests
                 Assert.Fail("GenerateTableLookups() returned 'false'.");
             }
         }
+
+        [TestMethod]
+        public void Test_convertDDMtoGridsquare_multipleInputsSameObject()
+        {
+            string ddmCoordsInput1 = "47*48.75',-122*17.5'";     // CN78ut
+            string ddmCoordsInput2 = "32*58.8',-105*44.0'";      // DM72dx
+            string expectedResult1 = "CN87ut";
+            string expectedResult2 = "DM72dx";
+            CoordinateConverter cc = new CoordinateConverter();
+            if (CoordinateConverter.GenerateTableLookups())
+            {
+                string actualResult1 = cc.ConvertDDMtoGridsquare(ddmCoordsInput1);
+                string actualResult2 = cc.ConvertDDMtoGridsquare(ddmCoordsInput2);
+                if (expectedResult1.ToUpper() == actualResult1.ToUpper())
+                {
+                    string assertMsg = $"Expected Result 1: {expectedResult1}; Actual Result 1: {actualResult1}; "
+                        + $"Expected Result 2: {expectedResult2}; Actual Result2: {actualResult2}";
+                    Assert.IsFalse(expectedResult2 == actualResult2);   //, assertMsg);
+                }
+                else
+                {
+                    Assert.Fail($"Something went wrong and the correct results were not returned.");
+                }
+            }
+            else
+            {
+                Assert.Fail("GenerateTableLookups() returned 'false'.");
+            }
+        }
+
+        [TestMethod]
+        public void Test_ConvertDDMtoGridsquare_multipleInputsAndObjects()
+        {
+            string ddmCoordsInput1 = "47*48.75',-122*17.5'";     // CN78ut
+            string ddmCoordsInput2 = "32*58.8'N,105*44.0'W";      // DM72dx
+            string expectedResult1 = "CN87ut";
+            string expectedResult2 = "DM72dx";
+            string actualResult1 = "";
+            string actualResult2 = "";
+            CoordinateConverter cc1 = new CoordinateConverter();
+            CoordinateConverter cc2 = new CoordinateConverter();
+            if (CoordinateConverter.GenerateTableLookups())
+            {
+                actualResult1 = cc1.ConvertDDMtoGridsquare(ddmCoordsInput1);
+                actualResult2 = cc2.ConvertDDMtoGridsquare(ddmCoordsInput2);
+                if (expectedResult1.ToUpper() == actualResult1.ToUpper())
+                {
+                    Assert.AreEqual(expectedResult2.ToUpper(), actualResult2.ToUpper(), "Separate objects produce non-concatenated Gridsquare output.");
+                }
+            }
+            else
+            {
+                Assert.Fail($"Test failed. cc1 gridsquare: {actualResult1}; cc2 gridsquare: {actualResult2}.");
+            }
+        }
         [TestMethod]
         public void Test_ConvertDDtoDDM()
         {
@@ -397,8 +445,17 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_ConvertDMStoDDM()
         {
-            string dms_CoordsInput = "47*48'45\"N,122*17'30\"W";
-            string expectedResult = "47*48.75'N,122*17.5'W";
+            string dms_CoordsInput = "47*48'45\"N,122*17'30\"W";    // 47*48'45\"N,122*17'30\"W
+            string expectedResult = "47*48.75'N,122*17.50'W";        // 47*48.75'N,122*17.50'W // note forced 2-digit space in Decimal Minutes.
+            CoordinateConverter cc = new CoordinateConverter();
+            string actualResult = cc.ConvertDMStoDDM(dms_CoordsInput);
+            Assert.AreEqual(expectedResult.ToUpper(), actualResult.ToUpper(), $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
+        }
+        [TestMethod]
+        public void Test_ConvertDMStoDDM_Bravo()
+        {
+            string dms_CoordsInput = "47*48'45\"N,122*17'40\"W";    // 47*48'45\"N,122*17'40\"W
+            string expectedResult = "47*48.75'N,122*17.67'W";        // 47*48.75'N,122*17.67'W
             CoordinateConverter cc = new CoordinateConverter();
             string actualResult = cc.ConvertDMStoDDM(dms_CoordsInput);
             Assert.AreEqual(expectedResult.ToUpper(), actualResult.ToUpper(), $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
