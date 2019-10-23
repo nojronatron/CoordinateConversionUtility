@@ -97,6 +97,15 @@ namespace CoordinateConversionUtility {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;Table lookup failed due to incorrect lookup value&quot;.
+        /// </summary>
+        internal static string gridsquareIndexOutOfRange {
+            get {
+                return ResourceManager.GetString("gridsquareIndexOutOfRange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;Table Generation Failed. See inner exception.&quot;.
         /// </summary>
         internal static string tableGenerationFailed {

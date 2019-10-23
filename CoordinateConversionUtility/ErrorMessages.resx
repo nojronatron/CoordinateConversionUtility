@@ -129,6 +129,9 @@
   <data name="gridsquareArgumentOutOfRange" xml:space="preserve">
     <value>"gridsquare is a six-character string in the format AA##aa."</value>
   </data>
+  <data name="gridsquareIndexOutOfRange" xml:space="preserve">
+    <value>"Table lookup failed due to incorrect lookup value"</value>
+  </data>
   <data name="tableGenerationFailed" xml:space="preserve">
     <value>"Table Generation Failed. See inner exception."</value>
   </data>
