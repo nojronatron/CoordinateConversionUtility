@@ -610,12 +610,12 @@ namespace CoordinateConversionUtility
             {
                 throw new ArgumentNullException(ddCoordinates, rm.GetString("ddCoordinatesArgumentNull", currentCulture));
             }
-            string returnString;    //  default initialized value of string is ""
+            //string returnString;    //  default initialized value of string is ""
             ddCoordinates = ddCoordinates.Trim();
             if (ddCoordinates.Length < 7 || 21 < ddCoordinates.Length) // 1*N,2*W || 12.4567*N,123.5678*W
             {
-                returnString = "Unable to process DD Coordinates that are less than 7 characters or more than 21 characters long.";
-                returnString += "Use format DD.dddd*[NS],DD.dddd*[EW]";
+                return "Unable to process DD Coordinates that are less than 7 characters or more than 21 characters long. " +
+                    "Use format DD.dddd*[NS],DD.dddd*[EW]";
             }
             int temp_LatDirection = 1;
             int temp_LonDirection = 1;
@@ -681,7 +681,7 @@ namespace CoordinateConversionUtility
             LatDirection = temp_LatDirection;
             LonDirection = temp_LonDirection;
 
-            returnString = $"{DDMlatDegrees}*{DDMlatMinutes:f2}'";
+            string returnString = $"{DDMlatDegrees}*{DDMlatMinutes:f2}'";
             if (LatDirection < 0)
             {
                 returnString += "S,";
@@ -715,14 +715,14 @@ namespace CoordinateConversionUtility
             dmsCoordinates = dmsCoordinates.Trim();
             if (dmsCoordinates.Length < 15 || 22 < dmsCoordinates.Length) // 1*2'3"N,2*3'4"W || 12*34'56"N,123*45'07"W
             {
-                returnString = "Unable to process DD Coordinates that are less than 15 characters or more than 22 characters long.\n";
-                returnString += "Use format DD*MM'SS\"[NS],DDD*MM'SS\"[EW]";
+                returnString = "Unable to process DD Coordinates that are less than 15 characters or more than 22 characters long.\n" +
+                    "Use format DD*MM'SS\"[NS],DDD*MM'SS\"[EW]";
             }
             int temp_LatDirection = 0;
             int temp_LonDirection = 0;
             char starDegrees = char.Parse("*");
             char minutes = char.Parse("'");
-            char seconds = char.Parse("\"");
+            //  char seconds = char.Parse("\"");    //  never referenced
             char south = char.Parse("S");
             char west = char.Parse("W");
             char comma = char.Parse(",");
