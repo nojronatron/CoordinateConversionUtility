@@ -10,7 +10,7 @@ namespace CoordinateConversionUtility
 {
     public class CoordinateConverter //: IFormatProvider, ICustomFormatter
     {
-        private ResourceManager rm = new ResourceManager("ErrorMessages", typeof(CoordinateConverter).Assembly);
+        private readonly ResourceManager rm = new ResourceManager("ErrorMessages", typeof(CoordinateConverter).Assembly);
         private CultureInfo currentCulture = CultureInfo.CurrentCulture;
         private static List<string> alphabet = new List<string>(24)
         {
