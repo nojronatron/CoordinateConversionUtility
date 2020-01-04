@@ -730,7 +730,7 @@ namespace CoordinateConversionUtility
             int commaIndex = dmsCoordinates.IndexOf(comma);
             string LatRegion = dmsCoordinates.Substring(0, commaIndex - 1);   // isolate Lat Degrees e.x.:[+-]47
             string LonRegion = dmsCoordinates.Substring(commaIndex + 1, dmsCoordinates.Length - commaIndex - 1); // isolate Lon Degrees e.x.: [+-]122
-            int sThing = LatRegion.IndexOf(south);
+            //  int sThing = LatRegion.IndexOf(south);  //  never used
             if (0 <= LatRegion.IndexOf(negSign) && LatRegion.IndexOf(negSign) < LatRegion.Length)
             {   // LatRegion holds a negative number or an S so set temp_LatDirection to -1 else set to 1
                 temp_LatDirection = -1;
@@ -743,7 +743,7 @@ namespace CoordinateConversionUtility
             {
                 temp_LatDirection = 1;
             }
-            int wThing = LonRegion.IndexOf(west);
+            //  int wThing = LonRegion.IndexOf(west);   //  never used
             if (0 <= LonRegion.IndexOf(negSign) && LonRegion.IndexOf(negSign) < LonRegion.Length)
             {   // LonRegion holds a negative number or a W so set temp_LonDirection to a -1 else set to 1
                 temp_LonDirection = -1;
