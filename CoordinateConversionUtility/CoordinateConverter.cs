@@ -11,16 +11,16 @@ namespace CoordinateConversionUtility
     public class CoordinateConverter //: IFormatProvider, ICustomFormatter
     {
         private readonly ResourceManager rm = new ResourceManager("ErrorMessages", typeof(CoordinateConverter).Assembly);
-        private CultureInfo currentCulture = CultureInfo.CurrentCulture;
-        private static List<string> alphabet = new List<string>(24)
+        private readonly CultureInfo currentCulture = CultureInfo.CurrentCulture;
+        private static readonly List<string> alphabet = new List<string>(24)
         {
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
             "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
         };
-        private static int capacity9 = 9;
-        private static int capacity10 = 10;
-        private static int capacity18 = 18;
-        private static int capacity24 = 24;
+        private const int capacity9 = 9;
+        private const int capacity10 = 10;
+        private const int capacity18 = 18;
+        private const int capacity24 = 24;
         // Lookup Tables for Grid->Coordinate calculations
         private static Dictionary<string, int> Table1G2CLookup;
         private static Dictionary<string, double> Table3G2CLookup;
@@ -413,7 +413,7 @@ namespace CoordinateConversionUtility
         private void GetSixthGridsquareCharacter()
         {   // Input: DDM_LatMinutes; Remainder_Lat
             // Sets: Gridsquare (sixth character by concatenation)
-            string gridsquareSixthChar = "-";   //  makes it obvious if nothing is set in this character position
+            //string gridsquareSixthChar = "-";   //  makes it obvious if nothing is set in this character position
             double latMinsLookupValue = DDMlatMinutes;
             // check remainder and zero it out if in 2-degree increments otherwise...
             //   ...remove all but the remaining single-degree increment
@@ -431,18 +431,20 @@ namespace CoordinateConversionUtility
             }
             if (Table6C2GLookup.TryGetValue(latMinsLookupValue, out string table6LookupResult))
             {
-                gridsquareSixthChar = table6LookupResult.ToLower(currentCulture);
+                //gridsquareSixthChar = table6LookupResult.ToLower(currentCulture);
+                Gridsquare += table6LookupResult.ToLower(currentCulture);
             }
             else
             {
-                throw new IndexOutOfRangeException($"Lookup value {latMinsLookupValue} not found in Table6C2GLookup.");
+                //throw new IndexOutOfRangeException($"Lookup value {latMinsLookupValue} not found in Table6C2GLookup.");
+                Gridsquare += "?";
             }
-            Gridsquare += gridsquareSixthChar;
+            //Gridsquare += gridsquareSixthChar;
         }
         private void GetFifthGridsquareCharacter()
         {   // Inputs: Remainder_Lon; 
             // Sets: DDM_LonMinutes; Gridsquare (fifth character by concatenation)
-            string gridsquareFifthChar = "-";
+            //string gridsquareFifthChar = "-";
             double lonMinutesLookupValue = DDMlonMinutes;
             // use remainder from Table1Lookup and Table2Lookup, express it as Minutes and Add to actual Minutes
             // ... then lookup nearest (round UP) 5-minute increment
@@ -461,13 +463,15 @@ namespace CoordinateConversionUtility
             }
             if (Table3C2GLookup.TryGetValue((int)lonMinutesLookupValue, out string table3LookupResult))
             {
-                gridsquareFifthChar = table3LookupResult.ToLower(currentCulture);
+                Gridsquare = table3LookupResult.ToLower(currentCulture);
+                //gridsquareFifthChar = table3LookupResult.ToLower(currentCulture);
             }
             else
             {
+                Gridsquare += "?";
                 throw new IndexOutOfRangeException(rm.GetString("gridsquareIndexOutOfRange", currentCulture));
             }
-            Gridsquare += gridsquareFifthChar;
+            //Gridsquare += gridsquareFifthChar;
         }
         private void GetFourthGridsquareCharacter()
         {   // inputs: Remainder_Lat; LatDirection
@@ -499,7 +503,7 @@ namespace CoordinateConversionUtility
         private void GetThirdGridsquareCharacter()
         {   // Inputs: Remainder_Lon;
             // Sets: Remainder_Lon; Gridsquare (third character by concatenation)
-            string gridsquareThirdChar = "-";   //  makes it obvious if nothing is set for this character position
+            //string gridsquareThirdChar = "-";   //  makes it obvious if nothing is set for this character position
             int lonDegreesCalculatedResult; //  default int is 0
             if (LonDirection < 0)
             {
@@ -513,7 +517,7 @@ namespace CoordinateConversionUtility
             {
                 lonDegreesCalculatedResult = 9;
             }
-            gridsquareThirdChar = Math.Abs(lonDegreesCalculatedResult).ToString(currentCulture);
+            //gridsquareThirdChar = Math.Abs(lonDegreesCalculatedResult).ToString(currentCulture);
             if (RemainderLon % 2 != 0)
             {
                 RemainderLon = 1;
@@ -522,12 +526,13 @@ namespace CoordinateConversionUtility
             {
                 RemainderLon = 0;
             }
-            Gridsquare += gridsquareThirdChar;
+            //Gridsquare += gridsquareThirdChar;
+            Gridsquare += Math.Abs(lonDegreesCalculatedResult).ToString(currentCulture);
         }
         private void GetSecondGridsquareCharacter()
         {   // input: DDM_LatDegrees
             // Sets: LatDirection; Remainder_Lat; Gridsquare (2nd character by concatenation)
-            string gridsquareSecondChar = "-";
+            //string gridsquareSecondChar = "-";
             int latDegreesLookupValue = DDMlatDegrees;
             if (LonDirection == 0)
             {
@@ -550,24 +555,34 @@ namespace CoordinateConversionUtility
             {
                 if (Table4C2GLookupPositive.TryGetValue(latDegreesLookupValue, out string table4LookupResult))
                 {
-                    gridsquareSecondChar = table4LookupResult;
+                    Gridsquare += table4LookupResult;
+                    //gridsquareSecondChar = table4LookupResult;
                 }
             }
-            if (LatDirection < 0)
+            else if (LatDirection < 0)
             {
                 if (Table4C2GLookupNegative.TryGetValue(Math.Abs(latDegreesLookupValue) * LatDirection, out string table4LookupResult))
                 {
-                    gridsquareSecondChar = table4LookupResult;
+                    Gridsquare += table4LookupResult;
+                    //gridsquareSecondChar = table4LookupResult;
+                }
+                else
+                {
+                    Gridsquare += "?";
                 }
             }
-            Gridsquare += gridsquareSecondChar;
+            else
+            {
+                Gridsquare += "?";
+            }
+            //Gridsquare += gridsquareSecondChar;
         }
         private void GetFirstGridsquareCharacter()
         {
             // inputs: int DDM_LonDegrees
             // sets: LonDirection; Gridsquare (first character by concatination)
             int lonDegreesLookupValue = DDMlonDegrees;
-            string gridsquareFirstChar = "-";
+            //string gridsquareFirstChar = "-";
             if (LonDirection == 0)
             {
                 if (DDMlonDegrees < 0)
@@ -588,17 +603,27 @@ namespace CoordinateConversionUtility
             {
                 if (Table1C2GLookupNegative.TryGetValue(Math.Abs(lonDegreesLookupValue) * LonDirection, out string table1LookupResult))
                 {
-                    gridsquareFirstChar = table1LookupResult;
+                    Gridsquare += table1LookupResult;
+                    //gridsquareFirstChar = table1LookupResult;
                 }
             }
-            if (LonDirection > 0)
+            else if (LonDirection > 0)
             {
                 if (Table1C2GLookupPositive.TryGetValue(lonDegreesLookupValue, out string table1LookupResult))
                 {
-                    gridsquareFirstChar = table1LookupResult;
+                    Gridsquare += table1LookupResult;
+                    //gridsquareFirstChar = table1LookupResult;
+                }
+                else
+                {
+                    Gridsquare += "?";
                 }
             }
-            Gridsquare += gridsquareFirstChar;
+            else
+            {
+                Gridsquare += "?";
+            }
+            //Gridsquare += gridsquareFirstChar;
         }
         public string ConvertDDtoDDM(string ddCoordinates)
         {
@@ -711,89 +736,92 @@ namespace CoordinateConversionUtility
             {
                 throw new ArgumentNullException(rm.GetString("dmsCoordinatesArgumentNull", currentCulture));
             }
-            string returnString;    //  string default value is ""
+            //string returnString;    //  string default value is ""
             dmsCoordinates = dmsCoordinates.Trim();
             if (dmsCoordinates.Length < 15 || 22 < dmsCoordinates.Length) // 1*2'3"N,2*3'4"W || 12*34'56"N,123*45'07"W
             {
-                returnString = "Unable to process DD Coordinates that are less than 15 characters or more than 22 characters long.\n" +
+                return "Unable to process DD Coordinates that are less than 15 characters or more than 22 characters long.\n" +
                     "Use format DD*MM'SS\"[NS],DDD*MM'SS\"[EW]";
             }
-            int temp_LatDirection = 0;
-            int temp_LonDirection = 0;
-            char starDegrees = char.Parse("*");
-            char minutes = char.Parse("'");
-            //  char seconds = char.Parse("\"");    //  never referenced
-            char south = char.Parse("S");
-            char west = char.Parse("W");
-            char comma = char.Parse(",");
-            char negSign = char.Parse("-");
-            int commaIndex = dmsCoordinates.IndexOf(comma);
-            string LatRegion = dmsCoordinates.Substring(0, commaIndex - 1);   // isolate Lat Degrees e.x.:[+-]47
-            string LonRegion = dmsCoordinates.Substring(commaIndex + 1, dmsCoordinates.Length - commaIndex - 1); // isolate Lon Degrees e.x.: [+-]122
-            //  int sThing = LatRegion.IndexOf(south);  //  never used
-            if (0 <= LatRegion.IndexOf(negSign) && LatRegion.IndexOf(negSign) < LatRegion.Length)
-            {   // LatRegion holds a negative number or an S so set temp_LatDirection to -1 else set to 1
-                temp_LatDirection = -1;
-            }
-            else if (LatRegion.IndexOf(south) >= 0 && temp_LatDirection == 0)
-            {   // LatRegion didn't have a negative sign but does have an S
-                temp_LonDirection = -1;
-            }
             else
             {
-                temp_LatDirection = 1;
-            }
-            //  int wThing = LonRegion.IndexOf(west);   //  never used
-            if (0 <= LonRegion.IndexOf(negSign) && LonRegion.IndexOf(negSign) < LonRegion.Length)
-            {   // LonRegion holds a negative number or a W so set temp_LonDirection to a -1 else set to 1
-                temp_LonDirection = -1;
-            }
-            else if (LonRegion.IndexOf(west) >= 0 && temp_LonDirection == 0)
-            {   // LonRegion didn't have a negative sign but does have an W
-                temp_LonDirection = -1;
-            }
-            else
-            {
-                temp_LonDirection = 1;
-            }
-            string tempLatDegrees = LatRegion.Substring(0, LatRegion.IndexOf(starDegrees));
-            string tempLatMinutes = LatRegion.Substring(LatRegion.IndexOf(starDegrees) + 1, 2);
-            string tempLatSeconds = LatRegion.Substring(LatRegion.IndexOf(minutes) + 1, 2);
-            string tempLonDegrees = LonRegion.Substring(0, LonRegion.IndexOf(starDegrees));
-            string tempLonMinutes = LonRegion.Substring(LonRegion.IndexOf(starDegrees) + 1, 2);
-            string tempLonSeconds = LonRegion.Substring(LonRegion.IndexOf(minutes) + 1, 2);
+                int temp_LatDirection = 0;
+                int temp_LonDirection = 0;
+                char starDegrees = char.Parse("*");
+                char minutes = char.Parse("'");
+                //  char seconds = char.Parse("\"");    //  never referenced
+                char south = char.Parse("S");
+                char west = char.Parse("W");
+                char comma = char.Parse(",");
+                char negSign = char.Parse("-");
+                int commaIndex = dmsCoordinates.IndexOf(comma);
+                string LatRegion = dmsCoordinates.Substring(0, commaIndex - 1);   // isolate Lat Degrees e.x.:[+-]47
+                string LonRegion = dmsCoordinates.Substring(commaIndex + 1, dmsCoordinates.Length - commaIndex - 1); // isolate Lon Degrees e.x.: [+-]122
+                                                                                                                     //  int sThing = LatRegion.IndexOf(south);  //  never used
+                if (0 <= LatRegion.IndexOf(negSign) && LatRegion.IndexOf(negSign) < LatRegion.Length)
+                {   // LatRegion holds a negative number or an S so set temp_LatDirection to -1 else set to 1
+                    temp_LatDirection = -1;
+                }
+                else if (LatRegion.IndexOf(south) >= 0 && temp_LatDirection == 0)
+                {   // LatRegion didn't have a negative sign but does have an S
+                    temp_LonDirection = -1;
+                }
+                else
+                {
+                    temp_LatDirection = 1;
+                }
+                //  int wThing = LonRegion.IndexOf(west);   //  never used
+                if (0 <= LonRegion.IndexOf(negSign) && LonRegion.IndexOf(negSign) < LonRegion.Length)
+                {   // LonRegion holds a negative number or a W so set temp_LonDirection to a -1 else set to 1
+                    temp_LonDirection = -1;
+                }
+                else if (LonRegion.IndexOf(west) >= 0 && temp_LonDirection == 0)
+                {   // LonRegion didn't have a negative sign but does have an W
+                    temp_LonDirection = -1;
+                }
+                else
+                {
+                    temp_LonDirection = 1;
+                }
+                string tempLatDegrees = LatRegion.Substring(0, LatRegion.IndexOf(starDegrees));
+                string tempLatMinutes = LatRegion.Substring(LatRegion.IndexOf(starDegrees) + 1, 2);
+                string tempLatSeconds = LatRegion.Substring(LatRegion.IndexOf(minutes) + 1, 2);
+                string tempLonDegrees = LonRegion.Substring(0, LonRegion.IndexOf(starDegrees));
+                string tempLonMinutes = LonRegion.Substring(LonRegion.IndexOf(starDegrees) + 1, 2);
+                string tempLonSeconds = LonRegion.Substring(LonRegion.IndexOf(minutes) + 1, 2);
 
-            // set Properties for: Lat Degrees, Lat Minutes, Lat Seconds, Lon Degrees, Lon Minutes and Lon Seconds
-            DDMlatDegrees = int.Parse(tempLatDegrees, currentCulture);
-            double tempLatMinutes2 = double.Parse(tempLatMinutes, currentCulture);
-            tempLatMinutes2 += double.Parse(tempLatSeconds, currentCulture) / 60;
-            DDMlatMinutes = tempLatMinutes2;
-            DDMlonDegrees = int.Parse(tempLonDegrees, currentCulture);
-            double tempLonMinutes2 = double.Parse(tempLonMinutes, currentCulture);
-            tempLonMinutes2 += double.Parse(tempLonSeconds, currentCulture) / 60;
-            DDMlonMinutes = tempLonMinutes2;
-            LatDirection = temp_LatDirection;
-            LonDirection = temp_LonDirection;
-            returnString = $"{DDMlatDegrees}*{DDMlatMinutes:f2}'";
+                // set Properties for: Lat Degrees, Lat Minutes, Lat Seconds, Lon Degrees, Lon Minutes and Lon Seconds
+                DDMlatDegrees = int.Parse(tempLatDegrees, currentCulture);
+                double tempLatMinutes2 = double.Parse(tempLatMinutes, currentCulture);
+                tempLatMinutes2 += double.Parse(tempLatSeconds, currentCulture) / 60;
+                DDMlatMinutes = tempLatMinutes2;
+                DDMlonDegrees = int.Parse(tempLonDegrees, currentCulture);
+                double tempLonMinutes2 = double.Parse(tempLonMinutes, currentCulture);
+                tempLonMinutes2 += double.Parse(tempLonSeconds, currentCulture) / 60;
+                DDMlonMinutes = tempLonMinutes2;
+                LatDirection = temp_LatDirection;
+                LonDirection = temp_LonDirection;
+                string returnString = $"{DDMlatDegrees}*{DDMlatMinutes:f2}'";
 
-            if (LatDirection < 0)
-            {
-                returnString += "S,";
+                if (LatDirection < 0)
+                {
+                    returnString += "S,";
+                }
+                else
+                {
+                    returnString += "N,";
+                }
+                returnString += $"{DDMlonDegrees}*{DDMlonMinutes:f2}'";
+                if (LonDirection < 0)
+                {
+                    returnString += "W";
+                }
+                else
+                {
+                    returnString += "E";
+                }
+                return returnString;
             }
-            else
-            {
-                returnString += "N,";
-            }
-            returnString += $"{DDMlonDegrees}*{DDMlonMinutes:f2}'";
-            if (LonDirection < 0)
-            {
-                returnString += "W";
-            }
-            else
-            {
-                returnString += "E";
-            }
-            return returnString;
         }
         public string ConvertDDtoGridsquare(string ddLatAndLonCoordinates)
         {
