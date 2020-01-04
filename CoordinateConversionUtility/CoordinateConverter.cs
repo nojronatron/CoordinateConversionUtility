@@ -544,7 +544,7 @@ namespace CoordinateConversionUtility
             RemainderLat = latDegreesLookupValue % 10;
             if (RemainderLat != 0)
             {
-                latDegreesLookupValue = latDegreesLookupValue - RemainderLat;
+                latDegreesLookupValue -= - RemainderLat;
             }
             if (LatDirection > 0)
             {
