@@ -610,7 +610,7 @@ namespace CoordinateConversionUtility
             {
                 throw new ArgumentNullException(ddCoordinates, rm.GetString("ddCoordinatesArgumentNull", currentCulture));
             }
-            string returnString = "";
+            string returnString;    //  default initialized value of string is ""
             ddCoordinates = ddCoordinates.Trim();
             if (ddCoordinates.Length < 7 || 21 < ddCoordinates.Length) // 1*N,2*W || 12.4567*N,123.5678*W
             {
@@ -711,7 +711,7 @@ namespace CoordinateConversionUtility
             {
                 throw new ArgumentNullException(rm.GetString("dmsCoordinatesArgumentNull", currentCulture));
             }
-            string returnString = "";
+            string returnString;    //  string default value is ""
             dmsCoordinates = dmsCoordinates.Trim();
             if (dmsCoordinates.Length < 15 || 22 < dmsCoordinates.Length) // 1*2'3"N,2*3'4"W || 12*34'56"N,123*45'07"W
             {
@@ -798,7 +798,8 @@ namespace CoordinateConversionUtility
         public string ConvertDDtoGridsquare(string ddLatAndLonCoordinates)
         {
             Contract.Requires(ddLatAndLonCoordinates != null);
-            string DDM_Lat_Lon_String = ConvertDDtoDDM(ddLatAndLonCoordinates);
+            //string DDM_Lat_Lon_String = ConvertDDtoDDM(ddLatAndLonCoordinates);
+            ConvertDDtoDDM(ddLatAndLonCoordinates);
             GetFirstGridsquareCharacter();
             GetSecondGridsquareCharacter();
             GetThirdGridsquareCharacter();
@@ -810,7 +811,8 @@ namespace CoordinateConversionUtility
         public string ConvertDMStoGridsquare(string dmsLatAndLongCoordinates)
         {
             Contract.Requires(dmsLatAndLongCoordinates != null);
-            string DMS_Lat_Lon_String = ConvertDMStoDDM(dmsLatAndLongCoordinates);
+            //string DMS_Lat_Lon_String = ConvertDMStoDDM(dmsLatAndLongCoordinates);
+            ConvertDMStoDDM(dmsLatAndLongCoordinates);
             GetFirstGridsquareCharacter();
             GetSecondGridsquareCharacter();
             GetThirdGridsquareCharacter();
