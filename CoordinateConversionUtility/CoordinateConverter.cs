@@ -211,7 +211,7 @@ namespace CoordinateConversionUtility
                     }
                 }
             }
-            catch (ArgumentOutOfRangeException aoore)
+            catch (ArgumentOutOfRangeException)
             {
                 //Console.WriteLine(aoore.Message);
                 valid_Lons = false;
@@ -413,7 +413,7 @@ namespace CoordinateConversionUtility
         private void GetSixthGridsquareCharacter()
         {   // Input: DDM_LatMinutes; Remainder_Lat
             // Sets: Gridsquare (sixth character by concatenation)
-            string gridsquareSixthChar = "-";
+            string gridsquareSixthChar = "-";   //  makes it obvious if nothing is set in this character position
             double latMinsLookupValue = DDMlatMinutes;
             // check remainder and zero it out if in 2-degree increments otherwise...
             //   ...remove all but the remaining single-degree increment
@@ -499,8 +499,8 @@ namespace CoordinateConversionUtility
         private void GetThirdGridsquareCharacter()
         {   // Inputs: Remainder_Lon;
             // Sets: Remainder_Lon; Gridsquare (third character by concatenation)
-            string gridsquareThirdChar = "-";
-            int lonDegreesCalculatedResult = 0;
+            string gridsquareThirdChar = "-";   //  makes it obvious if nothing is set for this character position
+            int lonDegreesCalculatedResult; //  default int is 0
             if (LonDirection < 0)
             {
                 lonDegreesCalculatedResult = Math.Abs(RemainderLon) / 2 - 9;
