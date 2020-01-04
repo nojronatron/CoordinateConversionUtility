@@ -161,7 +161,7 @@ namespace CoordinateConversionUtility
                     }
                 }
             }
-            catch (ArgumentOutOfRangeException aoore)
+            catch (ArgumentOutOfRangeException)
             {
                 //Console.WriteLine(aoore.Message);
                 valid_Lats = false;
