@@ -137,11 +137,10 @@ namespace CoordinateConversionUtility
                     lat_half = lat_half.Replace("-", "");
                     lat_half_direction = "S";
                 }
-                string second_half = ddmCoordinates.Substring(commaSymbolIndex + 1, ddmCoordinates.Length - commaSymbolIndex - 1);
                 if (lat_half.Length > 5 && lat_half.Length < 12)
                 {   // test length for somewhere like or between 1*2.0" and 99*88.77" (directionals already stripped)
                     int degreeSymbolIndex = lat_half.IndexOf("*", System.StringComparison.CurrentCulture);
-                    if (degreeSymbolIndex > 0 && degreeSymbolIndex < 3)
+                    if (degreeSymbolIndex > 0 && degreeSymbolIndex <= 2)
                     {   // test the degree symbol (*) is in an appropriate place
                         int minutesSymbolIndex = lat_half.IndexOf("'", System.StringComparison.CurrentCulture);
                         if (minutesSymbolIndex == lat_half.Length - 1)
@@ -190,7 +189,7 @@ namespace CoordinateConversionUtility
                 if (lon_half.Length > 5 && lon_half.Length < 12)
                 {   // test length for somewhere like or between 1*2.0' and 199*88.77' (directionals already stripped)
                     int degreeSymbolIndex = lon_half.IndexOf("*", System.StringComparison.CurrentCulture);
-                    if (degreeSymbolIndex > 0 && degreeSymbolIndex < 4)
+                    if (degreeSymbolIndex > 0 && degreeSymbolIndex <= 3)
                     {   // test the degree symbol (*) is in an appropriate place
                         int minutesSymbolIndex = lon_half.IndexOf("'", System.StringComparison.CurrentCulture);
                         if (minutesSymbolIndex == lon_half.Length - 1)
@@ -463,7 +462,7 @@ namespace CoordinateConversionUtility
             }
             if (Table3C2GLookup.TryGetValue((int)lonMinutesLookupValue, out string table3LookupResult))
             {
-                Gridsquare = table3LookupResult.ToLower(currentCulture);
+                Gridsquare += table3LookupResult.ToLower(currentCulture);
                 //gridsquareFifthChar = table3LookupResult.ToLower(currentCulture);
             }
             else
@@ -549,7 +548,7 @@ namespace CoordinateConversionUtility
             RemainderLat = latDegreesLookupValue % 10;
             if (RemainderLat != 0)
             {
-                latDegreesLookupValue -= - RemainderLat;
+                latDegreesLookupValue -= RemainderLat;
             }
             if (LatDirection > 0)
             {
