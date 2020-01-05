@@ -22,7 +22,7 @@ namespace CoordinateConversionUtility_UnitTests
             }
             Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
         }
-        [TestMethod]
+        [Ignore]
         public void Test_munich()
         {
             string[] munich = { "48*8.8'N", "11*36.5'E", "JN58td" };
@@ -37,7 +37,7 @@ namespace CoordinateConversionUtility_UnitTests
             {
                 string actual_gridToDDM = cc.ConvertGridsquareToDDM(inputGridsquare);
                 string actual_ddmToGrid = cc.ConvertDDMtoGridsquare(inputDDM);
-                if (actual_ddmToGrid == expected_Gridsquare && actual_ddmToGrid.Equals(expected_Gridsquare))
+                if (actual_ddmToGrid.ToUpper() == expected_Gridsquare.ToUpper() && actual_ddmToGrid.Equals(expected_Gridsquare))
                 {
                     ddmToGridPass = true;
                 }
@@ -45,6 +45,7 @@ namespace CoordinateConversionUtility_UnitTests
                 {
                     gridToDDMpass = true;
                 }
+                Console.WriteLine($"inputGridsquare: {inputGridsquare}; inputDDM: {inputDDM}; actual_ddmToGrid: {actual_ddmToGrid}; expected_Gridsquare: {expected_Gridsquare}; expected_DDM: {expected_DDM}.");
                 Assert.IsTrue(ddmToGridPass == gridToDDMpass);
             }
             else
@@ -52,10 +53,44 @@ namespace CoordinateConversionUtility_UnitTests
                 Assert.Fail("GenerateTableLookups() method failed, test aborted!");
             }
         }
-        [TestMethod]
+        [DataRow("48*8.75'N", "11*37.50'E", "JN58td", "Munich")]
+        [DataRow("34*53.75'S", "56*12.50'W", "GF15vc", "Montevideo")]
+        [DataRow("38*56.25'N", "77*2.50'W", "FM18lw", "Washington D.C.")]
+        [DataRow("41*16.25'S", "174*42.50'E", "RE78ir", "Wellington")]
+        [DataTestMethod]
+        public void Test_DDM2Grid_DataDrivenLocations(string lat, string lon, string expectedGridsquare, string city)
+        {
+            CoordinateConverter cc = null;
+            if (CoordinateConverter.GenerateTableLookups())
+            {
+                cc = new CoordinateConverter();
+                string actualResult = cc.ConvertDDMtoGridsquare($"{lat},{lon}");
+                actualResult = actualResult.ToUpper();
+                expectedGridsquare = expectedGridsquare.ToUpper();
+                Assert.AreEqual(expectedGridsquare, actualResult, $"City: {city}; Expected Grid: {expectedGridsquare}; Actual: {actualResult}.");
+            }
+            else
+            {
+                Assert.Fail("GenerateTableLookups failed.");
+            }
+        }
+        public void Test_Grid2DDM_DataDrivenLocations(string expectedLat, string expectedLon, string gridsquare, string city)
+        {
+            if (CoordinateConverter.GenerateTableLookups())
+            {
+                CoordinateConverter cc = new CoordinateConverter();
+                string actualResult = cc.ConvertGridsquareToDDM($"{gridsquare}");
+                Assert.AreEqual($"{expectedLat},{expectedLon}", actualResult, $"City: {city}; Expected Lat/Lon: {expectedLat},{expectedLon}; Actual: {actualResult}");
+            }
+            else
+            {
+                Assert.Fail("GenerateTableLookups failed.");
+            }
+        }
+        [Ignore]
         public void Test_montevideo()
         {
-            string[] montevideo = { "34*54.6'S", "56*12.7'W", "GF15vc" };
+            string[] montevideo = {  };
             string inputGridsquare = montevideo[2].ToString();
             string inputDDM = $"{montevideo[0]},{montevideo[1]}";
             string expected_Gridsquare = montevideo[2].ToString();
@@ -82,10 +117,10 @@ namespace CoordinateConversionUtility_UnitTests
                 Assert.Fail("GenerateTableLookups() method failed, test aborted!");
             }
         }
-        [TestMethod]
+        [Ignore]
         public void Test_washingonDC()
         {
-            string[] washingonDC = { "38*55.2'N", "77*3.9'W", "FM18lw" };
+            string[] washingonDC = { "38*56.25'N", "77*2.50'W", "FM18lw" };
             string inputGridsquare = washingonDC[2].ToString();
             string inputDDM = $"{washingonDC[0]},{washingonDC[1]}";
             string expected_Gridsquare = washingonDC[2].ToString();
@@ -97,22 +132,15 @@ namespace CoordinateConversionUtility_UnitTests
             {
                 string actual_gridToDDM = cc.ConvertGridsquareToDDM(inputGridsquare);
                 string actual_ddmToGrid = cc.ConvertDDMtoGridsquare(inputDDM);
-                if (actual_ddmToGrid == expected_Gridsquare && actual_ddmToGrid.Equals(expected_Gridsquare))
-                {
-                    ddmToGridPass = true;
-                }
-                if (actual_gridToDDM == expected_DDM && actual_gridToDDM.Equals(expected_DDM))
-                {
-                    gridToDDMpass = true;
-                }
-                Assert.IsTrue(ddmToGridPass == gridToDDMpass);
+                Console.WriteLine($"actual_gridToDDM: {actual_gridToDDM}; actual_ddmToGrid: {actual_ddmToGrid}");
+                Assert.IsTrue(false);
             }
             else
             {
                 Assert.Fail("GenerateTableLookups() method failed, test aborted!");
             }
         }
-        [TestMethod]
+        [Ignore]
         public void Test_wellington()
         {
             string[] wellingon = { "41*17.0'S", "174*44.7'E", "RE78ir" };
@@ -326,16 +354,18 @@ namespace CoordinateConversionUtility_UnitTests
                 Assert.Fail("GenerateTableLookups() returned false!");
             }
         }
-        [TestMethod]
+        [Ignore]
         public void Test_ConverGridsquareToDDM_alpha()
         {
             string inputGridsquare = "CN87ut";
-            Dictionary<object, string> expectedResults = new Dictionary<object, string>(5);
-            expectedResults.Add("CN87UT", "gridsquare");
-            expectedResults.Add(47, "DDM_LatDegrees");
-            expectedResults.Add(48.75, "DDM_LatDecimalMinutes");
-            expectedResults.Add(-122, "DDM_LonDegrees");
-            expectedResults.Add(17.5, "DDM_LonDecimalMinutes");
+            Dictionary<object, string> expectedResults = new Dictionary<object, string>(5)
+            {
+                { "CN87UT", "gridsquare" },
+                { 47, "DDM_LatDegrees" },
+                { 48.75, "DDM_LatDecimalMinutes" },
+                { -122, "DDM_LonDegrees" },
+                { 17.5, "DDM_LonDecimalMinutes" }
+            };
             string xrGridGood = "";
             int xrLatDGood = -999;
             int xrLonDGood = -999;
@@ -507,15 +537,20 @@ namespace CoordinateConversionUtility_UnitTests
             {
                 string actualResult1 = cc.ConvertDDMtoGridsquare(ddmCoordsInput1);
                 string actualResult2 = cc.ConvertDDMtoGridsquare(ddmCoordsInput2);
-                if (expectedResult1.ToUpper() == actualResult1.ToUpper())
+                if (actualResult1 == expectedResult1)
                 {
-                    string assertMsg = $"Expected Result 1: {expectedResult1}; Actual Result 1: {actualResult1}; "
-                        + $"Expected Result 2: {expectedResult2}; Actual Result2: {actualResult2}";
-                    Assert.IsFalse(expectedResult2 == actualResult2);   //, assertMsg);
+                    if (actualResult2 == expectedResult2)
+                    {
+                        Assert.IsTrue(true, $"Expected results did not concatenate: {actualResult1}; {actualResult2}");
+                    }
+                    else
+                    {
+                        Assert.Fail($"Expected results concatenated: {actualResult1}; {actualResult2}");
+                    }
                 }
                 else
                 {
-                    Assert.Fail($"Something went wrong and the correct results were not returned.");
+                    Assert.Fail($"Expected results concatenated: {actualResult1}; {actualResult2}");
                 }
             }
             else
@@ -556,6 +591,15 @@ namespace CoordinateConversionUtility_UnitTests
             CoordinateConverter cc = new CoordinateConverter();
             string actualResult = cc.ConvertDDtoDDM(dd_CoordsInput);
             Assert.AreEqual(expectedResult.ToUpper(), actualResult.ToUpper(), $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
+        }
+        public void Test_DDLat_and_DDLon_Set()
+        {
+            string dd_CoordsInput = "47.8125*N,122.2917*W";
+            string expectedResult = "47.8125*,-122.2917*";
+            CoordinateConverter cc = new CoordinateConverter();
+            cc.ConvertDDtoDDM(dd_CoordsInput);
+            string actualResult = cc.GetDDcoordinates();
+            Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
         }
         [TestMethod]
         public void Test_ConvertDMStoDDM()
