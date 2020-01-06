@@ -22,7 +22,7 @@ namespace CoordinateConversionUtility_UnitTests
             }
             Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
         }
-        [Ignore]
+        [TestMethod]
         public void Test_munich()
         {
             string[] munich = { "48*8.8'N", "11*36.5'E", "JN58td" };
@@ -74,9 +74,9 @@ namespace CoordinateConversionUtility_UnitTests
                 Assert.Fail("GenerateTableLookups failed.");
             }
         }
+        [DataRow("38*56.25'N", "77*2.50'W", "FM18lw", "Washington D.C.")]
         [DataRow("48*8.75'N", "11*37.50'E", "JN58td", "Munich")]
         [DataRow("34*53.75'S", "56*12.50'W", "GF15vc", "Montevideo")]
-        [DataRow("38*56.25'N", "77*2.50'W", "FM18lw", "Washington D.C.")]
         [DataRow("41*16.25'S", "174*42.50'E", "RE78ir", "Wellington")]
         [DataTestMethod]
         public void Test_Grid2DDM_DataDrivenLocations(string expectedLat, string expectedLon, string gridsquare, string city)
@@ -92,7 +92,7 @@ namespace CoordinateConversionUtility_UnitTests
                 Assert.Fail("GenerateTableLookups failed.");
             }
         }
-        [Ignore]
+        [TestMethod]
         public void Test_montevideo()
         {
             string[] montevideo = {  };
@@ -122,7 +122,7 @@ namespace CoordinateConversionUtility_UnitTests
                 Assert.Fail("GenerateTableLookups() method failed, test aborted!");
             }
         }
-        [Ignore]
+        [TestMethod]
         public void Test_washingonDC()
         {
             string[] washingonDC = { "38*56.25'N", "77*2.50'W", "FM18lw" };
@@ -130,8 +130,8 @@ namespace CoordinateConversionUtility_UnitTests
             string inputDDM = $"{washingonDC[0]},{washingonDC[1]}";
             string expected_Gridsquare = washingonDC[2].ToString();
             string expected_DDM = $"{washingonDC[0]},{washingonDC[1]}";
-            bool gridToDDMpass = false;
-            bool ddmToGridPass = false;
+            //bool gridToDDMpass = false;
+            //bool ddmToGridPass = false;
             CoordinateConverter cc = new CoordinateConverter();
             if (CoordinateConverter.GenerateTableLookups())
             {
@@ -145,7 +145,7 @@ namespace CoordinateConversionUtility_UnitTests
                 Assert.Fail("GenerateTableLookups() method failed, test aborted!");
             }
         }
-        [Ignore]
+        [TestMethod]
         public void Test_wellington()
         {
             string[] wellingon = { "41*17.0'S", "174*44.7'E", "RE78ir" };
@@ -207,7 +207,7 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_GetLonDegrees_FirstPortion()
         {   // Lon DDM Degrees
             string inputGridsquare = "CN87ut";
-            string[] expectedResults = new string[2] { "-1", "-120" };
+            string[] expectedResults = new string[2] { "-1", "120" };
             string[] actualResults = new string[2];  // concatenate stringified versions of output from cc
             bool resultsMatch = false;
             CoordinateConverter cc = new CoordinateConverter();
@@ -225,7 +225,8 @@ namespace CoordinateConversionUtility_UnitTests
                         resultsMatch = true;
                     }
                 }
-                Assert.IsTrue(resultsMatch);
+                Assert.IsTrue(resultsMatch, $"expectedResults: {expectedResults[0]}, {expectedResults[1]};" +
+                    $" actualResults: {actualResults[0]}, {actualResults[1]}.");
             }
             else
             {
@@ -236,7 +237,7 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_GetLonDegrees_SecondPortion()
         {   // Lon DDM Degrees
             string inputGridsquare = "CN87ut";
-            string[] expectedResults = new string[2] { "-1", "-122" };
+            string[] expectedResults = new string[2] { "-1", "122" };
             string[] actualResults = new string[2];
             bool resultsMatch = false;
             CoordinateConverter cc = new CoordinateConverter();
@@ -254,7 +255,8 @@ namespace CoordinateConversionUtility_UnitTests
                         resultsMatch = true;
                     }
                 }
-                Assert.IsTrue(resultsMatch);
+                Assert.IsTrue(resultsMatch, $"expectedResults: {expectedResults[0]}, {expectedResults[1]};" +
+                    $" actualResults: {actualResults[0]}, {actualResults[1]}.");
             }
             else
             {
@@ -359,7 +361,7 @@ namespace CoordinateConversionUtility_UnitTests
                 Assert.Fail("GenerateTableLookups() returned false!");
             }
         }
-        [Ignore]
+        [TestMethod]
         public void Test_ConverGridsquareToDDM_alpha()
         {
             string inputGridsquare = "CN87ut";
@@ -597,13 +599,14 @@ namespace CoordinateConversionUtility_UnitTests
             string actualResult = cc.ConvertDDtoDDM(dd_CoordsInput);
             Assert.AreEqual(expectedResult.ToUpper(), actualResult.ToUpper(), $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
         }
+        [TestMethod]
         public void Test_DDLat_and_DDLon_Set()
         {
             string dd_CoordsInput = "47.8125*N,122.2917*W";
             string expectedResult = "47.8125*,-122.2917*";
             CoordinateConverter cc = new CoordinateConverter();
             cc.ConvertDDtoDDM(dd_CoordsInput);
-            string actualResult = cc.GetDDcoordinates();
+            string actualResult = cc.GetDDcoordinatesSigned();
             Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
         }
         [TestMethod]
@@ -624,7 +627,7 @@ namespace CoordinateConversionUtility_UnitTests
             string actualResult = cc.ConvertDMStoDDM(dms_CoordsInput);
             Assert.AreEqual(expectedResult.ToUpper(), actualResult.ToUpper(), $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
         }
-        [Ignore]
+        [TestMethod]
         public void Test_DDtoGridsquare()
         {
             string expectedResult = "CN87ut";  // six-character gridsquare

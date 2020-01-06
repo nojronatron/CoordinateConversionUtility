@@ -47,10 +47,32 @@ namespace CoordinateConversionUtility
         public double DDMlonMinutes { get; private set; }  // decimal minutes portion of DDM e.g.: 17.5 in 122*17.5"W
         public int RemainderLat { get; private set; }      // stores carry-over remainder value for Lattitude calculations
         public int RemainderLon { get; private set; }      // stores carry-over remainder value for Longitude calculations
+        public string LatCompass { get; private set; }      // Lattitude compass heading N or S
+        public string LonCompass { get; private set; }      // Longitude compass heading E or W
         public string Gridsquare { get; private set; }      // six-character representation of a validated Gridsquare coordinate
-        public string GetDDcoordinates()
+        public string GetDDcoordinatesSigned()
         {
-            return $"{DD_Lattitude},{DD_Longitude}";
+            return $"{Math.Abs(DD_Lattitude) * LatDirection}*,{Math.Abs(DD_Longitude) * LonDirection}*";
+        }
+        public string GetDDcoordinatesCompass()
+        {
+            if (LonDirection < 0)
+            {
+                LonCompass = "W";
+            }
+            else
+            {
+                LonCompass = "E";
+            }
+            if (LatDirection < 0)
+            {
+                LatCompass = "S";
+            }
+            else
+            {
+                LatCompass = "N";
+            }
+            return $"{DD_Lattitude}*{LatCompass},{DD_Longitude}*{LonCompass}";
         }
         public void SetGridsquare(string gridsquare)
         {   // use for testing. Externally setting this value can produce unexpected results
@@ -213,17 +235,16 @@ namespace CoordinateConversionUtility
             }
             catch (ArgumentOutOfRangeException)
             {
-                //Console.WriteLine(aoore.Message);
                 valid_Lons = false;
             }
             if (valid_Lats && valid_Lons)
             {
-                DDMlatDegrees = new_DDM_LatDegrees * new_DDM_LatDirection;
+                DDMlatDegrees = new_DDM_LatDegrees;// * new_DDM_LatDirection;
                 DDMlatMinutes = Math.Abs(new_DDM_LatMinutes);
-                LatDirection = new_DDM_LatDirection;
-                DDMlonDegrees = new_DDM_LonDegrees * new_DDM_LonDirection;
+                LatDirection = new_DDM_LatDirection;    //  DDMlatDegrees is set to LatDirection MUST also be set
+                DDMlonDegrees = new_DDM_LonDegrees;// * new_DDM_LonDirection;
                 DDMlonMinutes = Math.Abs(new_DDM_LonMinutes);
-                LonDirection = new_DDM_LonDirection;
+                LonDirection = new_DDM_LonDirection;    //  DDMlonDegrees is set so LonDirection MUST also be set
                 return true;
             }
             return false;
@@ -246,26 +267,26 @@ namespace CoordinateConversionUtility
         }
         public void GetLatDegrees()
         {   // Table4 Lookup primary Degrees Lattitude
-            if (Table4G2CLookup.TryGetValue(Gridsquare[1].ToString(currentCulture).ToUpper(culture: currentCulture), out int latDegrees))
+            if (Table4G2CLookup.TryGetValue(Gridsquare[1].ToString(currentCulture).ToUpper(culture: currentCulture), out int latDegreesLookupResult))
             {
-                DDMlatDegrees = latDegrees;
-            }
-            else
-            {
-                throw new KeyNotFoundException($"{Gridsquare[1].ToString(currentCulture)} of {Gridsquare} not found in Table4");
-            }
-            if (Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture) == "I" || DDMlatDegrees < 0)
-            {
-                LatDirection = -1;
-            }
-            else if (Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture) == "J" || DDMlatDegrees > 0)
-            {
-                LatDirection = 1;
+                if (Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture) == "I" || latDegreesLookupResult < 0)
+                {
+                    LatDirection = -1;
+                }
+                else if (Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture) == "J" || latDegreesLookupResult > 0)
+                {
+                    LatDirection = 1;
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"{Gridsquare[1].ToString(currentCulture)} of {Gridsquare} not found in Table4");
+                }
             }
             else
             {
                 throw new InvalidOperationException($"Somehow, Gridsquare member {Gridsquare[0]} (index zero of {Gridsquare}) or LonDegrees {DDMlatDegrees} did not match the program logic.");
             }
+            DDMlatDegrees = Math.Abs(latDegreesLookupResult);
         }
         public void AddLatDegreesRemainder()
         {   // Table5 is calculated and will add to Degrees Lattitude, MUST BE ZERO_BIASED
@@ -292,7 +313,7 @@ namespace CoordinateConversionUtility
                 }
                 else
                 {   // the negative side (-60 thru 0) of the Table
-                    latMinsLookupResult += LatMinsRound;
+                    latMinsLookupResult += (LatMinsRound * LatDirection);
                 }
                 while (Math.Abs(latMinsLookupResult) >= 60)
                 {
@@ -308,40 +329,42 @@ namespace CoordinateConversionUtility
         }
         public void GetLonDegrees()
         {   // the 1st portion of Degrees Longitude IS the successfull lookup of first_lonChar in Table1
-            if (Table1G2CLookup.TryGetValue(Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture), out int lonDegrees))
+            if (Table1G2CLookup.TryGetValue(Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture), out int lonDegreesLookupResult))
             {
-                DDMlonDegrees = lonDegrees;
+                //  DDMlonDegrees will be set to LonDirection MUST also be set
+                if (Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture) == "I" || lonDegreesLookupResult < 0)
+                {   // if Gridsquare is I result should be between -20 and 0
+                    LonDirection = -1;
+                }
+                else if (Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture) == "J" || lonDegreesLookupResult > 0)
+                {   // if Gridsquare is J result should be between 0 and 20
+                    LonDirection = 1;
+                }
+                else
+                {
+                    throw new InvalidOperationException($"Somehow, Gridsquare member {Gridsquare[0]} (index zero of {Gridsquare}) or LonDegrees {lonDegreesLookupResult} did not match the program logic.");
+                }
             }
             else
             {
                 throw new KeyNotFoundException($"{Gridsquare[0]} of {Gridsquare} not found in Table1!");
             }
-            if (Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture) == "I" || DDMlonDegrees < 0)
-            {   // if Gridsquare is I result should be between -20 and 0
-                LonDirection = -1;
-            }
-            else if (Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture) == "J" || DDMlonDegrees > 0)
-            {   // if Gridsquare is J result should be between 0 and 20
-                LonDirection = 1;
-            }
-            else
-            {
-                throw new InvalidOperationException($"Somehow, Gridsquare member {Gridsquare[0]} (index zero of {Gridsquare}) or LonDegrees {DDMlonDegrees} did not match the program logic.");
-            }
+            DDMlonDegrees = Math.Abs(lonDegreesLookupResult);
         }
         public void AddLonDegreesRemainder()
         {   // Table2 lookup is calculated, then added to Degrees Longitude, MUST BE ZERO_BIASED
-            int lon_MinsAdjustment = 0;// -18;
+            //  LonDirection must be checked (should have been set PRIOR to reaching this method)
             if (LonDirection == 1)
-            {
-                lon_MinsAdjustment = 0;
+            {   //  calc gridchar Number to Positive side of table is (num * 2)
+                //lon_MinsAdjustment = 0;
+                DDMlonDegrees += (int.Parse(Gridsquare[2].ToString(currentCulture), currentCulture) * 2);
             }
             else if (LonDirection == -1)
             {
-                lon_MinsAdjustment = -18;
+                //  calc gridchar Number to Negative side of table: (num * 2) - 18 
+                int lon_MinsAdjustment = -18;
+                DDMlonDegrees += Math.Abs((lon_MinsAdjustment + (int.Parse(Gridsquare[2].ToString(currentCulture), currentCulture) * 2)));
             }
-            // MUST convert char to string then to int otherwise the char value of the string is returned e.x.: "8" = char(56)
-            DDMlonDegrees += (lon_MinsAdjustment + (int.Parse(Gridsquare[2].ToString(currentCulture), currentCulture) * 2));
         }
         public void GetLonMinutes()
         {   // Table3 is Minutes Longitude Lookup table will also Round-up/down and in/decrement Lon Degrees with carry-over
@@ -361,7 +384,7 @@ namespace CoordinateConversionUtility
                 // lonMinsLookupResult += (LonMinsRound * LonDirection);
                 while (Math.Abs(lonMinsLookupResult) >= 60) //   120)
                 {
-                    DDMlonDegrees += (1 * LonDirection);
+                    DDMlonDegrees += 1;
                     lonMinsLookupResult -= lonMinsReducer;  //   120;
                 }
             }
@@ -416,7 +439,7 @@ namespace CoordinateConversionUtility
         private void GetSixthGridsquareCharacter()
         {   // Input: DDM_LatMinutes; Remainder_Lat
             // Sets: Gridsquare (sixth character by concatenation)
-            double latMinsLookupValue = 0;
+            double latMinsLookupValue;
             // check remainder and zero it out if in 2-degree increments otherwise...
             //   ...remove all but the remaining single-degree increment
             if (LatDirection > 0)
@@ -452,7 +475,7 @@ namespace CoordinateConversionUtility
         private void GetFifthGridsquareCharacter()
         {   // Inputs: Remainder_Lon; 
             // Sets: DDM_LonMinutes; Gridsquare (fifth character by concatenation)
-            double lonMinutesLookupValue = 0;    // = DDMlonMinutes;
+            double lonMinutesLookupValue;   // = 0;    // = DDMlonMinutes;
             double remainderCorrectionValue = 0;
             if (RemainderLon > 1)
             {
@@ -498,7 +521,7 @@ namespace CoordinateConversionUtility
         {   // inputs: Remainder_Lat; LatDirection
             // Sets: Remainder_Lat; Gridsquare (fourth character by concatenation)
             //  NOTE: Fourth Gridsquare character is arranged in single-digit increments therefore no remainder
-            int latLookupValue = RemainderLat;
+            int latLookupValue; // = RemainderLat;
             if (LatDirection < 0)
             {
                 latLookupValue = RemainderLat + 9;
@@ -517,17 +540,19 @@ namespace CoordinateConversionUtility
         private void GetThirdGridsquareCharacter()
         {   // Inputs: Remainder_Lon;
             // Sets: Remainder_Lon; Gridsquare (third character by concatenation)
-            int calculationNumber = 0;
+            int calculationNumber;  // = 0;
             if (LonDirection < 0)
             {
                 if (RemainderLon % 2 != 0)  //  TRY THIS to solve odd-numbered negative-degrees Longitude e.g.: -5 needs to append "7"
                 {
-                    calculationNumber = (RemainderLon + 21) / 2 - 1;
+                    //calculationNumber = (RemainderLon + 21) / 2 - 1;      // *might* be incorrect calculation after all
+                    calculationNumber = ((RemainderLon * LonDirection) + 21) / 2 - 1;
                     RemainderLon = 1;   // used up max even portion of RemainderLon so odd single is left and must be accounted for in last grid character
                 }
                 else
                 {
-                    calculationNumber = (RemainderLon + 20) / 2 - 1;
+                    //calculationNumber = (RemainderLon + 20) / 2 - 1;      // returns '10' when RemainderLon = 2 and LonDirection = -1
+                    calculationNumber = ((RemainderLon * LonDirection) + 20) / 2 - 1;
                 }
             }
             else
@@ -592,25 +617,30 @@ namespace CoordinateConversionUtility
         private void GetFirstGridsquareCharacter()
         {
             // inputs: int DDM_LonDegrees
-            // sets: LonDirection; Gridsquare (first character by concatination)
-            this.Gridsquare = "";
-            int lonDegreesLookupValue = DDMlonDegrees;
-                if (DDMlonDegrees < 0)
-                {   // use this to check pos/neg degrees and adjust sign accordingly as a multiplier
-                    LonDirection = -1;
-                }
-                else if (DDMlonDegrees > 0)
-                {
-                    LonDirection = 1;
-                }
-            else
+            // sets: Gridsquare (first character by concatination)
+            // LonDirection MUST be set prior to entering this method
+            int lonDegreesLookupValue;
+            if (LonDirection != -1 && LonDirection != 1)
             {
-                throw new IndexOutOfRangeException($"LonDirection ({LonDirection}) could not be set for lonDegreesLookupValue {lonDegreesLookupValue}.");
+                throw new IndexOutOfRangeException($"LonDirection ({LonDirection}) could not be set for lonDegreesLookupValue.");
             }
+            this.Gridsquare = "";
+            //if (DDMlonDegrees < 0)
+            //{   // use this to check pos/neg degrees and adjust sign accordingly as a multiplier
+            //    LonDirection = -1;
+            //}
+            //else if (DDMlonDegrees > 0)
+            //{
+            //    LonDirection = 1;
+            //}
             RemainderLon = DDMlonDegrees % 20;
             if (RemainderLon != 0)
             {
                 lonDegreesLookupValue = DDMlonDegrees - RemainderLon;
+            }
+            else
+            {
+                lonDegreesLookupValue = DDMlonDegrees;
             }
             if (LonDirection < 0)
             {
@@ -712,8 +742,8 @@ namespace CoordinateConversionUtility
             double temp_lonMinutes = double.Parse(sbLonCoords.ToString().Substring(lon_decimal_index + 1, (sbLonCoords.Length - (lon_decimal_index + 1))), currentCulture);
             DDMlatMinutes = Math.Round((temp_latMinutes / 10_000) * 60, 2);
             DDMlonMinutes = Math.Round((temp_lonMinutes / 10_000) * 60, 2);
-            LatDirection = temp_LatDirection;
-            LonDirection = temp_LonDirection;
+            LatDirection = temp_LatDirection;   //  LatDirection MUST be set when DDMlatDegrees has been set
+            LonDirection = temp_LonDirection;   //  LonDirection MUST be set when DDMlonDegrees has been set
 
             string returnString = $"{DDMlatDegrees}*{DDMlatMinutes:f2}'";
             if (LatDirection < 0)
@@ -746,7 +776,7 @@ namespace CoordinateConversionUtility
                 throw new ArgumentNullException(rm.GetString("dmsCoordinatesArgumentNull", currentCulture));
             }
             dmsCoordinates = dmsCoordinates.Trim();
-            if (dmsCoordinates.Length < 15 || 22 < dmsCoordinates.Length) // 1*2'3"N,2*3'4"W || 12*34'56"N,123*45'07"W
+            if (22 < dmsCoordinates.Length || dmsCoordinates.Length < 15 ) // 1*2'3"N,2*3'4"W || 12*34'56"N,123*45'07"W
             {
                 return "Unable to process DD Coordinates that are less than 15 characters or more than 22 characters long.\n" +
                     "Use format DD*MM'SS\"[NS],DDD*MM'SS\"[EW]";
@@ -805,8 +835,8 @@ namespace CoordinateConversionUtility
                 double tempLonMinutes2 = double.Parse(tempLonMinutes, currentCulture);
                 tempLonMinutes2 += double.Parse(tempLonSeconds, currentCulture) / 60;
                 DDMlonMinutes = tempLonMinutes2;
-                LatDirection = temp_LatDirection;
-                LonDirection = temp_LonDirection;
+                LatDirection = temp_LatDirection;   //  LatDirection MUST be set when DDMlatDegrees is set
+                LonDirection = temp_LonDirection;   //  LonDirection MUST be set when DDMlonDegrees is set
                 string returnString = $"{DDMlatDegrees}*{DDMlatMinutes:f2}'";
 
                 if (LatDirection < 0)

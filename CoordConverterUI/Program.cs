@@ -19,8 +19,8 @@ namespace CoordConverterUI
             string[] montevideo = { "34*54.6'S", "56*12.7'W", "GF15vc" };
             string[] washingonDC = { "38*55.2'N", "77*3.9'W", "FM18lw" };
             string[] wellington = { "41*17.0'S", "174*44.7'E", "RE78ir" };
-            string someOtherGridsquare = "DM72dx";
-            string anotherGridsquare = "DM13ek";
+            //string someOtherGridsquare = "DM72dx";
+            //string anotherGridsquare = "DM13ek";
 
             CoordinateConverter cc = new CoordinateConverter();
             CoordinateConverter.GenerateTableLookups();
