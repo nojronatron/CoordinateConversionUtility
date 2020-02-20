@@ -8,6 +8,24 @@ namespace CoordinateConversionUtility_UnitTests
     [TestClass]
     public class UnitTest1
     {
+        private char DegreesSymbol { get { return (char)176; } }     //  degree symbol
+        private char MinutesSymbol { get { return (char)39; } }      //  single quote
+        private char SecondsSymbol { get { return (char)34; } }      //  double quote
+        public static DDCoordindateHelper dd_LynnwoodCoords = new DDCoordindateHelper(47.8125m, -122.2917m); // decimal degrees
+        public static List<string> LynnwoodData = new List<string>() { "47*48.75'N", "122*17.5'W", "CN87ut", "Lynnwood, WA" };
+
+        public static DDCoordindateHelper dd_MunichCoords = new DDCoordindateHelper(48.8125m, -122.2917m); // decimal degrees
+        public static List<string> MunichData = new List<string>() { "48*8.75'N", "11*37.50'E", "JN58td", "Munich, Germany" };
+
+        public static DDCoordindateHelper dd_MontevideoCoords = new DDCoordindateHelper(47.8125m, -122.2917m); // decimal degrees
+        public static List<string> MontevideoData = new List<string>() { "34*53.75'S", "56*12.50'W", "GF15vc", "Montevideo, Uruguay" };
+
+        public static DDCoordindateHelper dd_WashingtondcCoords = new DDCoordindateHelper(47.8125m, -122.2917m); // decimal degrees
+        public static List<string> WashingtonDcData = new List<string>() { "38*56.25'N", "77*2.50'W", "FM18lw", "Washington D.C." };
+
+        public static DDCoordindateHelper dd_WellingtonCoords = new DDCoordindateHelper(47.8125m, -122.2917m); // decimal degrees
+        public static List<string> WellingtonData = new List<string>() { "41*16.25'S", "174*42.50'E", "RE78ir", "Wellington, New Zealand" };
+
         // CAN do this if necessary: CoordinateConverter ccc = null;
         [TestMethod]
         public void Test_ValidateGridsquareInput_ExactMatch()
@@ -18,7 +36,7 @@ namespace CoordinateConversionUtility_UnitTests
             string actualResult = "failed";
             if (cc.ValidateGridsquareInput(inputGridsquare))
             {
-                actualResult = cc.Gridsquare;
+                actualResult = cc.Gridsquare.ToString();
             }
             Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
         }
@@ -185,7 +203,7 @@ namespace CoordinateConversionUtility_UnitTests
                 string actualResult = "failed";
                 if (cc.ValidateGridsquareInput(inputGridsquare))
                 {
-                    actualResult = cc.Gridsquare;
+                    actualResult = cc.Gridsquare.ToString();
                 }
                 Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
             }
@@ -199,7 +217,7 @@ namespace CoordinateConversionUtility_UnitTests
             string actualResult = "failed";
             if (cc.ValidateGridsquareInput(inputGridsquare))
             {
-                actualResult = cc.Gridsquare;
+                actualResult = cc.Gridsquare.ToString();
             }
             Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
         }
@@ -362,7 +380,7 @@ namespace CoordinateConversionUtility_UnitTests
             }
         }
         [TestMethod]
-        public void Test_ConverGridsquareToDDM_alpha()
+        public void Test_ConvertGridsquareToDDM_alpha()
         {
             string inputGridsquare = "CN87ut";
             Dictionary<object, string> expectedResults = new Dictionary<object, string>(5)
@@ -382,11 +400,11 @@ namespace CoordinateConversionUtility_UnitTests
             {
                 CoordinateConverter cc = new CoordinateConverter();
                 cc.ConvertGridsquareToDDM(inputGridsquare);
-                if (expectedResults.TryGetValue(cc.Gridsquare, out var dictGrid))
+                if (expectedResults.TryGetValue(cc.Gridsquare.ToString(), out var dictGrid))
                 {
                     if (dictGrid == "gridsquare")
                     {
-                        xrGridGood = cc.Gridsquare;
+                        xrGridGood = cc.Gridsquare.ToString();
                     }
                 }
                 if (expectedResults.TryGetValue(cc.DDMlatDegrees, out var dictDDMLatD))
@@ -631,7 +649,7 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_DDtoGridsquare()
         {
             string expectedResult = "CN87ut";  // six-character gridsquare
-            string dd_CoordsInput = "47.8125*N,122.2917*W"; // decimal degrees
+            DDCoordindateHelper dd_CoordsInput = new DDCoordindateHelper(47.8125m, -122.2917m); // decimal degrees
             CoordinateConverter cc = new CoordinateConverter();
             if (CoordinateConverter.GenerateTableLookups())
             {
