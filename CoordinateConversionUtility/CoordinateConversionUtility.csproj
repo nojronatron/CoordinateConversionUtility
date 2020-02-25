@@ -58,6 +58,7 @@
       <DependentUpon>ErrorMessages.resx</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DMSCoordinateHelper.cs" />
+    <Compile Include="Helpers\GridSquareHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

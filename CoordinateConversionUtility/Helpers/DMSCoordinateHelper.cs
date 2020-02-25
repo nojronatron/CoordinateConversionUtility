@@ -21,15 +21,15 @@ namespace CoordinateConversionUtility
             DegreesLon = ddLon;
             DDCoordinates = new DDCoordindateHelper(ddLat, ddLon);
         }
-        public DMSCoordinateHelper(string ddmLatAndLon)
+        public DMSCoordinateHelper(string dmsLatAndLon)
         {
-            if (ddmLatAndLon is null)   //  check for null
+            if (dmsLatAndLon is null)   //  check for null
             {
-                throw new ArgumentNullException(nameof(ddmLatAndLon));
+                throw new ArgumentNullException(nameof(dmsLatAndLon));
             }
             //  Split string into NS, DegreesLat, MinutesLat, EW, DegreesLon, MinutesLon
             char[] splitChars = { ',', (char)176, (char)39 };
-            string[] strDdmLatAndLon = ddmLatAndLon.Split(splitChars);
+            string[] strDdmLatAndLon = dmsLatAndLon.Split(splitChars);
 
             //  TryParse degrees and minutes each into decimal format
             //  Convert Minutes of each to decimal portions of a degree
@@ -55,8 +55,8 @@ namespace CoordinateConversionUtility
                 MinutesLon = decLonMinutes / 120;
             }
             //  Multiply 1/-1 to each degree
-            int north = ExtractPolarityNSEW(ddmLatAndLon);
-            int east = ExtractPolarityNSEW(ddmLatAndLon);
+            int north = ExtractPolarityNSEW(dmsLatAndLon);
+            int east = ExtractPolarityNSEW(dmsLatAndLon);
             DegreesLat *= north;
             DegreesLon *= east;
 

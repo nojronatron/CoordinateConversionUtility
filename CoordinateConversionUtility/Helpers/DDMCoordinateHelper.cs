@@ -19,6 +19,14 @@ namespace CoordinateConversionUtility
             DegreesLon = ddLon;
             DDCoordinates = new DDCoordindateHelper(ddLat, ddLon);
         }
+        public DDMCoordinateHelper(decimal latDegrees, decimal latMinutes, decimal lonDegrees, decimal lonMinutes)
+        {
+            //  latDegrees and lonDegrees MUST BE SIGNED decimals if negative
+            DegreesLat = latDegrees;
+            DegreesLon = lonDegrees;
+            MinutesLat = latMinutes;
+            MinutesLon = lonMinutes;
+        }
         public DDMCoordinateHelper(string ddmLatAndLon)
         {
             if (ddmLatAndLon is null)   //  check for null
@@ -32,34 +40,36 @@ namespace CoordinateConversionUtility
             //  TryParse degrees and minutes each into decimal format
             //  Convert Minutes of each to decimal portions of a degree
             string temp = string.Empty;
-            temp = strDdmLatAndLon[0].Split((char)176)[0];
+            decimal tempDegreesLat = 0m;
+            decimal tempDegreesLon = 0m;
+            temp = strDdmLatAndLon[0];//.Split((char)176)[0];
             if (decimal.TryParse(temp, out decimal decLatDegrees))
             {
-                DegreesLat = decLatDegrees;
+                tempDegreesLat = decLatDegrees;
             }
-            temp = strDdmLatAndLon[0].Split((char)176)[1];
+            temp = strDdmLatAndLon[1];//.Split((char)176)[1];
             if (decimal.TryParse(temp, out decimal decLatMinutes))
             {
-                MinutesLat = decLatMinutes / 60;
+                MinutesLat = decLatMinutes;// / 60;
             }
-            temp = strDdmLatAndLon[1].Split((char)176)[0];
+            temp = strDdmLatAndLon[3];//.Split((char)176)[0];
             if (decimal.TryParse(temp, out decimal decLonDegrees))
             {
-                DegreesLon = decLonDegrees;
+                tempDegreesLon = decLonDegrees;
             }
-            temp = strDdmLatAndLon[1].Split((char)176)[1];
+            temp = strDdmLatAndLon[4];//.Split((char)176)[1];
             if (decimal.TryParse(temp, out decimal decLonMinutes))
             {
-                MinutesLon = decLonMinutes / 120;
+                MinutesLon = decLonMinutes;// / 120;
             }
             //  Multiply 1/-1 to each degree
-            int north = ExtractPolarityNSEW(ddmLatAndLon);
-            int east = ExtractPolarityNSEW(ddmLatAndLon);
-            DegreesLat *= north;
-            DegreesLon *= east;
+            int north = ExtractPolarityNSEW($"{ strDdmLatAndLon[2] }");
+            int east = ExtractPolarityNSEW($"{ strDdmLatAndLon[5] }");
+            DegreesLat = tempDegreesLat * north;
+            DegreesLon = tempDegreesLon * east;
 
-            //  Store as a DDCoordinate
-            DDCoordinates = new DDCoordindateHelper(DegreesLat + MinutesLat, DegreesLon + MinutesLon);
+            ////  Store as a DDCoordinate
+            //DDCoordinates = new DDCoordindateHelper(DegreesLat + ( MinutesLat / 60 ), DegreesLon + (MinutesLon / 60 ));
         }
 
         public decimal GetLatDegrees()
@@ -139,12 +149,37 @@ namespace CoordinateConversionUtility
                     return string.Empty;
             }
         }
+        public int GetLatDirection()
+        {
+            if (this.DegreesLat >= 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
+        public int GetLonDirection()
+        {
+            if (this.DegreesLon >= 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return -1;
+            }
+        }
         public override string ToString()
         {
-            return $"{ Math.Abs(GetLatDegrees()) }{ DegreesSymbol }" +
-                   $"{ MinutesLat }{ MinutesSymbol }{ GetNSEW(DegreesLat, 1) }, " +
-                   $"{ Math.Abs(GetLonDegrees()) }{ DegreesSymbol }" +
-                   $"{ MinutesLon }{ MinutesSymbol }{ GetNSEW(DegreesLon, 2) }";
+            //  TODO: fix output to include leading zeros in degrees e.g.: 5* => 05*
+            //  TODO: fix output to include leading zeros in minutes e.g.: 5.23' => 05.23'
+            //  TODO: fix output to include trailing zeros e.g.: 05.2' => 05.20'
+            return $"{ Math.Abs(GetLatDegrees())}{ DegreesSymbol }" +
+                   $"{ MinutesLat:00.00}{ MinutesSymbol }{ GetNSEW(DegreesLat, 1) }, " +
+                   $"{ Math.Abs(GetLonDegrees())}{ DegreesSymbol }" +
+                   $"{ MinutesLon:00.00}{ MinutesSymbol }{ GetNSEW(DegreesLon, 2) }";
         }
     }
 }

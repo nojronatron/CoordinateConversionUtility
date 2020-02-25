@@ -49,6 +49,14 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\ConversionHelperTests.cs" />
+    <Compile Include="TestModels\LynnwoodCoordinatesModel.cs" />
+    <Compile Include="TestModels\MontevideoCoordinateModel.cs" />
+    <Compile Include="TestModels\MunichCoordinatesModel.cs" />
+    <Compile Include="TestModels\RootCoordinateModel.cs" />
+    <Compile Include="TestModels\SanClementeCoordinatesModel.cs" />
+    <Compile Include="TestModels\WashingtondcCoordinateModel.cs" />
+    <Compile Include="TestModels\WellingtonCoordinateModel.cs" />
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

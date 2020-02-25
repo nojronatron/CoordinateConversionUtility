@@ -6,12 +6,58 @@ namespace CoordinateConversionUtility
     {   //  helper class to validate and instantiate proper DecimalDegree coordinates
         internal decimal DegreesLat { get; private set; }
         internal decimal DegreesLon { get; private set; }
-        private static char DegreesSymbol => (char)176;      //  degree symbol
+        private static char CommaSymbol => (char)44;    //  comma symbol
+        private static char DegreesSymbol => (char)176; //  degree symbol
         public DDCoordindateHelper() { }
+        public DDCoordindateHelper(string ddLatAndLon)
+        {
+            if (ddLatAndLon is null)   //  check for null
+            {
+                throw new ArgumentNullException(nameof(ddLatAndLon));
+            }
+            //  Split string into DegreesLat and DegreesLon
+            string[] strDdmLatAndLon = ddLatAndLon.Replace(DegreesSymbol, ' ').Split(CommaSymbol);
+            decimal degreesLatTemp = -91m;
+            decimal degreesLonTemp = -181m;
+
+            //  TryParse degrees into decimal format
+            if (decimal.TryParse(strDdmLatAndLon[0], out decimal decLatDegrees))
+            {
+                degreesLatTemp = decLatDegrees;
+            }
+            if (decimal.TryParse(strDdmLatAndLon[1], out decimal decLonDegrees))
+            {
+                degreesLonTemp = decLonDegrees;
+            }
+
+            //  Store as a DDCoordinate if both are set within specified ranges
+            if (-90m <= degreesLatTemp && degreesLatTemp <= 90m)
+            {
+                DegreesLat = degreesLatTemp;
+            }
+            if (-180m <= degreesLonTemp && degreesLonTemp <= 180m)
+            {
+                DegreesLon = degreesLonTemp;
+            }
+        }
         public DDCoordindateHelper(decimal lat, decimal lon)
         {
-            DegreesLat = lat;
-            DegreesLon = lon;
+            if (-90m <= lat && lat <= 90m)
+            {
+                DegreesLat = lat;
+            }
+            else
+            {
+                DegreesLat = -91m;
+            }
+            if (-180m <= lon && lon <= 180m)
+            {
+                DegreesLon = lon;
+            }
+            else
+            {
+                DegreesLon = -181m;
+            }
         }
         public decimal GetLatDegrees()
         {
@@ -93,7 +139,7 @@ namespace CoordinateConversionUtility
         }
         public override string ToString()
         {
-            return $"{ DegreesLat:f4}{ DegreesSymbol },{ DegreesLon:f4}{ DegreesSymbol }";
+            return $"{ DegreesLat:f4}{ DegreesSymbol }, { DegreesLon:f4}{ DegreesSymbol }";
         }
     }
 }
