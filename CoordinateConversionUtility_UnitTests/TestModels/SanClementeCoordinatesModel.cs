@@ -6,38 +6,41 @@ using System.Threading.Tasks;
 
 namespace CoordinateConversionUtility_UnitTests.TestModels
 {
-    class SanClementeCoordinatesModel : RootCoordinateModel
+    public class SanClementeCoordinatesModel : SymbolHelper
     {
-        internal static string NS => "N";
-        internal static string EW => "W";
-        public SanClementeCoordinatesModel()
+        public string ArrlDDM()
         {
-            DegreesLat = 33.4375m;
-            DegreesLon = -117.6250m;
+            return $"33{ DegreesSymbol }26.25{ MinutesSymbol }N, 117{ DegreesSymbol }37.50{ MinutesSymbol}W";
+        }   //  	    ARRL DDM:		    33*26.25'N, 117*37.5'W
+        public string ArrlGridsquare()
+        {
+            return "DM13ek";
         }
-        public static string strGridsquare()
+        public decimal DegreesLat()
         {
-            return $"DM13ek";
+            return 33.4375m;
         }
-        public static string strDD()
+        public decimal DegreesLon()
         {
-            return $"{ 33.4375m }{ DegreesSymbol }, { -117.6250m }{ DegreesSymbol }";
+            return -117.6250m;
+        }   //     //  	    GoogleMapped DD:    33.4375, -117.6250
+        public string GoogleMapsDD()
+        {
+            return $"33.4375{ DegreesSymbol }, -117.6250{ DegreesSymbol }";
         }
-        public static string strDDM()
+        public string GoogleMapsDMS()
         {
-            return $"33{ DegreesSymbol }27.50{ MinutesSymbol }{ NS }, " +
-                   $"117{ DegreesSymbol }40.00{ MinutesSymbol }{ EW }";
+            return $"N 33{ DegreesSymbol }26{ MinutesSymbol }15.0{ SecondsSymbol }, " +
+                   $"W 117{ DegreesSymbol }37{ MinutesSymbol }30.0{ SecondsSymbol }";
+        }   //  GoogleMapped DMS:	N 33*26'15", W 117*37'30"
+        public string CalculatedDDM()
+        {
+            return $"33{ DegreesSymbol }26.25{ MinutesSymbol }N, 117{ DegreesSymbol }37.50{ MinutesSymbol }W";
         }
-        public static string strArrlDDM()
+        public string AttainableDDM()
         {
-            //  these are the ARRL coordinates that point to middle of gridsquare RE78ir
-            return $"33{ DegreesSymbol }26.25{ MinutesSymbol }{ NS }, " +
-                   $"117{ DegreesSymbol }37.50{ MinutesSymbol }{ EW }";
-        }
-        public static string strDMS()
-        {
-            return $"{ NS } 41{ DegreesSymbol }15{ MinutesSymbol }00{ SecondsSymbol}, " +
-                   $"{ EW } 174{ DegreesSymbol }45{ MinutesSymbol }00{ SecondsSymbol }";
+            return $"33{ DegreesSymbol }26.25{ MinutesSymbol }N, 117{ DegreesSymbol }37.50{ MinutesSymbol }W";
+            //  <33°27.50'N, 117°40.00'W>. Actual:<33°26.25'N, 117°37.50'W>
         }
         /*
 	    ARRL DDM:		    33*26.25'N, 117*37.5'W

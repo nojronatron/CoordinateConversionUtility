@@ -6,67 +6,78 @@ using CoordinateConversionUtility_UnitTests.TestModels;
 namespace CoordinateConversionUtility_UnitTests
 {
     [TestClass]
-    public class UnitTest1
+    public class CoordConvUtilUnitTests
     {
-        private static char DegreesSymbol { get { return (char)176; } }     //  degree symbol
-        private static char MinutesSymbol { get { return (char)39; } }      //  single quote
-        private static char SecondsSymbol { get { return (char)34; } }      //  double quote
+        public WellingtonCoordinateModel wcm = new WellingtonCoordinateModel();
+        public WashingtondcCoordinateModel wdccm = new WashingtondcCoordinateModel();
+        public SanClementeCoordinatesModel sccm = new SanClementeCoordinatesModel();
+        public MunichCoordinatesModel mcm = new MunichCoordinatesModel();
+        public MontevideoCoordinateModel mvcm = new MontevideoCoordinateModel();
+        public LynnwoodCoordinatesModel lcm = new LynnwoodCoordinatesModel();
 
+        [TestMethod]
+        public void Test_ExploringRefactoredHelpersAndModels()
+        {
+            Console.WriteLine($"Wellington Decimal Degrees Lattitude: { wcm.DegreesLat() }.");
+            Console.WriteLine($"Wellington Decimal Degrees Longitude: { wcm.DegreesLon() }.");
+            Console.WriteLine($"Wellington ARRL DDM: { wcm.ArrlDDM() }.");
+            Console.WriteLine($"Wellington ARRL Gridsquare: { wcm.ArrlGridsquare() }.");
+            Console.WriteLine($"Wellington Calculated DDM { wcm.CalculatedDDM() }.");
+            Console.WriteLine($"Wellington Attainable DDM { wcm.AttainableDDM() }.");
+            Console.WriteLine($"Wellington GoogleMapDD: { wcm.GoogleMapsDD() }.");
+            Console.WriteLine($"Wellington GoogleMapDMS: { wcm.GoogleMapsDMS() }.");
+            Assert.AreEqual(true, true, "This is a test");
+        }
         [TestMethod]
         public void Test_DDCoordinateHelper_DecimalIn_StringOut()
         {
-            WellingtonCoordinateModel wcm = new WellingtonCoordinateModel();
-            decimal inputLattitude = wcm.DegreesLat;
-            decimal inputLongitude = wcm.DegreesLon;
+            decimal inputLattitude = wcm.DegreesLat();
+            decimal inputLongitude = wcm.DegreesLon();
             DDCoordindateHelper dDCoordindate = new DDCoordindateHelper(inputLattitude, inputLongitude);
-            string expectedResult = WellingtonCoordinateModel.strDD();
             string actualResult = dDCoordindate.ToString();
-            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual("System.String", actualResult.GetType().FullName);
         }
         [TestMethod]
         public void Test_DDCoordinateHelper_StringIn_ObjectOut()
         {
-            //WellingtonCoordinateModel wcm = new WellingtonCoordinateModel();
-            string strInputLatAndLon = WellingtonCoordinateModel.strDD();
+            string strInputLatAndLon = wcm.GoogleMapsDD();
             string expectedResult = "CoordinateConversionUtility.DDCoordindateHelper";
             DDCoordindateHelper dDCoordindate = new DDCoordindateHelper(strInputLatAndLon);
-            //  test that DDCoordinateHelper is an object
             Console.WriteLine($"{ dDCoordindate.GetType() }");
             Assert.AreEqual(expectedResult, dDCoordindate.GetType().FullName.ToString());
         }
         [TestMethod]
         public void Test_DDCoordinateHelper_StringIn_ToStringOut()
         {
-            //  strWellingtonDD has the expected result
-            string strInputLatAndLon = WellingtonCoordinateModel.strDD();
-            string expectedResult = $"{ WellingtonCoordinateModel.strDD() }";
-            DDCoordindateHelper dDCoordindate = new DDCoordindateHelper(WellingtonCoordinateModel.strDD());
+            string expectedResult = $"{ wcm.GoogleMapsDD() }";
+            DDCoordindateHelper dDCoordindate = new DDCoordindateHelper(wcm.GoogleMapsDD());
             Assert.AreEqual(expectedResult, dDCoordindate.ToString());
         }
         [TestMethod]
         public void Test_ValidateGridsquareInput_ValidatesTrue()
         {
             string inputGridsquare = "CN87ut";
-            string expectedResult = $"CN87UT";
             CoordinateConverter cc = new CoordinateConverter();
-            string actualResult = "failed";
             if (cc.ValidateGridsquareInput(inputGridsquare))
             {
-                actualResult = cc.Gridsquare.ToString();
+                string expectedResult = $"CN87UT";
+                string actualResult = cc.Gridsquare.ToString();
+                Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
             }
-            Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
+            else
+            {
+                Assert.Fail("ValidateGridsquareinput returned False");
+            }
         }
         [TestMethod]
         public void Test_Munich_ConvertGridsquareToDDM_Passes()
-        {
+        {   //  TODO: fix the CoordinateConverter code that overshoots the AttainableDDM
             CoordinateConverter cc = new CoordinateConverter();
-            string gridsquare = MunichCoordinatesModel.strGridSquare();
-            string expectedResult = MunichCoordinatesModel.strDDM();
-            string actualResult = "failed";
-
             if (CoordinateConverter.GenerateTableLookups())
             {
-                actualResult = cc.ConvertGridsquareToDDM(gridsquare);
+                string gridsquare = mcm.ArrlGridsquare();
+                string expectedResult = mcm.AttainableDDM();
+                string actualResult = cc.ConvertGridsquareToDDM(gridsquare);
                 Assert.AreEqual(expectedResult, actualResult);
             }
             else
@@ -78,14 +89,12 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_Munich_ConvertDDMtoGridsquare_Passes()
         {
             CoordinateConverter cc = new CoordinateConverter();
-            string ddmInput = MunichCoordinatesModel.strDDM();
-            string expectedResult = MunichCoordinatesModel.strGridSquare();
-            string actualResult = "failed";
-
             if (CoordinateConverter.GenerateTableLookups())
             {
+                string ddmInput = mcm.ArrlDDM();
+                string expectedResult = mcm.ArrlGridsquare();
                 DDMCoordinateHelper munichDDM = new DDMCoordinateHelper(ddmInput);
-                actualResult = cc.ConvertDDMtoGridsquare(munichDDM);
+                string actualResult = cc.ConvertDDMtoGridsquare(munichDDM);
                 Assert.AreEqual(expectedResult, actualResult);
             }
             else
@@ -97,13 +106,11 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_Montevideo_ConvertGridsquareToDDM_Passes()
         {
             CoordinateConverter cc = new CoordinateConverter();
-            string gridsquare = MontevideoCoordinateModel.strGridsquare();
-            string expectedResult = MontevideoCoordinateModel.strDDM();
-            string actualResult = "failed";
-
             if (CoordinateConverter.GenerateTableLookups())
             {
-                actualResult = cc.ConvertGridsquareToDDM(gridsquare);
+                string gridsquare = mvcm.ArrlGridsquare();
+                string expectedResult = mvcm.AttainableDDM();
+                string actualResult = cc.ConvertGridsquareToDDM(gridsquare);
                 Assert.AreEqual(expectedResult, actualResult);
             }
             else
@@ -115,13 +122,12 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_Montevideo_ConvertDDMtoGridsquare_Passes()
         {
             CoordinateConverter cc = new CoordinateConverter();
-            string ddmInput = MontevideoCoordinateModel.strMidGridDDM();
-            string expectedResult = MontevideoCoordinateModel.strGridsquare();
-            string actualResult = "failed";
             if (CoordinateConverter.GenerateTableLookups())
             {
+                string ddmInput = mvcm.ArrlDDM();
+                string expectedResult = mvcm.ArrlGridsquare();
                 DDMCoordinateHelper montevideoDDM = new DDMCoordinateHelper(ddmInput);
-                actualResult = cc.ConvertDDMtoGridsquare(montevideoDDM);
+                string actualResult = cc.ConvertDDMtoGridsquare(montevideoDDM);
                 Assert.AreEqual(expectedResult, actualResult);
             }
             else
@@ -133,13 +139,11 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_WashingtonDC_ConvertGridsquareToDDM_Passes()
         {
             CoordinateConverter cc = new CoordinateConverter();
-            string gridsquare = WashingtondcCoordinateModel.strGridsquare();
-            string expectedResult = WashingtondcCoordinateModel.strDDM();
-            string actualResult = "failed";
-
             if (CoordinateConverter.GenerateTableLookups())
             {
-                actualResult = cc.ConvertGridsquareToDDM(gridsquare);
+                string gridsquare = wdccm.ArrlGridsquare();
+                string expectedResult = wdccm.AttainableDDM();
+                string actualResult = cc.ConvertGridsquareToDDM(gridsquare);
                 Assert.AreEqual(expectedResult, actualResult);
             }
             else
@@ -151,14 +155,12 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_WashingtonDC_ConvertDDMtoGridsquare_Passes()
         {
             CoordinateConverter cc = new CoordinateConverter();
-            string ddmInput = WashingtondcCoordinateModel.strArrlDDM();
-            string expectedResult = WashingtondcCoordinateModel.strGridsquare();
-            string actualResult = "failed";
-
             if (CoordinateConverter.GenerateTableLookups())
             {
+                string ddmInput = wdccm.ArrlDDM();
+                string expectedResult = wdccm.ArrlGridsquare();
                 DDMCoordinateHelper washingtonDcDDM = new DDMCoordinateHelper(ddmInput);
-                actualResult = cc.ConvertDDMtoGridsquare(washingtonDcDDM);
+                string actualResult = cc.ConvertDDMtoGridsquare(washingtonDcDDM);
                 Assert.AreEqual(expectedResult, actualResult);
             }
             else
@@ -170,14 +172,12 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_WellingtonNZ_ConvertGridsquareToDDM_Passes()
         {
             CoordinateConverter cc = new CoordinateConverter();
-            string gridsquare = WellingtonCoordinateModel.strGridsquare();
-            string expectedResult = WellingtonCoordinateModel.strDDM();
-            string actualResult = "failed";
-
             if (CoordinateConverter.GenerateTableLookups())
             {
-                actualResult = cc.ConvertGridsquareToDDM(gridsquare);
-                Assert.AreEqual(expectedResult, actualResult);
+                string gridsquare = wcm.ArrlGridsquare();
+                string expectedresult = wcm.AttainableDDM();
+                string actualResult = cc.ConvertGridsquareToDDM(gridsquare);
+                Assert.AreEqual(expectedresult, actualResult);
             }
             else
             {
@@ -188,14 +188,12 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_WellingtonNZ_ConvertMidGridDDMtoGridsquare_Passes()
         {
             CoordinateConverter cc = new CoordinateConverter();
-            string ddmInput = WellingtonCoordinateModel.strArrlDDM();
-            string expectedResult = WellingtonCoordinateModel.strGridsquare();
-            string actualResult = "failed";
-
             if (CoordinateConverter.GenerateTableLookups())
             {
+                string ddmInput = wcm.ArrlDDM();
+                string expectedResult = wcm.ArrlGridsquare();
                 DDMCoordinateHelper WellingtonDDM = new DDMCoordinateHelper(ddmInput);
-                actualResult = cc.ConvertDDMtoGridsquare(WellingtonDDM);
+                string actualResult = cc.ConvertDDMtoGridsquare(WellingtonDDM);
                 Assert.AreEqual(expectedResult, actualResult);
             }
             else
@@ -207,13 +205,11 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_SanClemente_ConvertGridsquareToDDM_Passes()
         {
             CoordinateConverter cc = new CoordinateConverter();
-            string gridsquare = SanClementeCoordinatesModel.strGridsquare();
-            string expectedResult = SanClementeCoordinatesModel.strDDM();
-            string actualResult = "failed";
-
             if (CoordinateConverter.GenerateTableLookups())
             {
-                actualResult = cc.ConvertGridsquareToDDM(gridsquare);
+                string gridsquare = sccm.ArrlGridsquare();
+                string expectedResult = sccm.AttainableDDM();
+                string actualResult = cc.ConvertGridsquareToDDM(gridsquare);
                 Assert.AreEqual(expectedResult, actualResult);
             }
             else
@@ -225,14 +221,12 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_SanClemente_ConvertDDMtoGridsquare_Passes()
         {
             CoordinateConverter cc = new CoordinateConverter();
-            string ddmInput = SanClementeCoordinatesModel.strArrlDDM();
-            string expectedResult = SanClementeCoordinatesModel.strGridsquare();
-            string actualResult = "failed";
-
             if (CoordinateConverter.GenerateTableLookups())
             {
+                string ddmInput = sccm.ArrlDDM();
+                string expectedResult = sccm.ArrlGridsquare();
                 DDMCoordinateHelper WellingtonDDM = new DDMCoordinateHelper(ddmInput);
-                actualResult = cc.ConvertDDMtoGridsquare(WellingtonDDM);
+                string actualResult = cc.ConvertDDMtoGridsquare(WellingtonDDM);
                 Assert.AreEqual(expectedResult, actualResult);
             }
             else
@@ -245,40 +239,37 @@ namespace CoordinateConversionUtility_UnitTests
         {
             {
                 string inputGridsquare = "783lkfCN87ut...ab";
-                string expectedResult = $"CN87UT";
                 CoordinateConverter cc = new CoordinateConverter();
-                string actualResult = "failed";
                 if (cc.ValidateGridsquareInput(inputGridsquare))
                 {
-                    actualResult = cc.Gridsquare.ToString();
+                    string expectedResult = $"CN87UT";
+                    string actualResult = cc.Gridsquare.ToString();
+                    Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
                 }
-                Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
+                else
+                {
+                    Assert.Fail("ValidateGridsquareinput() returned False.");
+                }
             }
         }
         [TestMethod]
         public void Test_ValidateGridsquareInput_TooFewChars()
         {
-            string inputGridsquare = "CN87u";
-            string expectedResult = $"failed";
+            string FiveCharGridsquare = "CN87u";
             CoordinateConverter cc = new CoordinateConverter();
-            string actualResult = "failed";
-            if (cc.ValidateGridsquareInput(inputGridsquare))
-            {
-                actualResult = cc.Gridsquare.ToString();
-            }
-            Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
+            Assert.IsFalse(cc.ValidateGridsquareInput(FiveCharGridsquare));
         }
         [TestMethod]
         public void Test_GetLonDegrees_FirstPortion()
-        {   // Lon DDM Degrees
-            string inputGridsquare = "CN87ut";
-            string[] expectedResults = new string[2] { "-1", "120" };
-            string[] actualResults = new string[2];  // concatenate stringified versions of output from cc
-            bool resultsMatch = false;
+        {   // TODO: Rewrite this test to SIMPLIFY it and remove all the logic
             CoordinateConverter cc = new CoordinateConverter();
             if (CoordinateConverter.GenerateTableLookups())
             {
                 // sets LonDirection and DDM_LonDegrees
+                string inputGridsquare = "CN87ut";
+                string[] expectedResults = new string[2] { "-1", "120" };
+                string[] actualResults = new string[2];  // concatenate stringified versions of output from cc
+                bool resultsMatch = false;
                 cc.SetGridsquare(inputGridsquare);
                 cc.GetLonDegrees();
                 actualResults[0] = $"{cc.LonDirection}"; // cc.LonDirection.ToString();
@@ -300,17 +291,17 @@ namespace CoordinateConversionUtility_UnitTests
         }
         [TestMethod]
         public void Test_GetLonDegrees_SecondPortion()
-        {   // Lon DDM Degrees
-            string inputGridsquare = "CN87ut";
-            string[] expectedResults = new string[2] { "-1", "122" };
-            string[] actualResults = new string[2];
-            bool resultsMatch = false;
+        {   // TODO: Rewrite this test to SIMPLIFY it and remove all the logic
             CoordinateConverter cc = new CoordinateConverter();
             if (CoordinateConverter.GenerateTableLookups())
             {
+                string inputGridsquare = "CN87ut";
                 cc.SetGridsquare(inputGridsquare);
                 cc.GetLonDegrees();
                 cc.AddLonDegreesRemainder();
+                string[] expectedResults = new string[2] { "-1", "122" };
+                string[] actualResults = new string[2];
+                bool resultsMatch = false;
                 actualResults[0] = $"{cc.LonDirection}";
                 actualResults[1] = $"{cc.DDMlonDegrees}";
                 if (expectedResults[0].ToString() == actualResults[0].ToString())
@@ -331,15 +322,15 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_GetLonMinutes()
         {   // Lon DDM Minutes
-            string inputGridsquare = "CN87ut";
-            string expectedResult = "17.5";
             CoordinateConverter cc = new CoordinateConverter();
             if (CoordinateConverter.GenerateTableLookups())
             {
+                string inputGridsquare = "CN87ut";
                 cc.SetGridsquare(inputGridsquare);
                 cc.GetLonDegrees();
                 cc.AddLonDegreesRemainder();
                 cc.GetLonMinutes();
+                string expectedResult = "17.5";
                 string actualResult = $"{cc.DDMlonMinutes}";
                 Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
             }
@@ -351,18 +342,17 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_GetLatDegrees_FirstPortion()
         {   // Lon DDM Degrees
-            string inputGridsquare = "CN87ut";
-            string[] expectedResults = new string[2] { "1", "40" };
-            string[] actualResults = new string[2];  // concatenate stringified versions of output from cc
-            bool resultsMatch = false;
             CoordinateConverter cc = new CoordinateConverter();
             if (CoordinateConverter.GenerateTableLookups())
             {
-                // sets LonDirection and DDM_LonDegrees
+                string inputGridsquare = "CN87ut";
+                string[] expectedResults = new string[2] { "1", "40" };
+                string[] actualResults = new string[2];
+                bool resultsMatch = false;
                 cc.SetGridsquare(inputGridsquare);
                 cc.GetLatDegrees();
-                actualResults[0] = $"{cc.LatDirection}"; // cc.LonDirection.ToString();
-                actualResults[1] = $"{cc.DDMlatDegrees}"; // cc.DDM_LonDegrees.ToString();
+                actualResults[0] = $"{cc.LatDirection}";
+                actualResults[1] = $"{cc.DDMlatDegrees}";
                 if (expectedResults[0].ToString() == actualResults[0].ToString())
                 {
                     if (expectedResults[1].ToString() == actualResults[1].ToString())
@@ -379,14 +369,14 @@ namespace CoordinateConversionUtility_UnitTests
         }
         [TestMethod]
         public void Test_GetLatDegrees_SecondPortion()
-        {   // Lon DDM Degrees
-            string inputGridsquare = "CN87ut";
-            string[] expectedResults = new string[2] { "1", "47" };
-            string[] actualResults = new string[2];
-            bool resultsMatch = false;
+        {
             CoordinateConverter cc = new CoordinateConverter();
             if (CoordinateConverter.GenerateTableLookups())
             {
+                string inputGridsquare = "CN87ut";
+                string[] expectedResults = new string[2] { "1", "47" };
+                string[] actualResults = new string[2];
+                bool resultsMatch = false;
                 cc.SetGridsquare(inputGridsquare);
                 cc.GetLatDegrees();
                 cc.AddLatDegreesRemainder();
@@ -409,11 +399,11 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_GetLatMinutes()
         {   // Lon DDM Minutes
-            string inputGridsquare = "CN87ut";
-            string expectedResult = "48.75";
             CoordinateConverter cc = new CoordinateConverter();
             if (CoordinateConverter.GenerateTableLookups())
             {
+                string inputGridsquare = "CN87ut";
+                string expectedResult = "48.75";
                 cc.SetGridsquare(inputGridsquare);
                 cc.GetLatDegrees();
                 cc.AddLatDegreesRemainder();
@@ -429,12 +419,12 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_DDMtoGridsquare()
         {
-            string expectedResult = "CN87ut";  // six-character gridsquare
-            LynnwoodCoordinatesModel lcm = new LynnwoodCoordinatesModel();
-            DDMCoordinateHelper lynnwood = new DDMCoordinateHelper(LynnwoodCoordinatesModel.strDDM());
             CoordinateConverter cc = new CoordinateConverter();
             if (CoordinateConverter.GenerateTableLookups())
             {
+                string expectedResult = lcm.ArrlGridsquare();
+                string inputDDM = lcm.AttainableDDM();
+                DDMCoordinateHelper lynnwood = new DDMCoordinateHelper(inputDDM);
                 string actualResult = cc.ConvertDDMtoGridsquare(lynnwood);
                 Assert.AreEqual(expectedResult.ToUpper(), actualResult.ToUpper(), $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
             }

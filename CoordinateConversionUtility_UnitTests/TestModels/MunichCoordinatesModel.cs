@@ -6,39 +6,40 @@ using System.Threading.Tasks;
 
 namespace CoordinateConversionUtility_UnitTests.TestModels
 {
-    public class MunichCoordinatesModel : RootCoordinateModel
+    public class MunichCoordinatesModel : SymbolHelper
     {
-        internal static string NS => "N";
-        internal static string EW => "E";
-        public MunichCoordinatesModel()
+        public string ArrlDDM()
         {
-            DegreesLat = 48.1467m;
-            DegreesLon = 11.6083m;
+            return $"48{ DegreesSymbol }8.80{ MinutesSymbol }N, 11{ DegreesSymbol }36.50{ MinutesSymbol}E";
+        }   //  ARRL DDM:			48*8.8'N, 11*36.5'E
+        public string ArrlGridsquare()
+        {
+            return "JN58td";
         }
-        public static string strGridSquare()
+        public decimal DegreesLat()
         {
-            return $"JN58td";
+            return 48.1467m;
         }
-        public static string strDD()
+        public decimal DegreesLon()
         {
-            return $"{ 48.1467 }{ DegreesSymbol }, { 11.6083 }{ DegreesSymbol }";
+            return 11.6083m;
+        }   //  GoogelMapped DD:	48.1467, 11.6083
+        public string GoogleMapsDD()
+        {
+            return $"48.1467{ DegreesSymbol }, 11.6083{ DegreesSymbol }";
         }
-        public static string strDDM()
+        public string GoogleMapsDMS()
         {
-            //  This is a RESULT DDM to test program output against
-            return $"48{ DegreesSymbol }10.00{ MinutesSymbol }N, " +
-                   $"11{ DegreesSymbol }40.00{ MinutesSymbol }E";
+            return $"N 48{ DegreesSymbol }8{ MinutesSymbol }48.10{ SecondsSymbol }, " +
+                   $"E 11{ DegreesSymbol }36{ MinutesSymbol }29.90{ SecondsSymbol }";
+        }   //  GoogleMapped DMS:	48°08'48.1"N 11°36'29.9"E
+        public string CalculatedDDM()
+        {
+            return $"48{ DegreesSymbol }8.80{ MinutesSymbol }N, 11{ DegreesSymbol }36.49{ MinutesSymbol }E";
         }
-        public static string strArrlDDM()
+        public string AttainableDDM()
         {
-            //  these are the ARRL coordinates that point to middle of gridsquare RE78ir
-            return $"48{ DegreesSymbol }08.80{ MinutesSymbol }{ NS }, " +
-                   $"11{ DegreesSymbol }36.50{ MinutesSymbol }{ EW }";
-        }
-        public static string strDMS()
-        {
-            return $"N 48{ DegreesSymbol }08{ MinutesSymbol }48.1{ SecondsSymbol}, " +
-                   $"E 11{ DegreesSymbol }36{ MinutesSymbol }29.9{ SecondsSymbol }";
+            return $"48{ DegreesSymbol }08.75{ MinutesSymbol }N, 11{ DegreesSymbol }37.50{ MinutesSymbol }E";
         }
     }
     /*
