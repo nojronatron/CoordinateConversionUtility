@@ -6,131 +6,77 @@ namespace CoordConverterUI
 {
     class Program
     {
+        public static char DegreesSymbol => (char)176;     //  degree symbol
+        public static char MinutesSymbol => (char)39;      //  single quote
+        public static char SecondsSymbol => (char)34;      //  double quote
+
         static void Main(string[] args)
         {
 
             Console.WriteLine("***** Fun with Coordinate Conversion Utility dll *****");
             Console.WriteLine();
 
-            //  testing method to filter inputs for valid gridsquare lookups
-            List<decimal> LattitudeInputs = new List<decimal>();
-            LattitudeInputs.Add(49.21m);    //lynn lat
-            LattitudeInputs.Add(-18.02m);    //lynn lon
-
-            LattitudeInputs.Add(-53.75m);    //montevideo lat
-            LattitudeInputs.Add(-12.50m);    //montevideo lon
-
-            LattitudeInputs.Add(08.75m);    //munich lat
-            LattitudeInputs.Add(37.50m);    //munich lon
-
-            LattitudeInputs.Add(55.4m);     //waDC lat
-            LattitudeInputs.Add(-03.80m);     //waDC lon
-
-            LattitudeInputs.Add(-17.00m);    //welling lat
-            LattitudeInputs.Add(44.70m);     //welling lon
-
-            foreach (decimal LatMinsInput in LattitudeInputs)
-            {
-                decimal LattitudeSteps = 2.5m;
-                //decimal MultipleOfInput = Math.Truncate(LatMinsInput / LattitudeSteps);
-                //decimal LowEndMultiple = MultipleOfInput * LattitudeSteps;
-                decimal LowEndMultiple = (Math.Truncate(LatMinsInput / LattitudeSteps)) * LattitudeSteps;
-                decimal HighEndMultiple = LowEndMultiple + LattitudeSteps;
-                decimal LowEndDifference = Math.Abs(LatMinsInput - LowEndMultiple);
-                decimal HighEndDifference = Math.Abs(LatMinsInput - HighEndMultiple);
-                decimal NearestMultipleLat = 0m;
-                if (LatMinsInput % LattitudeSteps == 0)
-                {
-                    NearestMultipleLat = LatMinsInput;
-                }
-                else if (LowEndDifference < HighEndDifference)
-                {
-                    if (LatMinsInput < 0)
-                    {
-                        NearestMultipleLat = LowEndMultiple;
-                    }
-                    if (LatMinsInput > 0)
-                    {
-                        NearestMultipleLat = HighEndMultiple;
-                    }
-                }
-                else if (LowEndDifference > HighEndDifference)
-                {
-                    if (LatMinsInput > 0)
-                    {
-                        NearestMultipleLat = HighEndMultiple;
-                    }
-                    if (LatMinsInput < 0)
-                    {
-                        NearestMultipleLat = LowEndMultiple;
-                    }
-                }
-                else // LowEndDifference == HighEndDifference
-                {
-                    if (LatMinsInput > 0)
-                    {
-                        NearestMultipleLat = HighEndMultiple;
-                    }
-                    if (LatMinsInput < 0)
-                    {
-                        NearestMultipleLat = LowEndMultiple;
-                    }
-                }
-
-                Console.WriteLine($"For input { LatMinsInput }, selected table entry is { NearestMultipleLat }.");
-            }
+            /*
+            Lynnwood WA
+            ARRL:	n/a
+            DMS:	
+            Model DDM:		47*49.21'N, 122*18.02'W
+            Corrected DDM to try:	47*50.00'N, 122*17.5'W
+            Corrected DD to try:	47.8334, -122.2719
+            Corrected DMS to try:	N47*50'00", W122*17'30"
+            */
+            decimal LynLatDD = 47.8334m;
+            decimal LynLonDD = -122.2719m;
+            string LynDmsLattitude = DDtoDMS(LynLatDD);
+            string LynDmsLongitude = DDtoDMS(LynLonDD);
+            Console.WriteLine($"Lynnwood DMS: { LynDmsLattitude }, { LynDmsLongitude }");
 
 
-            //result = cc.ConvertDDMtoGridsquare($"{munich[0].ToString()},{munich[1].ToString()}");
-            //Console.WriteLine($"Converted DDM {munich[0].ToString()},{munich[1].ToString()} to gridsquare {result} (should be {munich[2].ToString()}).");
+            decimal LynLatDegrees = 47m;
+            decimal LynLatMinutes = 50m;
+            decimal LynLatSeconds = 00m;
+            decimal LynDD = DMStoDD(LynLatDegrees, LynLatMinutes, LynLatSeconds);
+            Console.WriteLine($"Lynnwood DD Lattitude: { LynDD }{ DegreesSymbol }");
 
-            //result = cc.ConvertDDMtoGridsquare($"{lynnwoodWA[0].ToString()},{lynnwoodWA[1].ToString()}");
-            //Console.WriteLine($"Converted DDM {lynnwoodWA[0].ToString()},{lynnwoodWA[1].ToString()} to gridsquare {result} (should be {lynnwoodWA[2]}).");
-            //Console.WriteLine();
-
-            //result = cc.ConvertDDMtoGridsquare($"{montevideo[0].ToString()},{montevideo[1].ToString()}");
-            //Console.WriteLine($"Converted DDM {montevideo[0].ToString()},{montevideo[1].ToString()} to gridsquare {result} (should be {montevideo[2]}).");
-            //Console.WriteLine();
-
-            //result = cc.ConvertDDMtoGridsquare($"{washingonDC[0].ToString()},{washingonDC[1].ToString()}");
-            //Console.WriteLine($"Converted DDM {washingonDC[0].ToString()},{washingonDC[1].ToString()} to gridsquare {result} (should be {washingonDC[2]}).");
-            //Console.WriteLine();
-
-            //result = cc.ConvertDDMtoGridsquare($"{wellington[0].ToString()},{wellington[1].ToString()}");
-            //Console.WriteLine($"Converted DDM {wellington[0].ToString()},{wellington[1].ToString()} to gridsquare {result} (should be {wellington[2]}).");
-            //Console.WriteLine();
-
-            //result = cc.ConvertDDtoGridsquare(lynnwoodDD);
-            //Console.WriteLine($"Converted DD {lynnwoodDD} to gridsquare {result}.");
-            //Console.WriteLine();
-
-            //result = cc.ConvertDMStoGridsquare(lynnwoodDMS);
-            //Console.WriteLine($"Converted DMS {lynnwoodDMS} to gridsquare {result}.");
-            //Console.WriteLine();
-
-            //result = cc.ConvertDDtoDDM(lynnwoodDD);
-            //Console.WriteLine($"Converted DD {lynnwoodDD} to DDM {result} (should be {lynnwoodWA[0].ToString()},{lynnwoodWA[1].ToString()}).");
-            //Console.WriteLine();
-
-            //result = cc.ConvertDMStoDDM(lynnwoodDMS);
-            //Console.WriteLine($"Converted DMS {lynnwoodDMS} to DDM {result}.");
-            //Console.WriteLine();
-
-            //result = cc.ConvertGridsquareToDDM($"{lynnwoodWA[2].ToString()}");
-            //Console.WriteLine($"Converted gridsquare {lynnwoodWA[2].ToString()} to DDM {result} (should be {lynnwoodWA[0].ToString()},{lynnwoodWA[1].ToString()}).");
-            //Console.WriteLine();
-
-            //Console.WriteLine($"LatDirection is now {cc.LatDirection}.");
-            //Console.WriteLine($"LonDirection is now {cc.LonDirection}.");
-            //cc.ValidateDDMinput("");
-            //cc.ValidateGridsquareInput("");
+            decimal LynLonDegrees = -122m;
+            decimal LynLonMinutes = 17m;
+            decimal LynLonSeconds = 30m;
+            LynDD = DMStoDD(LynLonDegrees, LynLonMinutes, LynLonSeconds);
+            Console.WriteLine($"Lynnwood DD Longitude: { LynDD }{ DegreesSymbol }");
             
-
 
             Console.WriteLine("Press <Enter> to exit. . .");
             Console.ReadLine();
-
-
+        }
+        static decimal DDMtoDD(decimal D, decimal M)
+        {
+            decimal direction = 1;
+            if (D < 0)
+            {
+                direction = -1;
+            }
+            decimal DD = D;
+            DD += ((M / 60) * direction);
+            return DD;
+        }
+        static string DDtoDMS(decimal DD)
+        {
+            decimal D = Math.Truncate(DD);
+            decimal M = Math.Truncate(60 * Math.Abs(DD - D));
+            decimal S = 3600 * Math.Abs(DD - D) - 60 * M;
+            return $"{ D }{ DegreesSymbol }{ M }{ MinutesSymbol }{ S }{ SecondsSymbol } [N/S]|[E/W]";
+        }
+        static decimal DMStoDD(decimal D, decimal M, decimal S)
+        {
+            decimal direction = 1;
+            if(D < 0)
+            {
+                direction = -1;
+            }
+            decimal DD = D;
+            DD += ((M / 60) * direction);
+            DD += ((S / 3600) * direction);
+            return DD;
         }
     }
 }

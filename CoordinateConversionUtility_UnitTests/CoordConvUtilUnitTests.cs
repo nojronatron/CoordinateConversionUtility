@@ -53,22 +53,22 @@ namespace CoordinateConversionUtility_UnitTests
             DDCoordindateHelper dDCoordindate = new DDCoordindateHelper(wcm.GoogleMapsDD());
             Assert.AreEqual(expectedResult, dDCoordindate.ToString());
         }
-        [TestMethod]
-        public void Test_ValidateGridsquareInput_ValidatesTrue()
-        {
-            string inputGridsquare = "CN87ut";
-            CoordinateConverter cc = new CoordinateConverter();
-            if (cc.ValidateGridsquareInput(inputGridsquare))
-            {
-                string expectedResult = $"CN87UT";
-                string actualResult = cc.Gridsquare.ToString();
-                Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
-            }
-            else
-            {
-                Assert.Fail("ValidateGridsquareinput returned False");
-            }
-        }
+        //[TestMethod]
+        //public void Test_ValidateGridsquareInput_ValidatesTrue()
+        //{
+        //    string inputGridsquare = "CN87ut";
+        //    CoordinateConverter cc = new CoordinateConverter();
+        //    if (cc.ValidateGridsquareInput(inputGridsquare))
+        //    {
+        //        string expectedResult = $"CN87UT";
+        //        string actualResult = cc.Gridsquare.ToString();
+        //        Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
+        //    }
+        //    else
+        //    {
+        //        Assert.Fail("ValidateGridsquareinput returned False");
+        //    }
+        //}
         [TestMethod]
         public void Test_Munich_ConvertGridsquareToDDM_Passes()
         {   //  TODO: fix the CoordinateConverter code that overshoots the AttainableDDM
@@ -234,31 +234,31 @@ namespace CoordinateConversionUtility_UnitTests
                 Assert.Fail("GenerateTableLookups() method failed, test aborted!");
             }
         }
-        [TestMethod]
-        public void Test_ValidateGridsquareInputBad_JumbledMatch()
-        {
-            {
-                string inputGridsquare = "783lkfCN87ut...ab";
-                CoordinateConverter cc = new CoordinateConverter();
-                if (cc.ValidateGridsquareInput(inputGridsquare))
-                {
-                    string expectedResult = $"CN87UT";
-                    string actualResult = cc.Gridsquare.ToString();
-                    Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
-                }
-                else
-                {
-                    Assert.Fail("ValidateGridsquareinput() returned False.");
-                }
-            }
-        }
-        [TestMethod]
-        public void Test_ValidateGridsquareInput_TooFewChars()
-        {
-            string FiveCharGridsquare = "CN87u";
-            CoordinateConverter cc = new CoordinateConverter();
-            Assert.IsFalse(cc.ValidateGridsquareInput(FiveCharGridsquare));
-        }
+        //[TestMethod]
+        //public void Test_ValidateGridsquareInputBad_JumbledMatch()
+        //{
+        //    {
+        //        string inputGridsquare = "783lkfCN87ut...ab";
+        //        CoordinateConverter cc = new CoordinateConverter();
+        //        if (cc.ValidateGridsquareInput(inputGridsquare))
+        //        {
+        //            string expectedResult = $"CN87UT";
+        //            string actualResult = cc.Gridsquare.ToString();
+        //            Assert.AreEqual(expectedResult, actualResult, $"Expected Result: {expectedResult}; Actual Result: {actualResult}");
+        //        }
+        //        else
+        //        {
+        //            Assert.Fail("ValidateGridsquareinput() returned False.");
+        //        }
+        //    }
+        //}
+        //[TestMethod]
+        //public void Test_ValidateGridsquareInput_TooFewChars()
+        //{
+        //    string FiveCharGridsquare = "CN87u";
+        //    CoordinateConverter cc = new CoordinateConverter();
+        //    Assert.IsFalse(cc.ValidateGridsquareInput(FiveCharGridsquare));
+        //}
         [TestMethod]
         public void Test_GetLonDegrees_FirstPortion()
         {   // TODO: Rewrite this test to SIMPLIFY it and remove all the logic

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CoordinateConversionUtility
 {
@@ -10,6 +11,8 @@ namespace CoordinateConversionUtility
         internal decimal MinutesLon { get; private set; }
         internal decimal SecondsLat { get; private set; }
         internal decimal SecondsLon { get; private set; }
+        internal decimal DirectionLat { get; private set; }
+        internal decimal DirectionLon { get; private set; }
         internal DDCoordindateHelper DDCoordinates { get; private set; }
         private static char DegreesSymbol => (char)176;     //  degree symbol
         private static char MinutesSymbol => (char)39;      //  single quote
@@ -18,7 +21,20 @@ namespace CoordinateConversionUtility
         public DMSCoordinateHelper(decimal ddLat, decimal ddLon)
         {
             DegreesLat = ddLat;
+            if (ddLat < 0)
+            {
+                DirectionLat = -1;
+            }
+            else
+            {
+                DirectionLat = 1;
+            }
             DegreesLon = ddLon;
+            if (ddLon < 0)
+            {
+                DirectionLon = -1;
+            }
+            else DirectionLon = 1;
             DDCoordinates = new DDCoordindateHelper(ddLat, ddLon);
         }
         public DMSCoordinateHelper(string dmsLatAndLon)
@@ -28,53 +44,48 @@ namespace CoordinateConversionUtility
                 throw new ArgumentNullException(nameof(dmsLatAndLon));
             }
             //  Split string into NS, DegreesLat, MinutesLat, EW, DegreesLon, MinutesLon
-            char[] splitChars = { ',', (char)176, (char)39 };
-            string[] strDdmLatAndLon = dmsLatAndLon.Split(splitChars);
-
+            char[] splitChars = { ' ', ',', DegreesSymbol, MinutesSymbol, SecondsSymbol };
+            string[] strDdmLatAndLon = dmsLatAndLon.Split(splitChars); // N, 47, 50, 1.20, W, 122, 16, 18.60
+            Queue<string> qDdmLatAndLon = new Queue<string>();
+            foreach (string item in strDdmLatAndLon){
+                if (!string.IsNullOrEmpty(item))
+                {
+                    qDdmLatAndLon.Enqueue(item);
+                }
+            }
             //  TryParse degrees and minutes each into decimal format
             //  Convert Minutes of each to decimal portions of a degree
-            string temp = string.Empty;
-            temp = strDdmLatAndLon[0].Split((char)176)[0];
-            if (decimal.TryParse(temp, out decimal decLatDegrees))
+            DirectionLat = ConversionHelper.ExtractPolarityNSEW($"{ qDdmLatAndLon.Dequeue() }"); //  N
+            decimal tempDegreesLat = 0m;
+            if (decimal.TryParse(qDdmLatAndLon.Dequeue(), out decimal decLatDegrees))
             {
-                DegreesLat = decLatDegrees;
+                tempDegreesLat = decLatDegrees; //  47
             }
-            temp = strDdmLatAndLon[0].Split((char)176)[1];
-            if (decimal.TryParse(temp, out decimal decLatMinutes))
+            if (decimal.TryParse(qDdmLatAndLon.Dequeue(), out decimal decLatMinutes))
             {
-                MinutesLat = decLatMinutes / 60;
+                MinutesLat = decLatMinutes; //  50
             }
-            temp = strDdmLatAndLon[1].Split((char)176)[0];
-            if (decimal.TryParse(temp, out decimal decLonDegrees))
+            if(decimal.TryParse(qDdmLatAndLon.Dequeue(), out decimal decLatSeconds))
             {
-                DegreesLon = decLonDegrees;
+                SecondsLat = decLatSeconds; //  1.20
             }
-            temp = strDdmLatAndLon[1].Split((char)176)[1];
-            if (decimal.TryParse(temp, out decimal decLonMinutes))
+            DirectionLon = ConversionHelper.ExtractPolarityNSEW($"{ qDdmLatAndLon.Dequeue() }"); //  W
+            decimal tempDegreesLon = 0m;
+            if (decimal.TryParse(qDdmLatAndLon.Dequeue(), out decimal decLonDegrees))
             {
-                MinutesLon = decLonMinutes / 120;
+                tempDegreesLon = decLonDegrees; //  122
+            }
+            if (decimal.TryParse(qDdmLatAndLon.Dequeue(), out decimal decLonMinutes))
+            {
+                MinutesLon = decLonMinutes; //  16
+            }
+            if (decimal.TryParse(qDdmLatAndLon.Dequeue(), out decimal decLonSeconds))
+            {
+                SecondsLon = decLonSeconds; //  18.60
             }
             //  Multiply 1/-1 to each degree
-            int north = ExtractPolarityNSEW(dmsLatAndLon);
-            int east = ExtractPolarityNSEW(dmsLatAndLon);
-            DegreesLat *= north;
-            DegreesLon *= east;
-
-            //  Store as a DDCoordinate
-            DDCoordinates = new DDCoordindateHelper(DegreesLat + MinutesLat, DegreesLon + MinutesLon);
-        }
-        private static int ExtractPolarityNSEW(string strDdmLatOrLon)
-        {
-            int nsew = 1;
-            if (strDdmLatOrLon.IndexOf('S') > -1)
-            {
-                nsew = -1;
-            }
-            else if (strDdmLatOrLon.IndexOf('W') > -1)
-            {
-                nsew = -1;
-            }
-            return nsew;
+            DegreesLat = tempDegreesLat * DirectionLat; //  finalize Lattitude Degrees as whole signed decimal number
+            DegreesLon = tempDegreesLon * DirectionLon; //  finalize Longitude Degrees as whole signed decimal number
         }
         public decimal GetLatDegrees()
         {
@@ -100,39 +111,12 @@ namespace CoordinateConversionUtility
         {
             return SecondsLon;
         }
-        private static string GetNSEW(decimal degreesLatOrLon, int LatOrLon)
-        {
-            //  lat = 1; lon = 2
-            switch (LatOrLon)
-            {
-                case 1:
-                    {
-                        string NS = "N";
-                        if (degreesLatOrLon < 0)
-                        {
-                            NS = "S";
-                        }
-                        return NS;
-                    }
-                case 2:
-                    {
-                        string EW = "E";
-                        if (degreesLatOrLon < 0)
-                        {
-                            EW = "W";
-                        }
-                        return EW;
-                    }
-                default:
-                    return string.Empty;
-            }
-        }
         public override string ToString()
         {
-            return $"{ GetNSEW(DegreesLat, 1) } { Math.Abs(GetLatDegrees()) }{ DegreesSymbol }" +
+            return $"{ ConversionHelper.GetNSEW(DegreesLat, 1) } { Math.Abs(GetLatDegrees()) }{ DegreesSymbol }" +
                    $"{ GetLatMinutes() }{ MinutesSymbol }" +
                    $"{ SecondsLat }{ SecondsSymbol }, " +
-                   $"{ GetNSEW(DegreesLon, 2) } { Math.Abs(GetLonDegrees()) }{ DegreesSymbol }" +
+                   $"{ ConversionHelper.GetNSEW(DegreesLon, 2) } { Math.Abs(GetLonDegrees()) }{ DegreesSymbol }" +
                    $"{ GetLonMinutes() }{ MinutesSymbol }" +
                    $"{ SecondsLon }{ SecondsSymbol }";
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace CoordinateConversionUtility
@@ -9,6 +10,8 @@ namespace CoordinateConversionUtility
         internal decimal DegreesLon { get; private set; }
         internal decimal MinutesLat { get; private set; }
         internal decimal MinutesLon { get; private set; }
+        internal decimal DirectionLat { get; private set; }
+        internal decimal DirectionLon { get; private set; }
         internal DDCoordindateHelper DDCoordinates { get; private set; }
         private static char DegreesSymbol => (char)176;     //  degree symbol
         private static char MinutesSymbol => (char)39;      //  single quote
@@ -16,14 +19,43 @@ namespace CoordinateConversionUtility
         public DDMCoordinateHelper(decimal ddLat, decimal ddLon)
         {
             DegreesLat = ddLat;
+            if (ddLat < 0)
+            {
+                DirectionLat = -1;
+            }
+            else
+            {
+                DirectionLat = 1;
+            }
             DegreesLon = ddLon;
+            if (ddLon < 0)
+            {
+                DirectionLon = -1;
+            }
+            else DirectionLon = 1;
             DDCoordinates = new DDCoordindateHelper(ddLat, ddLon);
         }
         public DDMCoordinateHelper(decimal latDegrees, decimal latMinutes, decimal lonDegrees, decimal lonMinutes)
         {
             //  latDegrees and lonDegrees MUST BE SIGNED decimals if negative
             DegreesLat = latDegrees;
+            if (DegreesLat < 0)
+            {
+                DirectionLat = -1;
+            }
+            else
+            {
+                DirectionLat = 1;
+            }
             DegreesLon = lonDegrees;
+            if (DegreesLon < 0)
+            {
+                DirectionLon = -1;
+            }
+            else
+            {
+                DirectionLon = 1;
+            }
             MinutesLat = latMinutes;
             MinutesLon = lonMinutes;
         }
@@ -34,42 +66,41 @@ namespace CoordinateConversionUtility
                 throw new ArgumentNullException(nameof(ddmLatAndLon));
             }
             //  Split string into NS, DegreesLat, MinutesLat, EW, DegreesLon, MinutesLon
-            char[] splitChars = { ',', (char)176, (char)39 };
-            string[] strDdmLatAndLon = ddmLatAndLon.Split(splitChars);
-
+            char[] splitChars = { ' ', ',', DegreesSymbol, MinutesSymbol };
+            string[] strDdmLatAndLon = ddmLatAndLon.Split(splitChars); // 47, 50.02, N, 122, 16.31, W
+            Queue<string> qDdmLatAndLon = new Queue<string>();
+            foreach (string item in strDdmLatAndLon)
+            {
+                if (!string.IsNullOrEmpty(item))
+                {
+                    qDdmLatAndLon.Enqueue(item);
+                }
+            }
             //  TryParse degrees and minutes each into decimal format
             //  Convert Minutes of each to decimal portions of a degree
-            string temp = string.Empty;
             decimal tempDegreesLat = 0m;
+            if (decimal.TryParse(qDdmLatAndLon.Dequeue(), out decimal decLatDegrees))
+            {
+                tempDegreesLat = decLatDegrees; //  47
+            }
+            if (decimal.TryParse(qDdmLatAndLon.Dequeue(), out decimal decLatMinutes))
+            {
+                MinutesLat = decLatMinutes; //  50.02
+            }
+            DirectionLat = ConversionHelper.ExtractPolarityNSEW($"{ qDdmLatAndLon.Dequeue() }"); //  N
             decimal tempDegreesLon = 0m;
-            temp = strDdmLatAndLon[0];//.Split((char)176)[0];
-            if (decimal.TryParse(temp, out decimal decLatDegrees))
+            if (decimal.TryParse(qDdmLatAndLon.Dequeue(), out decimal decLonDegrees))
             {
-                tempDegreesLat = decLatDegrees;
+                tempDegreesLon = decLonDegrees; //  122
             }
-            temp = strDdmLatAndLon[1];//.Split((char)176)[1];
-            if (decimal.TryParse(temp, out decimal decLatMinutes))
+            if (decimal.TryParse(qDdmLatAndLon.Dequeue(), out decimal decLonMinutes))
             {
-                MinutesLat = decLatMinutes;// / 60;
+                MinutesLon = decLonMinutes; //  16.31
             }
-            temp = strDdmLatAndLon[3];//.Split((char)176)[0];
-            if (decimal.TryParse(temp, out decimal decLonDegrees))
-            {
-                tempDegreesLon = decLonDegrees;
-            }
-            temp = strDdmLatAndLon[4];//.Split((char)176)[1];
-            if (decimal.TryParse(temp, out decimal decLonMinutes))
-            {
-                MinutesLon = decLonMinutes;// / 120;
-            }
+            DirectionLon = ConversionHelper.ExtractPolarityNSEW($"{ qDdmLatAndLon.Dequeue() }"); //  W
             //  Multiply 1/-1 to each degree
-            int north = ExtractPolarityNSEW($"{ strDdmLatAndLon[2] }");
-            int east = ExtractPolarityNSEW($"{ strDdmLatAndLon[5] }");
-            DegreesLat = tempDegreesLat * north;
-            DegreesLon = tempDegreesLon * east;
-
-            ////  Store as a DDCoordinate
-            //DDCoordinates = new DDCoordindateHelper(DegreesLat + ( MinutesLat / 60 ), DegreesLon + (MinutesLon / 60 ));
+            DegreesLat = tempDegreesLat * DirectionLat; //  finalize Lattitude Degrees as whole signed decimal number
+            DegreesLon = tempDegreesLon * DirectionLon; //  finalize Longitude Degrees as whole signed decimal number
         }
 
         public decimal GetLatDegrees()
@@ -88,67 +119,7 @@ namespace CoordinateConversionUtility
         {
             return MinutesLon;
         }
-        private static int ExtractPolarityNSEW(string strDdmLatOrLon)
-        {
-            int nsew = 1;
-            if (strDdmLatOrLon.IndexOf('S') > -1)
-            {
-                nsew = -1;
-            }
-            else if (strDdmLatOrLon.IndexOf('W') > -1)
-            {
-                nsew = -1;
-            }
-            return nsew;
-        }
-        private static string GetNSEW(string strDdmLatOrLon)
-        {
-            StringBuilder nsew = new StringBuilder(2);
-            if (strDdmLatOrLon.IndexOf('N') > -1)
-            {
-                nsew.Append("N");
-            }
-            else
-            {
-                nsew.Append("S");
-            }
-            if (strDdmLatOrLon.IndexOf('E') > -1)
-            {
-                nsew.Append("E");
-            }
-            else
-            {
-                nsew.Append("W");
-            }
-            return nsew.ToString();
-        }
-        private static string GetNSEW(decimal degreesLatOrLon, int LatOrLon)
-        {
-            //  lat = 1; lon = 2
-            switch (LatOrLon)
-            {
-                case 1:
-                    {
-                        string NS = "N";
-                        if (degreesLatOrLon < 0)
-                        {
-                            NS = "S";
-                        }
-                        return NS;
-                    }
-                case 2:
-                    {
-                        string EW = "E";
-                        if (degreesLatOrLon < 0)
-                        {
-                            EW = "W";
-                        }
-                        return EW;
-                    }
-                default:
-                    return string.Empty;
-            }
-        }
+
         public int GetLatDirection()
         {
             if (this.DegreesLat >= 0)
@@ -177,9 +148,9 @@ namespace CoordinateConversionUtility
             //  TODO: fix output to include leading zeros in minutes e.g.: 5.23' => 05.23'
             //  TODO: fix output to include trailing zeros e.g.: 05.2' => 05.20'
             return $"{ Math.Abs(GetLatDegrees())}{ DegreesSymbol }" +
-                   $"{ MinutesLat:00.00}{ MinutesSymbol }{ GetNSEW(DegreesLat, 1) }, " +
+                   $"{ MinutesLat:00.00}{ MinutesSymbol }{ ConversionHelper.GetNSEW(DegreesLat, 1) }, " +
                    $"{ Math.Abs(GetLonDegrees())}{ DegreesSymbol }" +
-                   $"{ MinutesLon:00.00}{ MinutesSymbol }{ GetNSEW(DegreesLon, 2) }";
+                   $"{ MinutesLon:00.00}{ MinutesSymbol }{ ConversionHelper.GetNSEW(DegreesLon, 2) }";
         }
     }
 }
