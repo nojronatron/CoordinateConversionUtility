@@ -9,7 +9,7 @@ using CoordinateConversionUtility.Helpers;
 
 namespace CoordinateConversionUtility
 {
-    public class CoordinateConverter
+    public class CoordinateConversionUtil
     {
         private readonly CultureInfo currentCulture = CultureInfo.CurrentCulture;
         private static readonly List<string> alphabet = new List<string>(24)
@@ -592,7 +592,7 @@ namespace CoordinateConversionUtility
         }
         public static bool GenerateTableLookups()
         {
-            ResourceManager rmGTL = new ResourceManager("ErrorMessages", typeof(CoordinateConverter).Assembly);
+            ResourceManager rmGTL = new ResourceManager("ErrorMessages", typeof(CoordinateConversionUtil).Assembly);
 
             Table1G2CLookup = new Dictionary<string, int>(18);
             Table3G2CLookup = new Dictionary<string, decimal>(24);

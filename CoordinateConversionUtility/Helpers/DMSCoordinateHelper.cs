@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CoordinateConversionUtility
 {
@@ -47,7 +49,8 @@ namespace CoordinateConversionUtility
             char[] splitChars = { ' ', ',', DegreesSymbol, MinutesSymbol, SecondsSymbol };
             string[] strDdmLatAndLon = dmsLatAndLon.Split(splitChars); // N, 47, 50, 1.20, W, 122, 16, 18.60
             Queue<string> qDdmLatAndLon = new Queue<string>();
-            foreach (string item in strDdmLatAndLon){
+            foreach (string item in strDdmLatAndLon)
+            {
                 if (!string.IsNullOrEmpty(item))
                 {
                     qDdmLatAndLon.Enqueue(item);
@@ -65,7 +68,7 @@ namespace CoordinateConversionUtility
             {
                 MinutesLat = decLatMinutes; //  50
             }
-            if(decimal.TryParse(qDdmLatAndLon.Dequeue(), out decimal decLatSeconds))
+            if (decimal.TryParse(qDdmLatAndLon.Dequeue(), out decimal decLatSeconds))
             {
                 SecondsLat = decLatSeconds; //  1.20
             }
@@ -119,6 +122,50 @@ namespace CoordinateConversionUtility
                    $"{ ConversionHelper.GetNSEW(DegreesLon, 2) } { Math.Abs(GetLonDegrees()) }{ DegreesSymbol }" +
                    $"{ GetLonMinutes() }{ MinutesSymbol }" +
                    $"{ SecondsLon }{ SecondsSymbol }";
+        }
+        public static bool IsValid(string DMSLatAndLon, out DMSCoordinateHelper validDMScoords)
+        {   //  e.g. CoordinateConverter.IsValid("47.8058,-122.2516")
+            //  note: DegreeSymbol, MinutesSymbol, and SecondsSymbol could be included
+            if(string.IsNullOrEmpty(DMSLatAndLon) || string.IsNullOrWhiteSpace(DMSLatAndLon))
+            {
+                //  input nothing return null and out bool false
+                validDMScoords = null;
+                return false;
+            }
+
+            Regex rx = new Regex(@"[NS]"); // [00-90][DegreesSymbol][00-59][MinutesSymbol][0.0-59.59][,] [E,W] [000-180][DegreesSymbol][00-59][MinutesSymbol][0.0-59.59]");
+            MatchCollection matches = rx.Matches(DMSLatAndLon);
+
+
+
+            StringBuilder sb = new StringBuilder();
+            Queue<char> symbols = new Queue<char>();
+            symbols.Enqueue(DegreesSymbol);
+            symbols.Enqueue(MinutesSymbol);
+            symbols.Enqueue(SecondsSymbol);
+            symbols.Enqueue(DegreesSymbol);
+            symbols.Enqueue(MinutesSymbol);
+            symbols.Enqueue(SecondsSymbol);
+
+            string[] splitDMSLatAndLon = DMSLatAndLon.Split(',');
+
+            foreach (string latOrLon in splitDMSLatAndLon)
+            {
+                foreach (char item in DMSLatAndLon)
+                {
+                    if (char.IsDigit(item) || item == '.')
+                    {
+                        sb.Append(item.ToString());
+                    }
+                    else
+                    {
+                        sb.Append(symbols.Dequeue());
+                    }
+                }
+            }
+
+            validDMScoords = new DMSCoordinateHelper(sb.ToString());
+            return true;
         }
     }
 }

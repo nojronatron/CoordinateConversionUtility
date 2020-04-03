@@ -72,8 +72,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_Munich_ConvertGridsquareToDDM_Passes()
         {   //  TODO: fix the CoordinateConverter code that overshoots the AttainableDDM
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string gridsquare = mcm.ArrlGridsquare();
                 string expectedResult = mcm.AttainableDDM();
@@ -88,8 +88,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_Munich_ConvertDDMtoGridsquare_Passes()
         {
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string ddmInput = mcm.ArrlDDM();
                 string expectedResult = mcm.ArrlGridsquare();
@@ -105,8 +105,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_Montevideo_ConvertGridsquareToDDM_Passes()
         {
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string gridsquare = mvcm.ArrlGridsquare();
                 string expectedResult = mvcm.AttainableDDM();
@@ -121,8 +121,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_Montevideo_ConvertDDMtoGridsquare_Passes()
         {
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string ddmInput = mvcm.ArrlDDM();
                 string expectedResult = mvcm.ArrlGridsquare();
@@ -138,8 +138,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_WashingtonDC_ConvertGridsquareToDDM_Passes()
         {
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string gridsquare = wdccm.ArrlGridsquare();
                 string expectedResult = wdccm.AttainableDDM();
@@ -154,8 +154,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_WashingtonDC_ConvertDDMtoGridsquare_Passes()
         {
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string ddmInput = wdccm.ArrlDDM();
                 string expectedResult = wdccm.ArrlGridsquare();
@@ -171,8 +171,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_WellingtonNZ_ConvertGridsquareToDDM_Passes()
         {
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string gridsquare = wcm.ArrlGridsquare();
                 string expectedresult = wcm.AttainableDDM();
@@ -187,8 +187,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_WellingtonNZ_ConvertMidGridDDMtoGridsquare_Passes()
         {
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string ddmInput = wcm.ArrlDDM();
                 string expectedResult = wcm.ArrlGridsquare();
@@ -204,8 +204,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_SanClemente_ConvertGridsquareToDDM_Passes()
         {
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string gridsquare = sccm.ArrlGridsquare();
                 string expectedResult = sccm.AttainableDDM();
@@ -220,8 +220,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_SanClemente_ConvertDDMtoGridsquare_Passes()
         {
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string ddmInput = sccm.ArrlDDM();
                 string expectedResult = sccm.ArrlGridsquare();
@@ -262,8 +262,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_GetLonDegrees_FirstPortion()
         {   // TODO: Rewrite this test to SIMPLIFY it and remove all the logic
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 // sets LonDirection and DDM_LonDegrees
                 string inputGridsquare = "CN87ut";
@@ -292,8 +292,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_GetLonDegrees_SecondPortion()
         {   // TODO: Rewrite this test to SIMPLIFY it and remove all the logic
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string inputGridsquare = "CN87ut";
                 cc.SetGridsquare(inputGridsquare);
@@ -322,8 +322,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_GetLonMinutes()
         {   // Lon DDM Minutes
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string inputGridsquare = "CN87ut";
                 cc.SetGridsquare(inputGridsquare);
@@ -342,8 +342,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_GetLatDegrees_FirstPortion()
         {   // Lon DDM Degrees
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string inputGridsquare = "CN87ut";
                 string[] expectedResults = new string[2] { "1", "40" };
@@ -370,8 +370,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_GetLatDegrees_SecondPortion()
         {
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string inputGridsquare = "CN87ut";
                 string[] expectedResults = new string[2] { "1", "47" };
@@ -399,8 +399,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_GetLatMinutes()
         {   // Lon DDM Minutes
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string inputGridsquare = "CN87ut";
                 string expectedResult = "48.75";
@@ -419,8 +419,8 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_DDMtoGridsquare()
         {
-            CoordinateConverter cc = new CoordinateConverter();
-            if (CoordinateConverter.GenerateTableLookups())
+            CoordinateConversionUtility.CoordinateConversionUtil cc = new CoordinateConversionUtility.CoordinateConversionUtil();
+            if (CoordinateConversionUtility.CoordinateConversionUtil.GenerateTableLookups())
             {
                 string expectedResult = lcm.ArrlGridsquare();
                 string inputDDM = lcm.AttainableDDM();

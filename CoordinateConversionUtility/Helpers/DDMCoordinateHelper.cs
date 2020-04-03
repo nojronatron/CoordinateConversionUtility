@@ -152,5 +152,11 @@ namespace CoordinateConversionUtility
                    $"{ Math.Abs(GetLonDegrees())}{ DegreesSymbol }" +
                    $"{ MinutesLon:00.00}{ MinutesSymbol }{ ConversionHelper.GetNSEW(DegreesLon, 2) }";
         }
+        public static bool IsValid(string DDMLatAndLon, out DDMCoordinateHelper validDdmCoordinates)
+        {   //  e.g. CoordinateConverter.IsValid("47.8058,-122.2516")
+            //  note: DegreeSymbol and MinutesSymbol could be included
+            validDdmCoordinates = null;
+            return false;
+        }
     }
 }
