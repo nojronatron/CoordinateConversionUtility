@@ -1,10 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CoordinateConversionUtility;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using CoordinateConversionUtility.Models;
 
 namespace CoordinateConversionUtility.Tests
 {
@@ -12,8 +8,12 @@ namespace CoordinateConversionUtility.Tests
     public class ConversionHelperTests
     {
         [TestMethod()]
-        public void Test_ConvertMinsToDD()
+        public void Test_ConvertDMSMinsToDD()
         {
+            Decimal ddLat = 45.0000m;
+            Decimal ddLon = 90.0000m;
+            DMSCoordinate dms = new DMSCoordinate(ddLat, ddLon);
+            
             Assert.Fail();
         }
 
@@ -24,37 +24,37 @@ namespace CoordinateConversionUtility.Tests
         }
 
         [TestMethod()]
-        public void Test_ToDD()
+        public void Test_ConvertDDMToDD()
         {
             Assert.Fail();
         }
 
         [TestMethod()]
-        public void Test_ToDD1()
+        public void Test_ConvertDMSToDD()
         {
             Assert.Fail();
         }
 
         [TestMethod()]
-        public void Test_ToDDM()
+        public void Test_ConvertDDToDDM()
         {
             Assert.Fail();
         }
 
         [TestMethod()]
-        public void Test_ToDDM1()
+        public void Test_ConvertDMSToDDM()
         {
             Assert.Fail();
         }
 
         [TestMethod()]
-        public void Test_ToDMS()
+        public void Test_ConvertDDToDMS()
         {
             Assert.Fail();
         }
 
         [TestMethod()]
-        public void Test_ToDMS1()
+        public void Test_ConvertDDMToDMS()
         {
             Assert.Fail();
         }

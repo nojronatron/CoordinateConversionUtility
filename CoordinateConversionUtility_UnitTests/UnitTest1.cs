@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using CoordinateConversionUtility_UnitTests.TestModels;
+using CoordinateConversionUtility.Models;
 
 namespace CoordinateConversionUtility_UnitTests
 {
@@ -18,7 +19,7 @@ namespace CoordinateConversionUtility_UnitTests
             WellingtonCoordinateModel wcm = new WellingtonCoordinateModel();
             decimal inputLattitude = wcm.DegreesLat;
             decimal inputLongitude = wcm.DegreesLon;
-            DDCoordindateHelper dDCoordindate = new DDCoordindateHelper(inputLattitude, inputLongitude);
+            DDCoordinate dDCoordindate = new DDCoordinate(inputLattitude, inputLongitude);
             string expectedResult = WellingtonCoordinateModel.strDD();
             string actualResult = dDCoordindate.ToString();
             Assert.AreEqual(expectedResult, actualResult);
@@ -26,11 +27,9 @@ namespace CoordinateConversionUtility_UnitTests
         [TestMethod]
         public void Test_DDCoordinateHelper_StringIn_ObjectOut()
         {
-            //WellingtonCoordinateModel wcm = new WellingtonCoordinateModel();
             string strInputLatAndLon = WellingtonCoordinateModel.strDD();
-            string expectedResult = "CoordinateConversionUtility.DDCoordindateHelper";
-            DDCoordindateHelper dDCoordindate = new DDCoordindateHelper(strInputLatAndLon);
-            //  test that DDCoordinateHelper is an object
+            string expectedResult = "CoordinateConversionUtility.Models.DDCoordinate";
+            DDCoordinate dDCoordindate = ConversionHelper.StringToDD(strInputLatAndLon);
             Console.WriteLine($"{ dDCoordindate.GetType() }");
             Assert.AreEqual(expectedResult, dDCoordindate.GetType().FullName.ToString());
         }
@@ -40,7 +39,8 @@ namespace CoordinateConversionUtility_UnitTests
             //  strWellingtonDD has the expected result
             string strInputLatAndLon = WellingtonCoordinateModel.strDD();
             string expectedResult = $"{ WellingtonCoordinateModel.strDD() }";
-            DDCoordindateHelper dDCoordindate = new DDCoordindateHelper(WellingtonCoordinateModel.strDD());
+            DDCoordinate dDCoordindate = ConversionHelper.StringToDD(WellingtonCoordinateModel.strDD());
+            //DDCoordinate dDCoordindate = new DDCoordinate(WellingtonCoordinateModel.strDD());
             Assert.AreEqual(expectedResult, dDCoordindate.ToString());
         }
         [TestMethod]
@@ -84,7 +84,7 @@ namespace CoordinateConversionUtility_UnitTests
 
             if (CoordinateConverter.GenerateTableLookups())
             {
-                DDMCoordinateHelper munichDDM = new DDMCoordinateHelper(ddmInput);
+                DDMCoordinate munichDDM = new DDMCoordinate(ddmInput);
                 actualResult = cc.ConvertDDMtoGridsquare(munichDDM);
                 Assert.AreEqual(expectedResult, actualResult);
             }
@@ -120,7 +120,7 @@ namespace CoordinateConversionUtility_UnitTests
             string actualResult = "failed";
             if (CoordinateConverter.GenerateTableLookups())
             {
-                DDMCoordinateHelper montevideoDDM = new DDMCoordinateHelper(ddmInput);
+                DDMCoordinate montevideoDDM = new DDMCoordinate(ddmInput);
                 actualResult = cc.ConvertDDMtoGridsquare(montevideoDDM);
                 Assert.AreEqual(expectedResult, actualResult);
             }
@@ -157,7 +157,7 @@ namespace CoordinateConversionUtility_UnitTests
 
             if (CoordinateConverter.GenerateTableLookups())
             {
-                DDMCoordinateHelper washingtonDcDDM = new DDMCoordinateHelper(ddmInput);
+                DDMCoordinate washingtonDcDDM = new DDMCoordinate(ddmInput);
                 actualResult = cc.ConvertDDMtoGridsquare(washingtonDcDDM);
                 Assert.AreEqual(expectedResult, actualResult);
             }
@@ -184,6 +184,7 @@ namespace CoordinateConversionUtility_UnitTests
                 Assert.Fail("GenerateTableLookups() method failed, test aborted!");
             }
         }
+
         [TestMethod]
         public void Test_WellingtonNZ_ConvertMidGridDDMtoGridsquare_Passes()
         {
@@ -194,7 +195,7 @@ namespace CoordinateConversionUtility_UnitTests
 
             if (CoordinateConverter.GenerateTableLookups())
             {
-                DDMCoordinateHelper WellingtonDDM = new DDMCoordinateHelper(ddmInput);
+                DDMCoordinate WellingtonDDM = new DDMCoordinate(ddmInput);
                 actualResult = cc.ConvertDDMtoGridsquare(WellingtonDDM);
                 Assert.AreEqual(expectedResult, actualResult);
             }
@@ -203,6 +204,7 @@ namespace CoordinateConversionUtility_UnitTests
                 Assert.Fail("GenerateTableLookups() method failed, test aborted!");
             }
         }
+
         [TestMethod]
         public void Test_SanClemente_ConvertGridsquareToDDM_Passes()
         {
@@ -231,7 +233,7 @@ namespace CoordinateConversionUtility_UnitTests
 
             if (CoordinateConverter.GenerateTableLookups())
             {
-                DDMCoordinateHelper WellingtonDDM = new DDMCoordinateHelper(ddmInput);
+                DDMCoordinate WellingtonDDM = new DDMCoordinate(ddmInput);
                 actualResult = cc.ConvertDDMtoGridsquare(WellingtonDDM);
                 Assert.AreEqual(expectedResult, actualResult);
             }
@@ -431,7 +433,7 @@ namespace CoordinateConversionUtility_UnitTests
         {
             string expectedResult = "CN87ut";  // six-character gridsquare
             LynnwoodCoordinatesModel lcm = new LynnwoodCoordinatesModel();
-            DDMCoordinateHelper lynnwood = new DDMCoordinateHelper(LynnwoodCoordinatesModel.strDDM());
+            DDMCoordinate lynnwood = new DDMCoordinate(LynnwoodCoordinatesModel.strDDM());
             CoordinateConverter cc = new CoordinateConverter();
             if (CoordinateConverter.GenerateTableLookups())
             {

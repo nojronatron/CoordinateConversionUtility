@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Resources;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Diagnostics.Contracts;
-using CoordinateConversionUtility.Helpers;
+using CoordinateConversionUtility.Models;
 
 namespace CoordinateConversionUtility
 {
@@ -34,15 +33,14 @@ namespace CoordinateConversionUtility
         private static Dictionary<decimal, string> Table6C2GLookup;
 
 
-        //private readonly ResourceManager rm = new ResourceManager("ErrorMessages", typeof(CoordinateConverter).Assembly);
         private decimal LonMinsRound { get; } = 2.5m;         // used in gridsquare rounding calculations to find CENTER of 5th gridsquare character
         private decimal LatMinsRound { get; } = 1.25m;        // used in gridsquare rounding calculations to find CENTER of 6th gridsquare character
-        private DDCoordindateHelper DecimalDegrees { get; set; } = (DDCoordindateHelper)default;   //  decimal degrees Lat and Lon e.g. 47.8125,-122.2917
-        private DDMCoordinateHelper DecimalDegreesMinutes { get; set; } //  decimal degreeMinutes Lat and Lon e.g. 47*48.75'N,122*17.50'W
-        private DMSCoordinateHelper DegreesMinutesSeconds { get; set; } //  degrees minutes seconds Lat and Lon e.g. N 47*48'45",W 122*17'30"
-        private static char DegreesSymbol { get { return (char)176; } }     //  degree symbol
-        private static char MinutesSymbol { get { return (char)39; } }      //  single quote
-        private static char SecondsSymbol { get { return (char)34; } }      //  double quote
+        private DDCoordinate DecimalDegrees { get; set; } = (DDCoordinate)default;   //  decimal degrees Lat and Lon e.g. 47.8125,-122.2917
+        private DDMCoordinate DecimalDegreesMinutes { get; set; } //  decimal degreeMinutes Lat and Lon e.g. 47*48.75'N,122*17.50'W
+        private DMSCoordinate DegreesMinutesSeconds { get; set; } //  degrees minutes seconds Lat and Lon e.g. N 47*48'45",W 122*17'30"
+        //private static char DegreesSymbol { get { return (char)176; } }     //  degree symbol
+        //private static char MinutesSymbol { get { return (char)39; } }      //  single quote
+        //private static char SecondsSymbol { get { return (char)34; } }      //  double quote
         public decimal LatDirection { get; private set; }   // 1 or -1: represents N or S, respectively
         public decimal LonDirection { get; private set; }   // 1 or -1: represents E or W, respectively
         public decimal DDMlatDegrees { get; private set; }  //  ever negative?  // degree portion of DDM e.g.: 47 in 47*48.75"N
@@ -51,36 +49,34 @@ namespace CoordinateConversionUtility
         public decimal DDMlonMinutes { get; private set; }  //  ever negative?  //  decimal minutes portion of DDM e.g.: 17.5 in 122*17.5"W
         public decimal RemainderLat { get; private set; }      // stores carry-over remainder value for Lattitude calculations
         public decimal RemainderLon { get; private set; }      // stores carry-over remainder value for Longitude calculations
-        //public string LatCompass { get; private set; }      // Lattitude compass heading N or S
-        //public string LonCompass { get; private set; }      // Longitude compass heading E or W
         public StringBuilder Gridsquare { get; private set; }      // six-character representation of a validated Gridsquare coordinate
         public CoordinateConverter()                        //  custom CTOR to initialize StringBuilder Gridsquare
         {
             Gridsquare = new StringBuilder();
-            DecimalDegrees = new DDCoordindateHelper();
+            DecimalDegrees = new DDCoordinate();
         }
-        public bool AddDdCoordinates(DDCoordindateHelper ddCoords)
+        public bool AddDdCoordinates(DDCoordinate ddCoords)
         {
             if (ddCoords != null)
             {
-                DecimalDegrees = new DDCoordindateHelper(ddCoords.DegreesLat, ddCoords.DegreesLon);
+                DecimalDegrees = new DDCoordinate(ddCoords.DegreesLattitude, ddCoords.DegreesLongitude);
                 return true;
             }
             return false;
         }
-        public bool AddDdmCoordinates(DDMCoordinateHelper ddmCoords)
+        public bool AddDdmCoordinates(DDMCoordinate ddmCoords)
         {
             if (ddmCoords != null)
             {
-                DecimalDegreesMinutes = new DDMCoordinateHelper(ddmCoords.DegreesLat, ddmCoords.DegreesLon);
+                DecimalDegreesMinutes = new DDMCoordinate(ddmCoords.DegreesLattitude, ddmCoords.DegreesLongitude);
             }
             return false;
         }
-        public bool AddDmsCoordinates(DMSCoordinateHelper dmsCoords)
+        public bool AddDmsCoordinates(DMSCoordinate dmsCoords)
         {
             if (dmsCoords != null)
             {
-                DegreesMinutesSeconds = new DMSCoordinateHelper(dmsCoords.DegreesLat, dmsCoords.DegreesLon);
+                DegreesMinutesSeconds = new DMSCoordinate(dmsCoords.DegreesLattitude, dmsCoords.DegreesLongitude);
                 return true;
             }
             return false;
@@ -102,10 +98,10 @@ namespace CoordinateConversionUtility
             }
             else
             {
-                throw new ArgumentOutOfRangeException(gridsquare.Length.ToString(currentCulture), "SetGridsquare(gridsquare): Arg out of range.");
+                throw new ArgumentOutOfRangeException($"Argument out of range in { System.Reflection.MethodInfo.GetCurrentMethod().Name }");
             }
         }
-        //  if(string.IsNullOrEmpty())... see https://softwareengineering.stackexchange.com/questions/336179/is-there-an-easier-way-to-test-argument-validation-and-field-initialization-in-a
+
         public bool ValidateGridsquareInput(string gridsquare)
         {   // validates gridsquare input, sets property Gridsquare with validated portion, return True if valid, False otherwise
             if (string.IsNullOrEmpty(gridsquare))
@@ -141,13 +137,12 @@ namespace CoordinateConversionUtility
             }
             else
             {
-                throw new InvalidOperationException($"Somehow, Gridsquare member {Gridsquare[0]} (index zero of {Gridsquare}) or LonDegrees {DDMlatDegrees} did not match the program logic.");
+                throw new InvalidOperationException($"Gridsquare member {Gridsquare[0]} (index zero of {Gridsquare}) or LonDegrees {DDMlatDegrees} did not match the program logic.");
             }
             DDMlatDegrees = Math.Abs(latDegreesLookupResult);
         }
         public void AddLatDegreesRemainder()
         {   // Table5 is calculated and will add to Degrees Lattitude, MUST BE ZERO_BIASED
-            // LatDirection = -1;
             int lat_MinsAdjustment = 0; // -9;
             if (LatDirection == 1)
             {
@@ -199,7 +194,7 @@ namespace CoordinateConversionUtility
                 }
                 else
                 {
-                    throw new InvalidOperationException($"Somehow, Gridsquare member {Gridsquare[0]} (index zero of {Gridsquare}) or LonDegrees {lonDegreesLookupResult} did not match the program logic.");
+                    throw new InvalidOperationException($"Gridsquare member {Gridsquare[0]} (index zero of {Gridsquare}) or LonDegrees {lonDegreesLookupResult} did not match the program logic.");
                 }
             }
             else
@@ -271,14 +266,14 @@ namespace CoordinateConversionUtility
             }
             else
             {
-                throw new ArgumentOutOfRangeException("ConvertGridsquareToDDM(gridsquare): Argument out of range.");
+                throw new ArgumentException($"Argument { gridsquare } did not pass validation.");
             }
-            DecimalDegreesMinutes = new DDMCoordinateHelper(DDMlatDegrees * LatDirection, DDMlatMinutes, DDMlonDegrees * LonDirection, DDMlonMinutes);
+            DecimalDegreesMinutes = new DDMCoordinate(DDMlatDegrees * LatDirection, DDMlatMinutes, DDMlonDegrees * LonDirection, DDMlonMinutes);
             //  TODO: Fix output zeroes placeholder ahead of minutes
             //  TODO: Fix output zeroes behind seconds
             return DecimalDegreesMinutes.ToString();
         }
-        private decimal GetNearestEvenMultiple(decimal minutesInput, int latOrLon)
+        private static decimal GetNearestEvenMultiple(decimal minutesInput, int latOrLon)
         {   //  returns a decimal value that maps to the nearest even multiple of Lat (1) or Lon (2) coordinates for apropriate rounding
             decimal interval = 0.0m;
             if (latOrLon == 1)  //  1 = lattitude
@@ -330,6 +325,7 @@ namespace CoordinateConversionUtility
                     return LowEndMultiple;
                 }
             }
+
             return 0.0m;    //  a solution was not found
         }
         private void GetSixthGridsquareCharacter()
@@ -341,10 +337,6 @@ namespace CoordinateConversionUtility
             if (LatDirection > 0)
             {
                 latMinsLookupValue = -60m + DDMlatMinutes;
-                //if (latMinsLookupValue % LatMinsRound != 0)    //  test for divisible by 5 if not reduce to next LOWEST (by the table) multiple of 5
-                //{
-                //    latMinsLookupValue -= (latMinsLookupValue % 2.5m);
-                //}
                 latMinsLookupValue = GetNearestEvenMultiple(latMinsLookupValue, 1);
 
                 if (Table6C2GLookup.TryGetValue(latMinsLookupValue, out string table6LookupResult))
@@ -355,7 +347,7 @@ namespace CoordinateConversionUtility
             else if (LatDirection < 0)
             {
                 latMinsLookupValue = LatDirection * DDMlatMinutes;
-                //if (latMinsLookupValue % LatMinsRound != 0)
+
                 if (latMinsLookupValue % 2.5m != 0)
                 {
                     latMinsLookupValue -= (latMinsLookupValue % 2.5m);
@@ -368,7 +360,7 @@ namespace CoordinateConversionUtility
             else
             {
                 Gridsquare.Append("?");
-                throw new IndexOutOfRangeException("GetSixthGridsquareCharacter(): Index out of range.");
+                throw new ArgumentOutOfRangeException($"Unable to determine character in method { System.Reflection.MethodBase.GetCurrentMethod().Name }");
             }
         }
         private void GetFifthGridsquareCharacter()
@@ -378,7 +370,7 @@ namespace CoordinateConversionUtility
             decimal remainderCorrectionValue = 0;
             if (RemainderLon > 1)
             {
-                throw new IndexOutOfRangeException("GetFifthGridsquareCharacter(): Index out of range.");
+                throw new ArgumentOutOfRangeException($"RemainderLon was > 1 in { System.Reflection.MethodBase.GetCurrentMethod().Name }");
             }
             else if (RemainderLon == 1)
             {
@@ -389,11 +381,6 @@ namespace CoordinateConversionUtility
             if (LonDirection > 0)
             {
                 lonMinutesLookupValue = 0 - 120 + DDMlonMinutes + remainderCorrectionValue;
-                //if (lonMinutesLookupValue % 5 != 0) //  test for divisible by 5 if not reduce to next LOWEST (per the table) multiple of 5
-                //{
-                //    lonMinutesLookupValue -= (lonMinutesLookupValue % 5);   //  += (lonMinutesLookupValue % 5);   //    
-                //}
-
                 lonMinutesLookupValue = GetNearestEvenMultiple(lonMinutesLookupValue, 2);
 
                 if (Table3C2GLookup.TryGetValue(lonMinutesLookupValue, out string table3LookupResult))
@@ -444,17 +431,14 @@ namespace CoordinateConversionUtility
             decimal calculationNumber;  // = 0;
             if (LonDirection < 0)
             {
-                if (RemainderLon % 2 != 0)  //  TRY THIS to solve odd-numbered negative-degrees Longitude e.g.: -5 needs to append "7"
+
+                if (RemainderLon % 2 != 0)
                 {
-                    //calculationNumber = (RemainderLon + 21) / 2 - 1;      // *might* be incorrect calculation after all
-                    //calculationNumber = ((RemainderLon * LonDirection) + 21) / 2 - 1;
                     calculationNumber = ((RemainderLon) + 21) / 2 - 1;
                     RemainderLon = 1;   // used up max even portion of RemainderLon so odd single is left and must be accounted for in last grid character
                 }
                 else
                 {
-                    //calculationNumber = (RemainderLon + 20) / 2 - 1;      // returns '10' when RemainderLon = 2 and LonDirection = -1
-                    //calculationNumber = ((RemainderLon * LonDirection) + 20) / 2 - 1; //  changed 1430hrs 02/22/2020
                     calculationNumber = (18 + RemainderLon) / 2;
                 }
             }
@@ -462,6 +446,7 @@ namespace CoordinateConversionUtility
             {
                 calculationNumber = Math.Abs(RemainderLon) / 2;
             }
+
             if (RemainderLon % 2 != 0)  //  third character lookup is in 2-degree increments so an odd-number will result in a remainder of 1
             {
                 RemainderLon = 1;
@@ -470,7 +455,7 @@ namespace CoordinateConversionUtility
             {
                 RemainderLon = 0;   //  decrement remainder
             }
-            //  decimal lonDegreesCalculatedResult = calculationNumber;
+
             decimal lonDegreesCalculatedResult = Math.Truncate(calculationNumber);
             Gridsquare.Append(Math.Abs(lonDegreesCalculatedResult).ToString(currentCulture));
         }
@@ -490,13 +475,17 @@ namespace CoordinateConversionUtility
             {
                 throw new IndexOutOfRangeException($"LatDirection ({ LatDirection }) could not be set for latDegreesLookupValue { latDegreesLookupValue }.");
             }
+
             RemainderLat = latDegreesLookupValue % 10;
+            
             if (RemainderLat != 0)
             {
                 latDegreesLookupValue -= RemainderLat;
             }
+            
             if (LatDirection > 0)
             {
+            
                 if (Table4C2GLookupPositive.TryGetValue(latDegreesLookupValue, out string table4LookupResult))
                 {
                     Gridsquare.Append(table4LookupResult);
@@ -504,6 +493,7 @@ namespace CoordinateConversionUtility
             }
             else if (LatDirection < 0)
             {
+                
                 if (Table4C2GLookupNegative.TryGetValue(Math.Abs(latDegreesLookupValue) * LatDirection, out string table4LookupResult))
                 {
                     Gridsquare.Append(table4LookupResult);
@@ -528,7 +518,7 @@ namespace CoordinateConversionUtility
             {
                 throw new IndexOutOfRangeException($"LonDirection ({LonDirection}) could not be set for lonDegreesLookupValue.");
             }
-            Gridsquare.Clear(); //  TODO: verify keyword this is NOT necessary
+            Gridsquare.Clear();
             RemainderLon = DDMlonDegrees % 20;
             if (RemainderLon != 0)
             {
@@ -561,7 +551,7 @@ namespace CoordinateConversionUtility
                 Gridsquare.Append("?");
             }
         }
-        public string ConvertDDMtoGridsquare(DDMCoordinateHelper ddmCoordinates)
+        public string ConvertDDMtoGridsquare(DDMCoordinate ddmCoordinates)
         {
             // input: ddm_coordinates as a single string
             // output: string representation of the calculated Gridsquare
@@ -571,10 +561,10 @@ namespace CoordinateConversionUtility
             {
                 this.DDMlatDegrees = ddmCoordinates.GetLatDegrees();
                 this.DDMlonDegrees = ddmCoordinates.GetLonDegrees();
-                this.DDMlatMinutes = ddmCoordinates.GetLatMinutes();
-                this.DDMlonMinutes = ddmCoordinates.GetLonMinutes();
-                this.LatDirection = ddmCoordinates.GetLatDirection();
-                this.LonDirection = ddmCoordinates.GetLonDirection();
+                this.DDMlatMinutes = ddmCoordinates.MinutesLattitude;
+                this.DDMlonMinutes = ddmCoordinates.MinutesLongitude;
+                this.LatDirection = ConversionHelper.ExtractPolarityNS(ddmCoordinates.ToString());
+                this.LonDirection = ConversionHelper.ExtractPolarityEW(ddmCoordinates.ToString());
                 GetFirstGridsquareCharacter();
                 GetSecondGridsquareCharacter();
                 GetThirdGridsquareCharacter();
@@ -588,7 +578,7 @@ namespace CoordinateConversionUtility
                 return string.Empty;    //  if input is empty output is empty
             }
         }
-        public string ConvertDMStoGridsquare(DMSCoordinateHelper dmsLatAndLongCoordinates)
+        public string ConvertDMStoGridsquare(DMSCoordinate dmsLatAndLongCoordinates)
         {
             //  input: dms coordinates as an object
             //  output: string representation of the calculated Gridsquare
@@ -596,15 +586,9 @@ namespace CoordinateConversionUtility
             if (dmsLatAndLongCoordinates != null)
             {
                 string ddm = ConversionHelper.ToDDM(dmsLatAndLongCoordinates);
-                DecimalDegreesMinutes = new DDMCoordinateHelper(ddm);
-                LatDirection = DecimalDegreesMinutes.GetLatDirection();
-                LonDirection = DecimalDegreesMinutes.GetLonDirection();
-                //GetFirstGridsquareCharacter();
-                //GetSecondGridsquareCharacter();
-                //GetThirdGridsquareCharacter();
-                //GetFourthGridsquareCharacter();
-                //GetFifthGridsquareCharacter();
-                //GetSixthGridsquareCharacter();
+                DecimalDegreesMinutes = new DDMCoordinate(ddm);
+                LatDirection = ConversionHelper.ExtractPolarityNS(ddm);
+                LonDirection = ConversionHelper.ExtractPolarityEW(ddm);
                 ConvertDDMtoGridsquare(DecimalDegreesMinutes);
                 return $"{ Gridsquare.ToString() }";
             }
@@ -615,8 +599,6 @@ namespace CoordinateConversionUtility
         }
         public static bool GenerateTableLookups()
         {
-            ResourceManager rmGTL = new ResourceManager("ErrorMessages", typeof(CoordinateConverter).Assembly);
-
             Table1G2CLookup = new Dictionary<string, int>(18);
             Table3G2CLookup = new Dictionary<string, decimal>(24);
             Table4G2CLookup = new Dictionary<string, int>(18);
