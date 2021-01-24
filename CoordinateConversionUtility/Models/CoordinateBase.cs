@@ -10,6 +10,8 @@ namespace CoordinateConversionUtility.Models
         internal static char DegreesSymbol => (char)176; //  degree symbol
         internal static char MinutesSymbol => (char)39;      //  single quote
         internal static char SecondsSymbol => (char)34;      //  double quote
+        internal static char SpaceCharacter => (char)32;    //  spacebar
+        internal char[] trimChars = { CommaSymbol, DegreesSymbol, MinutesSymbol, SecondsSymbol, SpaceCharacter };
 
     }
 }

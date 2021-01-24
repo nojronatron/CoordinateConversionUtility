@@ -9,20 +9,20 @@ namespace CoordinateConversionUtility.Models
     {
         public DDCoordinate() { }
 
-        public DDCoordinate(decimal lat, decimal lon)
+        public DDCoordinate(decimal lattitude, decimal longitude)
         {
-            if (-90m <= lat && lat <= 90m)
+            if (-90m <= lattitude && lattitude <= 90m)
             {
-                DegreesLattitude = lat;
+                DegreesLattitude = lattitude;
             }
             else
             {
                 DegreesLattitude = -91m;
             }
 
-            if (-180m <= lon && lon <= 180m)
+            if (-180m <= longitude && longitude <= 180m)
             {
-                DegreesLongitude = lon;
+                DegreesLongitude = longitude;
             }
             else
             {
@@ -30,28 +30,24 @@ namespace CoordinateConversionUtility.Models
             }
         }
 
-        public int GetLatDegrees()
+        public decimal GetLattitudeDD()
         {
-            Decimal lat = Math.Truncate(DegreesLattitude);
-
-            if (int.TryParse(lat.ToString(), out int result))
-                {
-                return result;
-            }
-
-            return -91;
+            return DegreesLattitude;
         }
 
-        public decimal GetLonDegrees()
+        public decimal GetLongitudeDD()
         {
-            Decimal lon = Math.Truncate(DegreesLongitude);
+            return DegreesLongitude;
+        }
 
-            if (int.TryParse(lon.ToString(), out int result))
-            {
-                return result;
-            }
+        public decimal GetShortDegreesLat()
+        {
+            return Math.Truncate(this.DegreesLattitude);
+        }
 
-            return -181;
+        public decimal GetShortDegreesLon()
+        {
+            return Math.Truncate(this.DegreesLongitude);
         }
 
         public decimal GetFractionalLattitude()
@@ -137,16 +133,6 @@ namespace CoordinateConversionUtility.Models
             }
 
             return false;
-        }
-
-        public decimal GetShortDegreeslat()
-        {
-            return Math.Truncate(this.DegreesLattitude);
-        }
-
-        public decimal GetShortDegreesLon()
-        {
-            return Math.Truncate(this.DegreesLongitude);
         }
 
         public override string ToString()

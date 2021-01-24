@@ -4,8 +4,8 @@ namespace CoordinateConversionUtility.Models
 {
     public class DDMCoordinate : DDCoordinate
     {
-        internal Decimal _minutesLattitude;
-        internal Decimal MinutesLattitude
+        internal decimal _minutesLattitude;
+        internal decimal MinutesLattitude
         {
             get
             {
@@ -13,15 +13,15 @@ namespace CoordinateConversionUtility.Models
             }
             set
             {
-                if (value >= -90 && value <= 90)
+                if (value >= -60 && value <= 60)
                 {
-                    _minutesLattitude = Math.Round(value, 2);
+                    _minutesLattitude = value;
                 }
             }
         }
 
-        internal Decimal _minutesLongitude;
-        internal Decimal MinutesLongitude
+        internal decimal _minutesLongitude;
+        internal decimal MinutesLongitude
         {
             get
             {
@@ -29,29 +29,39 @@ namespace CoordinateConversionUtility.Models
             }
             set
             {
-                if (value >= -180 && value <= 180)
+                if (value >= -60 && value <= 60)
                 {
-                    _minutesLongitude = Math.Round(value, 2);
+                    _minutesLongitude = value;
                 }
             }
         }
-        //internal DDCoordinate DDCoordinates { get; private set; }
-        //private static char DegreesSymbol => (char)176;     //  degree symbol
+
         public DDMCoordinate() { }
         public DDMCoordinate(decimal ddLat, decimal ddLon)
         {
             DegreesLattitude = ddLat;
             DegreesLongitude = ddLon;
-            //DDCoordinates = new DDCoordinate(ddLat, ddLon);
+            MinutesLattitude = Math.Abs( (ddLat - Math.Truncate(ddLat)) * 60 );
+            MinutesLongitude = Math.Abs( (ddLon - Math.Truncate(ddLon)) * 60 );
         }
+
         public DDMCoordinate(decimal latDegrees, decimal latMinutes, decimal lonDegrees, decimal lonMinutes)
         {
-            //  latDegrees and lonDegrees MUST BE SIGNED decimals if negative
             DegreesLattitude = latDegrees;
             DegreesLongitude = lonDegrees;
             MinutesLattitude = latMinutes;
             MinutesLongitude = lonMinutes;
         }
+
+        public DDMCoordinate(decimal dmsLatDegrees, decimal dmsLonDegrees, decimal dmsLatMinutes, decimal dmsLonMinutes,
+            decimal dmsLatSeconds, decimal dmsLonSeconds)
+        {
+            DegreesLattitude = dmsLatDegrees;
+            DegreesLongitude = dmsLonDegrees;
+            MinutesLattitude = dmsLatMinutes + (dmsLatSeconds / 60);
+            MinutesLongitude = dmsLonMinutes + (dmsLonSeconds / 60);
+        }
+
         public DDMCoordinate(string ddmLatAndLon)
         {
             if (ddmLatAndLon is null)   //  check for null
@@ -59,7 +69,7 @@ namespace CoordinateConversionUtility.Models
                 throw new ArgumentNullException(nameof(ddmLatAndLon));
             }
 
-            char[] splitChars = { ',', (char)176, (char)39 };
+            char[] splitChars = { ',', DegreesSymbol, MinutesSymbol };
             string[] strDdmLatAndLon = ddmLatAndLon.Split(splitChars);
 
             string temp = string.Empty;
@@ -92,25 +102,28 @@ namespace CoordinateConversionUtility.Models
                 MinutesLongitude = decLonMinutes;// / 120;
             }
 
-            //  Multiply 1/-1 to each degree
             int north = ConversionHelper.ExtractPolarityNS($"{ strDdmLatAndLon[2] }");
             int east = ConversionHelper.ExtractPolarityEW($"{ strDdmLatAndLon[5] }");
             DegreesLattitude = tempDegreesLat * north;
             DegreesLongitude = tempDegreesLon * east;
+        }
 
-            ////  Store as a DDCoordinate
-            //DDCoordinates = new DDCoordindateHelper(DegreesLat + ( MinutesLat / 60 ), DegreesLon + (MinutesLon / 60 ));
+        public decimal GetMinsLat()
+        {
+            return MinutesLattitude;
+        }
+
+        public decimal GetMinsLon()
+        {
+            return MinutesLongitude;
         }
 
         public override string ToString()
         {
-            //  TODO: fix output to include leading zeros in degrees e.g.: 5* => 05*
-            //  TODO: fix output to include leading zeros in minutes e.g.: 5.23' => 05.23'
-            //  TODO: fix output to include trailing zeros e.g.: 05.2' => 05.20'
-            return $"{ Math.Abs(GetLatDegrees())}{ DegreesSymbol }" +
-                   $"{ MinutesLattitude:00.00}{ MinutesSymbol }{ ConversionHelper.GetNSEW(DegreesLattitude, 1) }, " +
-                   $"{ Math.Abs(GetLonDegrees())}{ DegreesSymbol }" +
-                   $"{ MinutesLongitude:00.00}{ MinutesSymbol }{ ConversionHelper.GetNSEW(DegreesLongitude, 2) }";
+            return $"{ Math.Abs(GetShortDegreesLat())}{ DegreesSymbol }" +
+                   $"{ Math.Round(MinutesLattitude, 2):00.00}{ MinutesSymbol }{ ConversionHelper.GetNSEW(DegreesLattitude, 1) }, " +
+                   $"{ Math.Abs(GetShortDegreesLon())}{ DegreesSymbol }" +
+                   $"{ Math.Round(MinutesLongitude, 2):00.00}{ MinutesSymbol }{ ConversionHelper.GetNSEW(DegreesLongitude, 2) }";
         }
     }
 }

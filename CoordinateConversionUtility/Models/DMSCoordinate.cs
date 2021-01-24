@@ -4,33 +4,6 @@ namespace CoordinateConversionUtility.Models
 {
     public class DMSCoordinate : DDMCoordinate
     {
-        new internal Decimal MinutesLattitude
-        {
-            get
-            {
-                return base.MinutesLattitude;
-            }
-            set
-            {
-                base.MinutesLattitude = Math.Truncate(value);
-            }
-        }
-
-        new internal Decimal MinutesLongitude
-        {
-            get
-            {
-                return base.MinutesLongitude;
-            }
-            set
-            {
-                if (value >= 0 && value <= 60)
-                {
-                    base.MinutesLongitude = Math.Truncate(value);
-                }
-            }
-        }
-
         internal decimal _secondsLattitude;
         internal decimal SecondsLattitude
         {
@@ -42,7 +15,7 @@ namespace CoordinateConversionUtility.Models
             {
                 if (value >= 0 && value <= 60)
                 {
-                    _secondsLattitude = Math.Round(value, 2);
+                    _secondsLattitude = value;
                 }
             }
         }
@@ -58,71 +31,137 @@ namespace CoordinateConversionUtility.Models
             {
                 if (value >= 0 && value <= 60)
                 {
-                    _secondsLongitude = Math.Round(value, 2);
+                    _secondsLongitude = value;
                 }
             }
         }
 
-        //internal DDCoordinate DDCoordinates { get; private set; }
         public DMSCoordinate() { }
         public DMSCoordinate(decimal ddLat, decimal ddLon)
         {
             DegreesLattitude = ddLat;
             DegreesLongitude = ddLon;
-            //DDCoordinates = new DDCoordinate(ddLat, ddLon);
+            MinutesLattitude = Math.Abs( (ddLat - Math.Truncate(ddLat)) * 60 );
+            MinutesLongitude = Math.Abs( (ddLon - Math.Truncate(ddLon)) * 60 );
+            SecondsLattitude = Math.Abs( (MinutesLattitude - Math.Truncate(MinutesLattitude)) * 60 );
+            SecondsLongitude = Math.Abs( (MinutesLongitude - Math.Truncate(MinutesLongitude)) * 60 );
+        }
+
+        public DMSCoordinate(decimal ddmDegreesLat, decimal ddmMinsLat, decimal ddmDegreesLon, decimal ddmMinsLon)
+        {
+            DegreesLattitude = Math.Truncate(ddmDegreesLat);
+            MinutesLattitude = Math.Truncate(ddmMinsLat);
+            SecondsLattitude = (ddmMinsLat - MinutesLattitude) * 60;
+
+            DegreesLongitude = Math.Truncate(ddmDegreesLon);
+            MinutesLongitude = Math.Truncate(ddmMinsLon);
+            SecondsLongitude = (ddmMinsLon - MinutesLongitude) * 60;
+        }
+
+        public DMSCoordinate(
+            decimal dmsDegreesLat, decimal dmsMinsLat, decimal dmsSecondsLat,
+            decimal dmsDegreesLon, decimal dmsMinsLon, decimal dmsSecondsLon)
+        {
+            DegreesLattitude = dmsDegreesLat;
+            DegreesLongitude = dmsDegreesLon;
+            MinutesLattitude = dmsMinsLat;
+            MinutesLongitude = dmsMinsLon;
+            SecondsLattitude = dmsSecondsLat;
+            SecondsLongitude = dmsSecondsLon;
         }
 
         public DMSCoordinate(string dmsLatAndLon)
         {
-            if (dmsLatAndLon is null)   //  check for null
+            if (string.IsNullOrEmpty(dmsLatAndLon) || string.IsNullOrWhiteSpace(dmsLatAndLon))
             {
                 throw new ArgumentNullException(nameof(dmsLatAndLon));
             }
-            //  Split string into NS, DegreesLat, MinutesLat, EW, DegreesLon, MinutesLon
-            char[] splitChars = { ',', (char)176, (char)39 };
-            string[] strDdmLatAndLon = dmsLatAndLon.Split(splitChars);
 
-            //  TryParse degrees and minutes each into decimal format
-            //  Convert Minutes of each to decimal portions of a degree
-            string temp = string.Empty;
-            temp = strDdmLatAndLon[0].Split((char)176)[0];
+            string[] splitLatAndLon = dmsLatAndLon.Split(CommaSymbol);
+            string dmsLat = splitLatAndLon[0];
+            string dmsLon = splitLatAndLon[1];
+
+            int degreeIDX = dmsLat.IndexOf(DegreesSymbol);
+            int minutesIDX = dmsLat.IndexOf(MinutesSymbol);
+            int secondsIDX = dmsLat.IndexOf(SecondsSymbol);
+
+            string temp = dmsLat.Substring(1, degreeIDX).Trim(trimChars).Trim();
             if (decimal.TryParse(temp, out decimal decLatDegrees))
             {
                 DegreesLattitude = decLatDegrees;
             }
-            temp = strDdmLatAndLon[0].Split((char)176)[1];
+
+            temp = dmsLat.Substring(degreeIDX, (minutesIDX - degreeIDX)).Trim(trimChars);
             if (decimal.TryParse(temp, out decimal decLatMinutes))
             {
-                MinutesLattitude = decLatMinutes / 60;
+                MinutesLattitude = decLatMinutes;
             }
-            temp = strDdmLatAndLon[1].Split((char)176)[0];
+
+            temp = dmsLat.Substring(minutesIDX, (secondsIDX - minutesIDX)).Trim(trimChars);
+            if (decimal.TryParse(temp, out decimal decLatSeconds))
+            {
+                SecondsLattitude = decLatSeconds;
+            }
+
+            dmsLon = dmsLon.Trim();
+            degreeIDX = dmsLon.IndexOf(DegreesSymbol);
+            minutesIDX = dmsLon.IndexOf(MinutesSymbol);
+            secondsIDX = dmsLon.IndexOf(SecondsSymbol);
+
+            temp = dmsLon.Substring(1, degreeIDX);
+            temp = temp.Trim(trimChars);
+
             if (decimal.TryParse(temp, out decimal decLonDegrees))
             {
                 DegreesLongitude = decLonDegrees;
             }
-            temp = strDdmLatAndLon[1].Split((char)176)[1];
+
+            temp = dmsLon.Substring(degreeIDX, (minutesIDX - degreeIDX)).Trim(trimChars);
             if (decimal.TryParse(temp, out decimal decLonMinutes))
             {
-                MinutesLongitude = decLonMinutes / 120;
+                MinutesLongitude = decLonMinutes;
             }
-            //  Multiply 1/-1 to each degree
+
+            temp = dmsLon.Substring(minutesIDX, (secondsIDX - minutesIDX)).Trim(trimChars);
+            if (decimal.TryParse(temp, out decimal decLonSeconds))
+            {
+                SecondsLongitude = decLonSeconds;
+            }
+
             int north = ConversionHelper.ExtractPolarityNS(dmsLatAndLon);
             int east = ConversionHelper.ExtractPolarityEW(dmsLatAndLon);
             DegreesLattitude *= north;
             DegreesLongitude *= east;
+        }
 
-            ////  Store as a DDCoordinate
-            //DDCoordinates = new DDCoordinate(DegreesLattitude + MinutesLattitude, DegreesLongitude + MinutesLongitude);
+        public decimal GetShortMinutesLattitude()
+        {
+            return Math.Truncate(MinutesLattitude);
+        }
+
+        public decimal GetShortMinutesLongitude()
+        {
+            return Math.Truncate(MinutesLongitude);
+        }
+
+        public decimal GetSecondsLattitude()
+        {
+            return SecondsLattitude;
+        }
+
+        public decimal GetSecondsLongitude()
+        {
+            return SecondsLongitude;
         }
 
         public override string ToString()
         {
-            return $"{ ConversionHelper.GetNSEW(DegreesLattitude, 1) } { Math.Abs(GetLatDegrees()) }{ DegreesSymbol }" +
-                   $"{ MinutesLattitude:00}{ MinutesSymbol }" +
-                   $"{ SecondsLattitude:00.0}{ SecondsSymbol }, " +
-                   $"{ ConversionHelper.GetNSEW(DegreesLongitude, 2) } { Math.Abs(GetLonDegrees()) }{ DegreesSymbol }" +
-                   $"{ MinutesLongitude:00}{ MinutesSymbol }" +
-                   $"{ SecondsLongitude:00.0}{ SecondsSymbol }";
+            return $"{ ConversionHelper.GetNSEW(DegreesLattitude, 1) } { Math.Abs(GetShortDegreesLat()) }{ DegreesSymbol }" +
+                   $"{ GetShortMinutesLattitude():00}{ MinutesSymbol }" +
+                   $"{ Math.Round(SecondsLattitude, 1):00.0}{ SecondsSymbol }, " +
+                   $"{ ConversionHelper.GetNSEW(DegreesLongitude, 2) } { Math.Abs(GetShortDegreesLon()) }{ DegreesSymbol }" +
+                   $"{ GetShortMinutesLongitude():00}{ MinutesSymbol }" +
+                   $"{ Math.Round(SecondsLongitude, 1):00.0}{ SecondsSymbol }";
         }
     }
 }

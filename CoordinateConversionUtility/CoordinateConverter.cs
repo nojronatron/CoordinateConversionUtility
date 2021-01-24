@@ -268,9 +268,8 @@ namespace CoordinateConversionUtility
             {
                 throw new ArgumentException($"Argument { gridsquare } did not pass validation.");
             }
+
             DecimalDegreesMinutes = new DDMCoordinate(DDMlatDegrees * LatDirection, DDMlatMinutes, DDMlonDegrees * LonDirection, DDMlonMinutes);
-            //  TODO: Fix output zeroes placeholder ahead of minutes
-            //  TODO: Fix output zeroes behind seconds
             return DecimalDegreesMinutes.ToString();
         }
         private static decimal GetNearestEvenMultiple(decimal minutesInput, int latOrLon)
@@ -559,8 +558,8 @@ namespace CoordinateConversionUtility
             Contract.Requires(ddmCoordinates != null);
             if (ddmCoordinates != null)
             {
-                this.DDMlatDegrees = ddmCoordinates.GetLatDegrees();
-                this.DDMlonDegrees = ddmCoordinates.GetLonDegrees();
+                this.DDMlatDegrees = ddmCoordinates.GetShortDegreesLat();
+                this.DDMlonDegrees = ddmCoordinates.GetShortDegreesLon();
                 this.DDMlatMinutes = ddmCoordinates.MinutesLattitude;
                 this.DDMlonMinutes = ddmCoordinates.MinutesLongitude;
                 this.LatDirection = ConversionHelper.ExtractPolarityNS(ddmCoordinates.ToString());
@@ -585,10 +584,12 @@ namespace CoordinateConversionUtility
             Contract.Requires(dmsLatAndLongCoordinates != null);
             if (dmsLatAndLongCoordinates != null)
             {
-                string ddm = ConversionHelper.ToDDM(dmsLatAndLongCoordinates);
-                DecimalDegreesMinutes = new DDMCoordinate(ddm);
-                LatDirection = ConversionHelper.ExtractPolarityNS(ddm);
-                LonDirection = ConversionHelper.ExtractPolarityEW(ddm);
+                //string ddm = ConversionHelper.ToDDM(dmsLatAndLongCoordinates);
+                //DecimalDegreesMinutes = new DDMCoordinate(ddm);
+                var ddm = ConversionHelper.ToDDM(dmsLatAndLongCoordinates);
+
+                LatDirection = ConversionHelper.ExtractPolarityNS(ddm.ToString());
+                LonDirection = ConversionHelper.ExtractPolarityEW(ddm.ToString());
                 ConvertDDMtoGridsquare(DecimalDegreesMinutes);
                 return $"{ Gridsquare.ToString() }";
             }

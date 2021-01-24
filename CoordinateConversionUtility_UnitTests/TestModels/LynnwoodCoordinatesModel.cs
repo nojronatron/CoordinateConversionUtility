@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoordinateConversionUtility_UnitTests.TestModels
 {
@@ -10,26 +6,32 @@ namespace CoordinateConversionUtility_UnitTests.TestModels
     {
         public LynnwoodCoordinatesModel()
         {
-            DegreesLat = 47.8203m;
-            DegreesLon = -122.3003m;
+            DegreesLat = 47.82533m;
+            DegreesLon = -122.29333m;    //  Google Maps rounds up to 2934; calculated is 293333...
+            DdmMinsLat = 49.52m;
+            DdmMinsLon = 17.60m;
+            DmsSecondsLat = 31.2m;
+            DmsSecondsLon = 36.0m;
         }
         public static string strGridSquare()
         {
-            return $"CN87??";
+            return $"CN87UT";
         }
         public static string strDD()
         {
-            return $"{ 47.8203m }{ DegreesSymbol }, { -122.3003m }{ DegreesSymbol }";
+            return $"{ 47.82533m }{ DegreesSymbol }, { -122.29333m }{ DegreesSymbol }";
         }
         public static string strDDM()
         {
-            return $"47{ DegreesSymbol }49.21{ MinutesSymbol }N, " +
-                   $"122{ DegreesSymbol }18.02{ MinutesSymbol }W";
+            return $"47{ DegreesSymbol }49.52{ MinutesSymbol }N, " +
+                   $"122{ DegreesSymbol }17.60{ MinutesSymbol }W";
         }
+
         public static string strDMS()
         {
-            return $"N 47{ DegreesSymbol }49{ MinutesSymbol }13{ SecondsSymbol}, " +
-                   $"W 122{ DegreesSymbol }18{ MinutesSymbol }01{ SecondsSymbol }";
+            return $"N 47{ DegreesSymbol }49{ MinutesSymbol }31.1{ SecondsSymbol}, " +
+                   $"W 122{ DegreesSymbol }17{ MinutesSymbol }36.2{ SecondsSymbol }";
         }
+
     }
 }
