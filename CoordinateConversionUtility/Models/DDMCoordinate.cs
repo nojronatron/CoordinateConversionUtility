@@ -53,8 +53,8 @@ namespace CoordinateConversionUtility.Models
             MinutesLongitude = lonMinutes;
         }
 
-        public DDMCoordinate(decimal dmsLatDegrees, decimal dmsLonDegrees, decimal dmsLatMinutes, decimal dmsLonMinutes,
-            decimal dmsLatSeconds, decimal dmsLonSeconds)
+        public DDMCoordinate(decimal dmsLatDegrees, decimal dmsLatMinutes, decimal dmsLatSeconds, 
+            decimal dmsLonDegrees, decimal dmsLonMinutes, decimal dmsLonSeconds)
         {
             DegreesLattitude = dmsLatDegrees;
             DegreesLongitude = dmsLonDegrees;
@@ -69,7 +69,7 @@ namespace CoordinateConversionUtility.Models
                 throw new ArgumentNullException(nameof(ddmLatAndLon));
             }
 
-            char[] splitChars = { ',', DegreesSymbol, MinutesSymbol };
+            char[] splitChars = { CommaSymbol, DegreesSymbol, MinutesSymbol };
             string[] strDdmLatAndLon = ddmLatAndLon.Split(splitChars);
 
             string temp = string.Empty;

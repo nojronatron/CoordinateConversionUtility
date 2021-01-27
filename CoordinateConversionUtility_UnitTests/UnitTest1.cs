@@ -98,7 +98,7 @@ namespace CoordinateConversionUtility_UnitTests
         {
             CoordinateConverter cc = new CoordinateConverter();
             string gridsquare = MontevideoCoordinateModel.strGridsquare();
-            string expectedResult = MontevideoCoordinateModel.strDDM();
+            string expectedResult = MontevideoCoordinateModel.strDDM_ARRL();
             string actualResult = "failed";
 
             if (CoordinateConverter.GenerateTableLookups())
@@ -115,7 +115,7 @@ namespace CoordinateConversionUtility_UnitTests
         public void Test_Montevideo_ConvertDDMtoGridsquare_Passes()
         {
             CoordinateConverter cc = new CoordinateConverter();
-            string ddmInput = MontevideoCoordinateModel.strMidGridDDM();
+            string ddmInput = MontevideoCoordinateModel.strDDM();
             string expectedResult = MontevideoCoordinateModel.strGridsquare();
             string actualResult = "failed";
             if (CoordinateConverter.GenerateTableLookups())

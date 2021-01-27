@@ -72,8 +72,14 @@ namespace CoordinateConversionUtility.Models
 
         public DMSCoordinate(string dmsLatAndLon)
         {
-            if (string.IsNullOrEmpty(dmsLatAndLon) || string.IsNullOrWhiteSpace(dmsLatAndLon))
+            if (string.IsNullOrEmpty(dmsLatAndLon) || string.IsNullOrWhiteSpace(dmsLatAndLon))   //  check for null
             {
+                DegreesLattitude = 0.0m;
+                DegreesLongitude = 0.0m;
+                MinutesLattitude = 0.0m;
+                MinutesLongitude = 0.0m;
+                SecondsLattitude = 0.0m;
+                SecondsLongitude = 0.0m;
                 throw new ArgumentNullException(nameof(dmsLatAndLon));
             }
 

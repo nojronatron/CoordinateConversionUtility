@@ -6,7 +6,7 @@ using CoordinateConversionUtility_UnitTests.TestModels;
 namespace CoordinateConversionUtility.Models.Tests
 {
     [TestClass()]
-    public class DMSCoordinateTests
+    public class DMSCoordinateTests : UnitTestsBase
     {
         [TestMethod()]
         public void CTOR_DDtoDMS_Test()
@@ -213,17 +213,6 @@ namespace CoordinateConversionUtility.Models.Tests
             DisplayOutput(expectedSecLons.ToString(), secondsLon.ToString(), dict);
 
             Assert.IsTrue(secondsLonDiff <= 1m);
-        }
-
-        private static void DisplayOutput(string expectedResult, string actualResult, Dictionary<string, decimal> diffs)
-        {
-            Console.WriteLine($"Expected: { expectedResult }");
-            Console.WriteLine($"Actual: { actualResult }");
-
-            foreach (KeyValuePair<string, decimal> diff in diffs)
-            {
-                Console.WriteLine($"{diff.Key}: {diff.Value.ToString()}");
-            }
         }
 
     }
