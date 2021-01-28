@@ -1,145 +1,232 @@
-﻿using System;
+﻿using CoordinateConversionUtility.Models;
+using System;
+using System.Text;
 
 namespace CoordinateConversionUtility
 {
     public static class ConversionHelper
     {
-        //  static class requires very few properties
-        private static char DegreesSymbol => (char)176;      //  degree symbol
-        private static char MinutesSymbol => (char)39;       //  single quote
-        private static char SecondsSymbol => (char)34;       //  double quote
+        internal static int PrecisionLevel => 5;        //  Math.Round( deciman, PrecisionLevel )
+        internal static char CommaSymbol => (char)44;    //  comma symbol
+        internal static char DegreesSymbol => (char)176; //  degree symbol
+        internal static char MinutesSymbol => (char)39;      //  single quote
+        internal static char SecondsSymbol => (char)34;      //  double quote
 
         //  RULES
         //      1) Inputs must come in as the appropriate object e.g. DD as DDCoordinateHelper instance
-        //      2) Outputs must always be string
+        //      2) Outputs must always be one of DD, DDM, or DMS
         //      3) NSEW format will always be: DD - none; DDM - post; DMS - Pre
 
-        public static decimal ConvertMinsToDD(decimal degrees, decimal minutes)
+        public static DDCoordinate ToDD(DDMCoordinate ddm)
         {
-            //  return the SUM of Longitude DDM Degres and DDM Minutes e.x.: 112*18.25 => 112.3041
-            return degrees + (minutes / 60);
-        }
-        public static decimal ConvertSecondsToDM(decimal minutes, decimal seconds)
-        {
-            //  generate the SUM of DMS Minutes and DMS Seconds e.x.: 45'30" => 45.50
-            return minutes + (seconds / 60);
-        }
-        //  convert from DDM to DD
-        public static string ToDD(DDMCoordinateHelper ddm)
-        {
-            //  TODO: Deal with signed decimal in calculation
-            decimal ddDegreesLat = ddm.DegreesLat + ( ddm.MinutesLat / 60 );
-            decimal ddDegreesLon = ddm.DegreesLat + ( ddm.MinutesLon / 60 );
-            int latSign = ExtractPolarityNSEW(ddm.ToString());
-            int lonSign = ExtractPolarityNSEW(ddm.ToString());
+            if (ddm == null)
+            {
+                return new DDCoordinate();
+            }
+
+            decimal ddDegreesLat = Math.Round( Math.Abs( ddm.DegreesLattitude) + ( ddm.MinutesLattitude / 60 ), PrecisionLevel );
+            decimal ddDegreesLon = Math.Round( Math.Abs( ddm.DegreesLongitude) + ( ddm.MinutesLongitude / 60 ), PrecisionLevel );
+            int latSign = ExtractPolarityNS(ddm.ToString());
+            int lonSign = ExtractPolarityEW(ddm.ToString());
             ddDegreesLat *= latSign;
             ddDegreesLon *= lonSign;
-            return $"{ ddDegreesLat }{ DegreesSymbol }, " +
-                   $"{ ddDegreesLon }{ DegreesSymbol }";
+            return new DDCoordinate(ddDegreesLat, ddDegreesLon);
         }
-        //  convert from DMS to DD
-        public static string ToDD(DMSCoordinateHelper dms)
+
+        public static DDCoordinate ToDD(DMSCoordinate dms)
         {
-            //  TODO: Deal with signed decimal in calculation
-            decimal ddmMinutesLat = Math.Truncate(dms.MinutesLat);
-            ddmMinutesLat += (dms.MinutesLat - Math.Truncate(dms.MinutesLat)) / 60;
-            decimal ddmMinutesLon = Math.Truncate(dms.MinutesLon);
-            ddmMinutesLon += (dms.MinutesLon - Math.Truncate(dms.MinutesLon)) / 60;
-            decimal ddDegreesLat = dms.DegreesLat + (ddmMinutesLat / 60);
-            decimal ddDegreesLon = dms.DegreesLon + (ddmMinutesLon / 60);
-            int latSign = ExtractPolarityNSEW(dms.ToString());
-            int lonSign = ExtractPolarityNSEW(dms.ToString());
+            if (dms == null)
+            {
+                return new DDCoordinate();
+            }
+
+            decimal ddDegreesLat = Math.Abs(dms.GetShortDegreesLat());
+            decimal ddFractionLat = dms.GetShortMinutesLattitude() / 60;
+            ddFractionLat += dms.GetSecondsLattitude() / 3600;
+            ddDegreesLat += ddFractionLat;
+
+            decimal ddDegreesLon = Math.Abs(dms.GetShortDegreesLon());
+            decimal ddFractionLon = dms.GetShortMinutesLongitude() / 60;
+            ddFractionLon += dms.GetSecondsLongitude() / 3600;
+            ddDegreesLon += ddFractionLon;
+
+            int latSign = ExtractPolarityNS(dms.ToString());
+            int lonSign = ExtractPolarityEW(dms.ToString());
             ddDegreesLat *= latSign;
             ddDegreesLon *= lonSign;
-            return $"{ ddDegreesLat }{ DegreesSymbol }, " +
-                   $"{ ddDegreesLon }{ DegreesSymbol }";
+
+            return new DDCoordinate(ddDegreesLat, ddDegreesLon);
         }
 
-        //  convert from DMS to DDM
-        public static string ToDDM(DMSCoordinateHelper dms)
+        public static DDMCoordinate ToDDM(DMSCoordinate dms)
         {
-            //  TODO: Fix invalid minutes output
-            //  TODO: Fix inconsistend NESW directionals
-            string NS = GetNSEW(Math.Truncate(dms.DegreesLat), 1);
-            string EW = GetNSEW(Math.Truncate(dms.DegreesLon), 2);
-            decimal ddmMinutesLat = Math.Truncate(dms.MinutesLat);
-            ddmMinutesLat += (dms.MinutesLat - Math.Truncate(dms.MinutesLat)) / 60;
-            decimal ddmMinutesLon = Math.Truncate(dms.MinutesLon);
-            ddmMinutesLon += (dms.MinutesLon - Math.Truncate(dms.MinutesLon)) / 60;
-
-            return $"{ Math.Abs(Math.Truncate(dms.DegreesLat)) }{ DegreesSymbol }" +
-                   $"{ ddmMinutesLat:f2}{ MinutesSymbol } { NS }, " +
-                   $"{ Math.Abs(Math.Truncate(dms.DegreesLon)) }{ DegreesSymbol }" +
-                   $"{ ddmMinutesLon:f2}{ MinutesSymbol } { EW }";
-        }
-
-        //  convert from DD to DDM
-        public static string ToDDM(DDCoordindateHelper dd)
-        {
-            string NS = GetNSEW(Math.Truncate(dd.DegreesLat), 1);
-            string EW = GetNSEW(Math.Truncate(dd.DegreesLon), 2);
-            return $"{ Math.Abs(Math.Truncate(dd.DegreesLat)) }{ DegreesSymbol }" +
-                   $"{ GetMinutesLat(dd.DegreesLat):f2}{ MinutesSymbol } { NS }, " +
-                   $"{ Math.Abs(Math.Truncate(dd.DegreesLon)) }{ DegreesSymbol }" +
-                   $"{ GetMinutesLon(dd.DegreesLon):f2}{ MinutesSymbol } { EW }";
-        }
-
-        //  convert from DDM to DMS
-        public static string ToDMS(DDMCoordinateHelper ddm)
-        {
-            //  TODO: Fix invalid Minutes and Seconds output
-            //  DDM properties are both in Degrees and Minutes
-            string NS = GetNSEW(ddm.DegreesLat, 1);
-            string EW = GetNSEW(ddm.DegreesLon, 1);
-            return $"{ NS } { Math.Abs(Math.Truncate(ddm.DegreesLat)) }{ DegreesSymbol }" +
-                   $"{ Math.Truncate(ddm.MinutesLat) }{ MinutesSymbol }" +
-                   $"{ Math.Truncate(GetSecondsLat(ddm.MinutesLat)) }{ SecondsSymbol }, " +
-                   $"{ EW } { Math.Abs(Math.Truncate(ddm.DegreesLon)) }{ DegreesSymbol }" +
-                   $"{ Math.Truncate(ddm.MinutesLon) }{ MinutesSymbol }" +
-                   $"{ Math.Truncate(GetSecondsLon(ddm.MinutesLon)) }{ SecondsSymbol }";
-        }
-        //  convert from DD to DMS
-        public static string ToDMS(DDCoordindateHelper dd)
-        {
-            //  DD properties are only in signed Degrees
-            string NS = GetNSEW(dd.DegreesLat, 1);
-            string EW = GetNSEW(dd.DegreesLon, 2);
-            decimal ddmMinutesLattitude = GetMinutes(dd.DegreesLat);
-            decimal ddmMinutesLongitude = GetMinutes(dd.DegreesLon);
-            return $"{ NS } { Math.Abs(Math.Truncate(dd.DegreesLat)) }{ DegreesSymbol }" +
-                   $"{ Math.Truncate(ddmMinutesLattitude) }{ MinutesSymbol }" +
-                   $"{ Math.Truncate(GetSecondsLat(ddmMinutesLattitude)) }{ SecondsSymbol }, " +
-                   $"{ EW } { Math.Abs(Math.Truncate(dd.DegreesLon)) }{ DegreesSymbol }" +
-                   $"{ Math.Truncate(ddmMinutesLongitude) }{ MinutesSymbol }" +
-                   $"{ Math.Truncate(GetSecondsLon(ddmMinutesLongitude)) }{ SecondsSymbol }";
-        }
-
-        //  used by some or all output methods
-        private static int ExtractPolarityNSEW(string strDdmLatOrLon)
-        {
-            int nsew = 1;
-            if (strDdmLatOrLon.IndexOf('S') > -1)
+            if (dms == null)
             {
-                nsew = -1;
+                return new DDMCoordinate();
             }
-            else if (strDdmLatOrLon.IndexOf('W') > -1)
-            {
-                nsew = -1;
-            }
-            return nsew;
+
+            decimal ddmMinutesLat = Math.Truncate(dms.MinutesLattitude);
+            decimal ddmMinutesLon = Math.Truncate(dms.MinutesLongitude);
+
+            ddmMinutesLat += dms.SecondsLattitude / 60;
+            ddmMinutesLon += dms.SecondsLongitude / 60;
+
+            decimal ddmDegreesLat = dms.GetShortDegreesLat();
+            decimal ddmDegreesLon = dms.GetShortDegreesLon();
+
+            return new DDMCoordinate(ddmDegreesLat, ddmMinutesLat, ddmDegreesLon, ddmMinutesLon);
         }
+
+        public static DDMCoordinate ToDDM(DDCoordinate dd)
+        {
+            if (dd == null)
+            {
+                return new DDMCoordinate();
+            }
+
+            decimal dmLat = dd.GetFractionalLattitude() * 60;
+            decimal dmLon = dd.GetFractionalLattitude() * 60;
+
+            return new DDMCoordinate();
+        }
+
+        public static DMSCoordinate ToDMS(DDMCoordinate ddm)
+        {
+            if (ddm == null)
+            {
+                return new DMSCoordinate();
+            }
+
+            string NS = GetNSEW(ddm.DegreesLattitude, 1);
+            string EW = GetNSEW(ddm.DegreesLongitude, 2);
+
+            int latPolarity = ExtractPolarityNS(NS);
+            int lonPolarity = ExtractPolarityEW(EW);
+
+            decimal latDegrees = Math.Abs( ddm.GetShortDegreesLat() );
+            decimal lonDegrees = Math.Abs( ddm.GetShortDegreesLon() );
+
+            decimal latMinutes = Math.Round( ddm.MinutesLattitude / 60 , PrecisionLevel);
+            decimal lonMinutes = Math.Round( ddm.MinutesLongitude / 60 , PrecisionLevel);
+
+            decimal ddLattitude = (latDegrees + latMinutes) * latPolarity;
+            decimal ddLongitude = (lonDegrees + lonMinutes) * lonPolarity;
+
+            return new DMSCoordinate(ddLattitude, ddLongitude);
+        }
+
+        public static DMSCoordinate ToDMS(DDCoordinate dd)
+        {
+            if (dd == null)
+            {
+                return new DMSCoordinate(); ;
+            }
+
+            //string NS = GetNSEW(dd.DegreesLattitude, 1);
+            //string EW = GetNSEW(dd.DegreesLongitude, 2);
+
+            //decimal dmsDegreesLattitude = dd.GetShortDegreesLat();
+            //decimal dmsDegreesLongitude = dd.GetShortDegreesLon();
+            //decimal dmsMinutesLattitude = dd.GetFractionalLattitude();
+            //decimal dmsMinutesLongitude = dd.GetFractionalLongitude();
+            //decimal dmsSecondsLattitude = (dmsMinutesLattitude - Math.Truncate(dmsMinutesLattitude)) / 60;
+            //decimal dmsSecondsLongitude = (dmsMinutesLongitude - Math.Truncate(dmsMinutesLongitude)) / 60;
+
+            return new DMSCoordinate(dd.DegreesLattitude, dd.DegreesLongitude);
+            //return $"{ NS } { Math.Abs(Math.Truncate(dd.DegreesLattitude)) }{ DegreesSymbol }" +
+            //       $"{ Math.Truncate(ddmMinutesLattitude) }{ MinutesSymbol }" +
+            //       $"{ Math.Truncate(GetSecondsLat(ddmMinutesLattitude)) }{ SecondsSymbol }, " +
+            //       $"{ EW } { Math.Abs(Math.Truncate(dd.DegreesLongitude)) }{ DegreesSymbol }" +
+            //       $"{ Math.Truncate(ddmMinutesLongitude) }{ MinutesSymbol }" +
+            //       $"{ Math.Truncate(GetSecondsLon(ddmMinutesLongitude)) }{ SecondsSymbol }";
+        }
+
+        /// <summary>
+        /// Returns a signed integer representing direction: 1 for N; -1 for S; 0 for bad input.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public static int ExtractPolarity(decimal number)
+        {
+            int result;
+
+            try
+            {
+                result = (int)(number / number);
+            }
+            catch
+            {
+                result = 0;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns integer representing Decimal direction: 1 for N; -1 for S; 0 for bad input.
+        /// Apply to absolute Longitude to transform from unsigned to signed value.
+        /// </summary>
+        /// <param name="ddmLattitude"></param>
+        /// <returns></returns>
+        public static int ExtractPolarityNS(string ddmLattitude)
+        {
+            if (string.IsNullOrEmpty(ddmLattitude) != true)
+            {
+
+                if (ddmLattitude.IndexOf('S') > -1)
+                {
+                    return -1;
+                }
+
+                if (ddmLattitude.IndexOf('N') > -1)
+                {
+                    return 1;
+                }
+            }
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Returns integer representing Decimal direction: 1 for E; -1 for W; 0 for bad input.
+        /// Apply to Absolute Lattitude to transform from unsigned to signed value.
+        /// </summary>
+        /// <param name="ddmLongitude"></param>
+        /// <returns></returns>
+        public static int ExtractPolarityEW(string ddmLongitude)
+        {
+            if (string.IsNullOrEmpty(ddmLongitude) != true)
+            {
+
+                if (ddmLongitude.IndexOf('W') > -1)
+                {
+                    return -1;
+                }
+
+                if (ddmLongitude.IndexOf('E') > -1)
+                {
+                    return 1;
+                }
+            }
+
+            return 0;
+        }
+
         private static decimal GetMinutes(decimal degreesLatOrLon)
         {
             return (Math.Abs(degreesLatOrLon) - Math.Truncate(Math.Abs(degreesLatOrLon))) * 60;
         }
+        
         public static decimal GetMinutesLat(decimal ddDegreesLattitude)
         {
             return (Math.Abs(ddDegreesLattitude) - Math.Truncate(Math.Abs(ddDegreesLattitude))) * 60;
         }
+        
         public static decimal GetMinutesLon(decimal ddDegreesLongitude)
         {
             return (Math.Abs(ddDegreesLongitude) - Math.Truncate(Math.Abs(ddDegreesLongitude))) * 60;
         }
+        
         private static decimal GetSeconds(decimal minutesLatOrLon)
         {
             decimal truncMinutes = Math.Abs(Math.Truncate(minutesLatOrLon));
@@ -148,6 +235,7 @@ namespace CoordinateConversionUtility
             decimal result = 60 * fractionalMinutes;
             return result;
         }
+        
         public static decimal GetSecondsLat(decimal ddMinutesLattitude)
         {
             decimal truncMinutes = Math.Abs(Math.Truncate(ddMinutesLattitude));
@@ -156,6 +244,7 @@ namespace CoordinateConversionUtility
             decimal result = 60 * fractionalMinutes;
             return result;
         }
+        
         public static decimal GetSecondsLon(decimal ddMinutesLongitude)
         {
             decimal truncMinutes = Math.Abs(Math.Truncate(ddMinutesLongitude));
@@ -164,7 +253,44 @@ namespace CoordinateConversionUtility
             decimal result = 60 * fractionalMinutes;
             return result;
         }
-        private static string GetNSEW(decimal degreesLatOrLon, int LatOrLon)
+
+        public static string GetNSEW(string strDdmLatOrLon)
+        {
+            if (string.IsNullOrEmpty(strDdmLatOrLon))
+            {
+                return string.Empty;
+            }
+
+            StringBuilder nsew = new StringBuilder(2);
+
+            if (strDdmLatOrLon.IndexOf('N') > -1)
+            {
+                nsew.Append("N");
+            }
+            else
+            {
+                nsew.Append("S");
+            }
+
+            if (strDdmLatOrLon.IndexOf('E') > -1)
+            {
+                nsew.Append("E");
+            }
+            else
+            {
+                nsew.Append("W");
+            }
+
+            return nsew.ToString();
+        }
+
+        /// <summary>
+        /// Returns string N, S, E, or W. Use LatOrLon=1 for Lattitudes; LatOrLon=2 for Longitudes.
+        /// </summary>
+        /// <param name="degreesLatOrLon"></param>
+        /// <param name="LatOrLon"></param>
+        /// <returns></returns>
+        public static string GetNSEW(decimal degreesLatOrLon, int LatOrLon)
         {   //  lat = 1; lon = 2
             switch (LatOrLon)
             {
@@ -187,8 +313,48 @@ namespace CoordinateConversionUtility
                         return EW;
                     }
                 default:
-                    return string.Empty;
+                    {
+                        return string.Empty;
+                    }
             }
+        }
+        
+        public static DDCoordinate StringToDD(string ddLatAndLon)
+        {
+            if (ddLatAndLon is null)   //  check for null
+            {
+                throw new ArgumentNullException(nameof(ddLatAndLon));
+            }
+            //  Split string into DegreesLat and DegreesLon
+            string[] strDdmLatAndLon = ddLatAndLon.Replace(DegreesSymbol, ' ').Split(CommaSymbol);
+            decimal degreesLatTemp = -91m;
+            decimal degreesLonTemp = -181m;
+
+            //  TryParse degrees into decimal format
+            if (decimal.TryParse(strDdmLatAndLon[0], out decimal decLatDegrees))
+            {
+                degreesLatTemp = decLatDegrees;
+            }
+            if (decimal.TryParse(strDdmLatAndLon[1], out decimal decLonDegrees))
+            {
+                degreesLonTemp = decLonDegrees;
+            }
+
+            //  Store as a DDCoordinate if both are set within specified ranges
+            Decimal degreesLat = 0m;
+            Decimal degreesLon = 0m;
+
+            if (-90m <= degreesLatTemp && degreesLatTemp <= 90m)
+            {
+                degreesLat = degreesLatTemp;
+            }
+
+            if (-180m <= degreesLonTemp && degreesLonTemp <= 180m)
+            {
+                degreesLon = degreesLonTemp;
+            }
+
+            return new DDCoordinate(degreesLat, degreesLon);
         }
     }
 }
