@@ -1,7 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using CoordinateConversionUtility_UnitTests.TestModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using CoordinateConversionUtility.Models;
-using CoordinateConversionUtility_UnitTests.TestModels;
 using System.Collections.Generic;
 
 namespace CoordinateConversionUtility.Tests
@@ -9,6 +8,13 @@ namespace CoordinateConversionUtility.Tests
     [TestClass()]
     public class ConversionHelperTests
     {
+        internal static char CommaSymbol => (char)44;    //  comma symbol
+        internal static char DegreesSymbol => (char)176; //  degree symbol
+        internal static char MinutesSymbol => (char)39;      //  single quote
+        internal static char SecondsSymbol => (char)34;      //  double quote
+        internal static char SpaceCharacter => (char)32;    //  spacebar
+        internal char[] trimChars = { CommaSymbol, DegreesSymbol, MinutesSymbol, SecondsSymbol, SpaceCharacter };
+
         private static void DisplayOutput(string expectedResult, string actualResult, Dictionary<string,decimal> diffs)
         {
             Console.WriteLine($"Expected: { expectedResult }");
@@ -21,190 +27,171 @@ namespace CoordinateConversionUtility.Tests
         }
 
         [TestMethod()]
-        public void Test_ConvertDDtoDDM()
+        public void ExtractPolarityTest()
         {
-            var lcm = new LynnwoodCoordinatesModel();
-            decimal ddLat = lcm.DegreesLat;
-            decimal ddLon = lcm.DegreesLon;
+            var expectedNorthResult = 1;
+            var expectedSouthResult = -1;
+            var expectedZeroResult = 0;
 
-            DDMCoordinate ddm = new DDMCoordinate(ddLat, ddLon);
+            var actualNorthResult = ConversionHelper.ExtractPolarity(10.0987m);
+            var actualSouthResult = ConversionHelper.ExtractPolarity(-1.1234m);
+            var actualZeroResult = ConversionHelper.ExtractPolarity(-0m);
 
-            string expectedResult = LynnwoodCoordinatesModel.strDDM();
-            string actualResult = ddm.ToString();
-
-            var latDiff = Math.Abs( ddm.GetShortDegreesLat() + ddm.GetFractionalLattitude() - lcm.DegreesLat);
-            var lonDiff = Math.Abs( ddm.GetShortDegreesLon() + ddm.GetFractionalLongitude() - lcm.DegreesLon);
-
-            //Console.WriteLine($"latDiff: { latDiff }");
-            //Console.WriteLine($"lonDiff: { lonDiff }");
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            DisplayOutput(expectedResult, actualResult, dict);
-
-            Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
-            Assert.IsTrue(lonDiff >= 0 && lonDiff <= 0.0001m);
+            Assert.AreEqual(expectedNorthResult, actualNorthResult);
+            Assert.AreEqual(expectedSouthResult, actualSouthResult);
+            Assert.AreEqual(expectedZeroResult, actualZeroResult);
         }
 
         [TestMethod()]
-        public void Test_ConvertDDToDMS()
+        public void ExtractPolarityNSTest()
         {
-            //var lcm = new LynnwoodCoordinatesModel();
-            //decimal ddLat = lcm.DegreesLat;
-            //decimal ddLon = lcm.DegreesLon;
+            var expectedPositiveResult = 1;
+            var expectedNegativeResult = -1;
+            var expectedZeroResult = 0;
 
-            //DMSCoordinate dms = new DMSCoordinate(ddLat, ddLon);
+            var actualPositiveResult = ConversionHelper.ExtractPolarityNS(SanClementeCoordinatesModel.strDDM());
+            var actualNegativeResult = ConversionHelper.ExtractPolarityNS(WellingtonCoordinateModel.strDDM());
+            var actualZeroResult = ConversionHelper.ExtractPolarityNS(string.Empty);
 
-            //string expectedResult = LynnwoodCoordinatesModel.strDMS();
-            //string actualResult = dms.ToString();
-
-            //var latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(lcm.DegreesLat));
-            //var lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(lcm.DegreesLon));
-
-            //var latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(lcm.DdmMinsLat));
-            //var lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(lcm.DdmMinsLon));
-
-            //var latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - lcm.DmsSecondsLat);
-            //var lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - lcm.DmsSecondsLon);
-
-            //Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            //dict.Add("latDiff", latDiff);
-            //dict.Add("lonDiff", lonDiff);
-            //dict.Add("latMinsDiff", latMinsDiff);
-            //dict.Add("lonMinsDiff", lonMinsDiff);
-            //dict.Add("latSecsDiff", latSecsDiff);
-            //dict.Add("lonSecsDiff", lonSecsDiff);
-            //DisplayOutput(expectedResult, actualResult, dict);
-
-            //Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
-            //Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= 0.1m);
-            //Assert.IsTrue(latSecsDiff >= 0 && latSecsDiff <= 1.0m);
-
-            //Assert.IsTrue(lonDiff >= 0 && lonDiff <= 0.0001m);
-            //Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= 0.1m );
-            //Assert.IsTrue(lonSecsDiff >= 0 && lonSecsDiff <= 1.0m );
+            Assert.AreEqual(expectedPositiveResult, actualPositiveResult);
+            Assert.AreEqual(expectedNegativeResult, actualNegativeResult);
+            Assert.AreEqual(expectedZeroResult, actualZeroResult);
         }
 
         [TestMethod()]
-        public void Test_ConvertDDMToDD()
+        public void ExtractPolarityEWTest()
         {
-            var lcm = new LynnwoodCoordinatesModel();
-            decimal ddLat = lcm.DegreesLat;
-            decimal ddLon = lcm.DegreesLon;
+            var expectedPositiveResult = 1;
+            var expectedNegativeResult = -1;
+            var expectedZeroResult = 0;
 
-            DDMCoordinate ddm = new DDMCoordinate(LynnwoodCoordinatesModel.strDDM());
-            DDCoordinate dd = ConversionHelper.ToDD(ddm);
+            var actualPositiveResult = ConversionHelper.ExtractPolarityEW(MunichCoordinatesModel.strDDM());
+            var actualNegativeResult = ConversionHelper.ExtractPolarityEW(SanClementeCoordinatesModel.strDDM());
+            var actualZeroResult = ConversionHelper.ExtractPolarityEW(string.Empty);
 
-            string expectedResult = LynnwoodCoordinatesModel.strDD();
-            string actualResult = dd.ToString();
-
-            var latDiff = Math.Abs(dd.GetLattitudeDD() - lcm.DegreesLat);
-            var lonDiff = Math.Abs(dd.GetLongitudeDD() - lcm.DegreesLon);
-
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            DisplayOutput(expectedResult, actualResult, dict);
-
-            Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m );
-            Assert.IsTrue(lonDiff >= 0 && lonDiff <= 0.0001m );
+            Assert.AreEqual(expectedPositiveResult, actualPositiveResult);
+            Assert.AreEqual(expectedNegativeResult, actualNegativeResult);
+            Assert.AreEqual(expectedZeroResult, actualZeroResult);
         }
 
         [TestMethod()]
-        public void Test_ConvertDDMToDMS()
+        public void GetNSEW_Test()
         {
-            //var lcm = new LynnwoodCoordinatesModel();
+            var expectedLattitudeResult = "N";
+            var expectedLongitudeResult = "W";
+            var expectedCombinedResult = "NW";
 
-            //DDMCoordinate ddm = new DDMCoordinate(LynnwoodCoordinatesModel.strDDM());
-            //DMSCoordinate dms = ConversionHelper.ToDMS(ddm);
+            var lcm = LynnwoodCoordinatesModel.strDDM();
+            var splitLatAndLon = lcm.ToString().Split(CommaSymbol);
+            var lcmLattitude = splitLatAndLon[0];
+            var lcmLongitude = splitLatAndLon[1];
 
-            //string expectedResult = LynnwoodCoordinatesModel.strDMS_Expected();
-            //string actualResult = dms.ToString();
+            var actualLattitudeResult = ConversionHelper.GetNSEW(lcmLattitude);
+            var actualLongitudeResult = ConversionHelper.GetNSEW(lcmLongitude);
+            var actualCombinedResult = ConversionHelper.GetNSEW(lcm);
 
-            //if (expectedResult != actualResult)
-            //{
-            //    var latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(lcm.DegreesLat));
-            //    var lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(lcm.DegreesLon));
-
-            //    var latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(lcm.DdmMinsLat));
-            //    var lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(lcm.DdmMinsLon));
-
-            //    var latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - lcm.DmsSecondsLat);
-            //    var lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - lcm.DmsSecondsLon);
-
-            //    Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            //    dict.Add("latDiff", latDiff);
-            //    dict.Add("lonDiff", lonDiff);
-            //    dict.Add("latMinsDiff", latMinsDiff);
-            //    dict.Add("lonMinsDiff", lonMinsDiff);
-            //    dict.Add("latSecsDiff", latSecsDiff);
-            //    dict.Add("lonSecsDiff", lonSecsDiff);
-            //    DisplayOutput(expectedResult, actualResult, dict);
-
-            //    Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
-            //    Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= 0.1m);
-            //    Assert.IsTrue(latSecsDiff >= 0 && latSecsDiff <= 1.0m);
-
-            //    Assert.IsTrue(lonDiff >= 0 && lonDiff <= 0.0001m);
-            //    Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= 0.1m);
-            //    Assert.IsTrue(lonSecsDiff >= 0 && lonSecsDiff <= 1.0m);
-            //}
-            //else
-            //{
-            //    Assert.AreEqual(expectedResult, actualResult);
-            //}
+            Assert.AreEqual(expectedLattitudeResult, actualLattitudeResult);
+            Assert.AreEqual(expectedLongitudeResult, actualLongitudeResult);
+            Assert.AreEqual(expectedCombinedResult, actualCombinedResult);
         }
 
         [TestMethod()]
-        public void Test_ConvertDMSToDD()
+        public void GetNSEW2_Test1()
         {
-            var lcm = new LynnwoodCoordinatesModel();
+            var expectedNorthResult = "N";
+            var expectedEastResult = "E";
+            var expectedNonResult = "N";    //  default lattitude result is "N"
 
-            DMSCoordinate dms = new DMSCoordinate(LynnwoodCoordinatesModel.strDMS());
-            DDCoordinate dd = ConversionHelper.ToDD(dms);
+            var munich = new MunichCoordinatesModel();
+            
+            var actualNorthResult = ConversionHelper.GetNSEW(munich.DegreesLat, 1);
+            var actualEastResult = ConversionHelper.GetNSEW(munich.DegreesLon, 2);
+            var actualLattitudeNonResult = ConversionHelper.GetNSEW(0, 1);
 
-            string expectedResult = LynnwoodCoordinatesModel.strDD();
-            string actualResult = dd.ToString();
-
-            var latDiff = Math.Abs(dd.GetLattitudeDD() - lcm.DegreesLat);
-            var lonDiff = Math.Abs(dd.GetLongitudeDD() - lcm.DegreesLon);
-
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            DisplayOutput(expectedResult, actualResult, dict);
-
-            Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
-            Assert.IsTrue(lonDiff >= 0 && lonDiff <= 0.0001m);
+            Assert.AreEqual(expectedNorthResult, actualNorthResult);
+            Assert.AreEqual(expectedEastResult, actualEastResult);
+            Assert.AreEqual(expectedNonResult, actualLattitudeNonResult);
         }
 
         [TestMethod()]
-        public void Test_ConvertDMSToDDM()
+        public void GetNSEW2_Test2()
         {
-            //var lcm = new LynnwoodCoordinatesModel();
+            var expectedSouthResult = "S";
+            var expectedWestResult = "W";
+            var expectedNonResult = "E";    //  default longitude result is "E"
 
-            //DMSCoordinate dms = new DMSCoordinate(LynnwoodCoordinatesModel.strDMS());
-            //DDMCoordinate ddm = ConversionHelper.ToDDM(dms);
+            var montevideo = new MontevideoCoordinateModel();
 
-            //string expectedResult = LynnwoodCoordinatesModel.strDDM();
-            //string actualresult = ddm.ToString();
+            var actualSouthResult = ConversionHelper.GetNSEW(montevideo.DegreesLat, 1);
+            var actualWestResult = ConversionHelper.GetNSEW(montevideo.DegreesLon, 2);
+            var actualLongitudeNonResult = ConversionHelper.GetNSEW(0, 2);
 
-            //var latDiff = Math.Abs(ddm.GetLattitudeDD() - Math.Truncate(lcm.DegreesLat));
-            //var lonDiff = Math.Abs(ddm.GetLongitudeDD() - Math.Truncate(lcm.DegreesLon));
-            //var latMinsDiff = Math.Abs(ddm.GetMinsLat() - lcm.DdmMinsLat);
-            //var lonMinsDiff = Math.Abs(ddm.GetMinsLon() - lcm.DdmMinsLon);
+            Assert.AreEqual(expectedSouthResult, actualSouthResult);
+            Assert.AreEqual(expectedWestResult, actualWestResult);
+            Assert.AreEqual(expectedNonResult, actualLongitudeNonResult);
+        }
 
-            //Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            //dict.Add("latDiff", latDiff);
-            //dict.Add("lonDiff", lonDiff);
-            //dict.Add("latMinsDiff", latMinsDiff);
-            //dict.Add("lonMinsDiff", lonMinsDiff);
-            //DisplayOutput(expectedResult, actualresult, dict);
+        [TestMethod()]
+        public void IsValidTest()
+        {
+            decimal lattitude = 48.1467m;
+            decimal longitude = 11.6083m;
 
-            //Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
-            //Assert.IsTrue(lonDiff >= 0 && lonDiff <= 0.0001m);
-            //Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= 0.1m);
-            //Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= 0.1m);
+            var expectedResult = true;
+            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod()]
+        public void IsNotValidTest_Lat()
+        {
+            //  DegreesLat = 48.1467m;
+            //  DegreesLon = 11.6083m;
+            decimal lattitude = 93.1467m;
+            decimal longitude = 11.6083m;
+
+            var expectedResult = false;
+            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod()]
+        public void IsNotValidTest_Lon()
+        {
+            decimal lattitude = 48.1467m;
+            decimal longitude = 191.6083m;
+
+            var expectedResult = false;
+            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+
+        [TestMethod()]
+        public void IsNotValidTest_NegativeLat()
+        {
+            decimal lattitude = -93.1467m;
+            decimal longitude = 11.6083m;
+
+            var expectedResult = false;
+            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod()]
+        public void IsNotValidTest_NegativeLon()
+        {
+            decimal lattitude = 48.1467m;
+            decimal longitude = -180.6083m;
+
+            var expectedResult = false;
+            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+
+            Assert.AreEqual(expectedResult, actualResult);
         }
 
     }

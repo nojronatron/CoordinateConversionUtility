@@ -24,25 +24,25 @@ namespace CoordinateConversionUtility_UnitTests
             string actualResult = dDCoordindate.ToString();
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [TestMethod]
-        public void Test_DDCoordinateHelper_StringIn_ObjectOut()
-        {
-            string strInputLatAndLon = WellingtonCoordinateModel.strDD();
-            string expectedResult = "CoordinateConversionUtility.Models.DDCoordinate";
-            DDCoordinate dDCoordindate = ConversionHelper.StringToDD(strInputLatAndLon);
-            Console.WriteLine($"{ dDCoordindate.GetType() }");
-            Assert.AreEqual(expectedResult, dDCoordindate.GetType().FullName.ToString());
-        }
-        [TestMethod]
-        public void Test_DDCoordinateHelper_StringIn_ToStringOut()
-        {
-            //  strWellingtonDD has the expected result
-            string strInputLatAndLon = WellingtonCoordinateModel.strDD();
-            string expectedResult = $"{ WellingtonCoordinateModel.strDD() }";
-            DDCoordinate dDCoordindate = ConversionHelper.StringToDD(WellingtonCoordinateModel.strDD());
-            //DDCoordinate dDCoordindate = new DDCoordinate(WellingtonCoordinateModel.strDD());
-            Assert.AreEqual(expectedResult, dDCoordindate.ToString());
-        }
+        //[TestMethod]
+        //public void Test_DDCoordinateHelper_StringIn_ObjectOut()
+        //{
+        //    string strInputLatAndLon = WellingtonCoordinateModel.strDD();
+        //    string expectedResult = "CoordinateConversionUtility.Models.DDCoordinate";
+        //    DDCoordinate dDCoordindate = ConversionHelper.StringToDD(strInputLatAndLon);
+        //    Console.WriteLine($"{ dDCoordindate.GetType() }");
+        //    Assert.AreEqual(expectedResult, dDCoordindate.GetType().FullName.ToString());
+        //}
+        //[TestMethod]
+        //public void Test_DDCoordinateHelper_StringIn_ToStringOut()
+        //{
+        //    //  strWellingtonDD has the expected result
+        //    string strInputLatAndLon = WellingtonCoordinateModel.strDD();
+        //    string expectedResult = $"{ WellingtonCoordinateModel.strDD() }";
+        //    DDCoordinate dDCoordindate = ConversionHelper.StringToDD(WellingtonCoordinateModel.strDD());
+        //    //DDCoordinate dDCoordindate = new DDCoordinate(WellingtonCoordinateModel.strDD());
+        //    Assert.AreEqual(expectedResult, dDCoordindate.ToString());
+        //}
         [TestMethod]
         public void Test_ValidateGridsquareInput_ValidatesTrue()
         {

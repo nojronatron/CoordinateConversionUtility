@@ -586,7 +586,9 @@ namespace CoordinateConversionUtility
             {
                 //string ddm = ConversionHelper.ToDDM(dmsLatAndLongCoordinates);
                 //DecimalDegreesMinutes = new DDMCoordinate(ddm);
-                var ddm = ConversionHelper.ToDDM(dmsLatAndLongCoordinates);
+                var ddm = new DDMCoordinate(dmsLatAndLongCoordinates.DegreesLattitude, dmsLatAndLongCoordinates.MinutesLattitude,
+                    dmsLatAndLongCoordinates.SecondsLattitude, dmsLatAndLongCoordinates.DegreesLongitude,
+                    dmsLatAndLongCoordinates.MinutesLongitude, dmsLatAndLongCoordinates.SecondsLongitude);
 
                 LatDirection = ConversionHelper.ExtractPolarityNS(ddm.ToString());
                 LonDirection = ConversionHelper.ExtractPolarityEW(ddm.ToString());
