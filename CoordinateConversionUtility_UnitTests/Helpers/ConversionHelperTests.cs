@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 
-namespace CoordinateConversionUtility.Tests
+namespace CoordinateConversionUtility.Helpers.Tests
 {
     [TestClass()]
     public class ConversionHelperTests

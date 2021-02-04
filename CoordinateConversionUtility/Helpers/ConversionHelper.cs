@@ -3,13 +3,12 @@ using System.Text;
 
 namespace CoordinateConversionUtility
 {
+    /// <summary>
+    /// Static Helper class.
+    /// Responsible for providing basic validation and state information for Coordinate objects and portions thereof.
+    /// </summary>
     public static class ConversionHelper
     {
-        //  RULES
-        //      1) Inputs must come in as the appropriate object e.g. DD as DDCoordinateHelper instance
-        //      2) Outputs must always be one of DD, DDM, or DMS
-        //      3) NSEW format will always be: DD - none; DDM - post; DMS - Pre
-
         public static int ExtractPolarity(decimal number)
         {
             if (number > 0)
