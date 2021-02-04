@@ -50,6 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\ConversionHelperTests.cs" />
+    <Compile Include="Models\DDCoordinateTests.cs" />
+    <Compile Include="Models\DDMCoordinateTests.cs" />
+    <Compile Include="Models\DMSCoordinateTests.cs" />
+    <Compile Include="Models\UnitTestsBase.cs" />
     <Compile Include="TestModels\LynnwoodCoordinatesModel.cs" />
     <Compile Include="TestModels\MontevideoCoordinateModel.cs" />
     <Compile Include="TestModels\MunichCoordinatesModel.cs" />

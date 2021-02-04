@@ -1,49 +1,51 @@
-﻿
+﻿using System;
+
 namespace CoordinateConversionUtility_UnitTests.TestModels
 {
-    public class WellingtonCoordinateModel : SymbolHelper
+    public class WellingtonCoordinateModel : RootCoordinateModel
     {
-        public string ArrlDDM()
+        internal static string NS => "S";
+        internal static string EW => "E";
+        public WellingtonCoordinateModel()
         {
-            return $"41{ DegreesSymbol }17.00{ MinutesSymbol }S, 174{ DegreesSymbol }44.70{ MinutesSymbol}E";
+            DegreesLat = -41.2833m;
+            DegreesLon = 174.7450m;
         }
-        public string ArrlGridsquare()
+        public static string strGridsquare()
         {
-            return "RE78ir";
+            return $"RE78ir";
         }
-        public decimal DegreesLat()
+        public static string strDD()
         {
-            return -41.2833m;
+            return $"{ -41.2833m }{ DegreesSymbol }, { 174.7450m }{ DegreesSymbol }";
         }
-        public decimal DegreesLon()
+        public static string strDDM()
         {
-            return 174.7450m;
+            //  Confirmed correct: 41°17.50'S, 174°45.00'E
+            //  This is a RESULT DDM to test program output against
+            return $"41{ DegreesSymbol }17.50{ MinutesSymbol }S, " +
+            $"174{ DegreesSymbol }45.00{ MinutesSymbol }E";
+            
         }
-        public string GoogleMapsDD()
+        public static string strArrlDDM()
         {
-            return $"-41.2833{ DegreesSymbol }, 174.7450{ DegreesSymbol }";
+            //  these are the ARRL coordinates that point to middle of gridsquare
+            //  Submit this method to test accurrate gridsquare result e.g.: ConvertGridsquareToDDM()
+            return $"41{ DegreesSymbol }17.0{ MinutesSymbol }S, " +
+                   $"174{ DegreesSymbol }44.7{ MinutesSymbol }E";
         }
-        public string GoogleMapsDMS()
+        public static string strDMS()
         {
-            return $" S 41{ DegreesSymbol }16{ MinutesSymbol }59.9{ SecondsSymbol }, " +
-                   $"E 174{ DegreesSymbol }44{ MinutesSymbol }42.0{ SecondsSymbol }";
-        }
-        public string CalculatedDDM()
-        {
-            return $"41{ DegreesSymbol }17.00{ MinutesSymbol }S, 174{ DegreesSymbol }44.70{ MinutesSymbol }E";
-        }
-        public string AttainableDDM()
-        {
-            return $"41{ DegreesSymbol }16.25{ MinutesSymbol }S, 174{ DegreesSymbol }42.50{ MinutesSymbol }E";
-            //  <41°17.50'S, 174°45.00'E>. Actual:<41°16.25'S, 174°42.50'E>
+            return $"S 41{ DegreesSymbol }16{ MinutesSymbol }59.9{ SecondsSymbol}, " +
+                   $"W 174{ DegreesSymbol }44{ MinutesSymbol }42.0{ SecondsSymbol }";
         }
         /*  24-Feb-2020
-        ARRL DDM:	41*17.0'S, 174*44.7'E
-        ARRL Gridsquare:	RE78ir
-        GoogleMapped DD:	-41.2833, 174.7450
-        GoogleMapped DMS:	S 41*16'59.9", E 174*44'42.0"
-        Calculated DDM:		41*17.00'S, 174*44.70'E
-        Attainable DDM:		41°17.50'S, 174°45.00'E
+	    ARRL DDM:	41*17.0'S, 174*44.7'E
+	    ARRL Gridsquare:	RE78ir
+	    GoogleMapped DD:	-41.2833, 174.7450
+	    GoogleMapped DMS:	S 41*16'59.9", E 174*44'42.0"
+	    Calculated DDM:		41*17.00'S, 174*44.70'E
+    	Attainable DDM:		41°17.50'S, 174°45.00'E
         */
     }
 }
