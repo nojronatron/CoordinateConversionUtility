@@ -1,10 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CoordinateConversionUtility.Helpers;
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoordinateConversionUtility.Helpers.Tests
 {
@@ -12,15 +8,24 @@ namespace CoordinateConversionUtility.Helpers.Tests
     public class LookupTablesHelperTests
     {
         [TestMethod()]
-        public void LookupTablesHelperTest()
+        public void Test_LookupTablesHelper()
         {
-            Assert.Fail();
+            var expectedResult = "CoordinateConversionUtility.Helpers.LookupTablesHelper";
+
+            var actualResult = new LookupTablesHelper();
+
+            Assert.IsTrue(actualResult.GetType().FullName == expectedResult);
         }
 
         [TestMethod()]
-        public void GenerateTableLookupsTest()
+        public void Test_GenerateTableLookups()
         {
-            Assert.Fail();
+            var expectedResult = true;
+
+            LookupTablesHelper lth = new LookupTablesHelper();
+            var actualResult = lth.GenerateTableLookups();
+
+            Assert.IsTrue(expectedResult == actualResult);
         }
     }
 }

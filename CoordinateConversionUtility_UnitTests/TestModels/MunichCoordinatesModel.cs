@@ -8,42 +8,55 @@ namespace CoordinateConversionUtility_UnitTests.TestModels
         internal static string EW => "E";
         public MunichCoordinatesModel()
         {
-            DegreesLat = 48.1467m;
-            DegreesLon = 11.6083m;
+            DegreesLat = 48.14690m;
+            DegreesLon = 11.60833m;
+            DdmMinsLat = 8.81m;
+            DdmMinsLon = 36.49m;
+            DmsSecondsLat = 48.60m;
+            DmsSecondsLon = 29.40m;
         }
+
         public static string strGridSquare()
         {
             return $"JN58td";
         }
         public static string strDD()
         {
-            return $"{ 48.1467 }{ DegreesSymbol }, { 11.6083 }{ DegreesSymbol }";
+            return $"{ 48.14690:f5}{ DegreesSymbol }, { 11.60833:f5}{ DegreesSymbol }";
         }
+        /// <summary>
+        /// Calculated DDM test program output against.
+        /// </summary>
+        /// <returns></returns>
         public static string strDDM()
         {
-            //  This is a RESULT DDM to test program output against
-            return $"48{ DegreesSymbol }10.00{ MinutesSymbol }N, " +
-                   $"11{ DegreesSymbol }40.00{ MinutesSymbol }E";
+            return $"48{ DegreesSymbol }08.81{ MinutesSymbol }{ NS }, " +
+                   $"11{ DegreesSymbol }36.49{ MinutesSymbol }{ EW }";
         }
+
+        /// <summary>
+        /// Coordinates that point to the middle of the gridsquare
+        /// </summary>
+        /// <returns></returns>
         public static string strArrlDDM()
         {
-            //  these are the ARRL coordinates that point to middle of gridsquare RE78ir
-            return $"48{ DegreesSymbol }08.80{ MinutesSymbol }{ NS }, " +
-                   $"11{ DegreesSymbol }36.50{ MinutesSymbol }{ EW }";
+            return $"48{ DegreesSymbol }07.75{ MinutesSymbol }{ NS }, " +
+                   $"11{ DegreesSymbol }37.50{ MinutesSymbol }{ EW }";
         }
+
         public static string strDMS()
         {
-            return $"N 48{ DegreesSymbol }08{ MinutesSymbol }48.1{ SecondsSymbol}, " +
-                   $"E 11{ DegreesSymbol }36{ MinutesSymbol }29.9{ SecondsSymbol }";
+            return $"N 48{ DegreesSymbol }08{ MinutesSymbol }48.60{ SecondsSymbol}, " +
+                   $"E 11{ DegreesSymbol }36{ MinutesSymbol }29.40{ SecondsSymbol }";
         }
     }
     /*
- 	ARRL DDM:			48*8.8'N, 11*36.5'E
-	ARRL Gridsquare:	JN58td
-	GoogelMapped DD:	48.1467, 11.6083
-	GoogleMapped DMS:	48°08'48.1"N 11°36'29.9"E
-	Calculated DDM:		48*08.80'N, 11*36.49'E
-	Attainable DDM:		48*10.00'N, 11*35.00'E
-    TODO:               The TABLES (Grid->DDM) will push 36.49 UP to 40.00 NOT DOWN to 35.00
+    Validated on GoogleMaps 6-Feb-21
+ 	ARRL input DDM:			48*8.8'N, 11*36.5'E
+	ARRL input Gridsquare:	JN58td
+	GoogelMapped DD:	48.14690, 11.60833
+    GoogleMapped DMS:	48°08'48.8"N 11°36'30.0"E
+	Calculated DDM:		48*08.81'N, 11*36.49'E
+	Attainable DDM:		48*08.75'N, 11*37.50'E
     */
 }

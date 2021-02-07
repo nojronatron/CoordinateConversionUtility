@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CoordinateConversionUtility.Models
 {
-    public class DMSCoordinate : DDMCoordinate
+    public class DMSCoordinate : DDMCoordinate, IEquatable<DMSCoordinate>
     {
         internal decimal _secondsLattitude;
         internal decimal SecondsLattitude
@@ -168,6 +169,46 @@ namespace CoordinateConversionUtility.Models
                    $"{ ConversionHelper.GetNSEW(DegreesLongitude, 2) } { Math.Abs(GetShortDegreesLon()) }{ DegreesSymbol }" +
                    $"{ GetShortMinutesLongitude():00}{ MinutesSymbol }" +
                    $"{ Math.Round(SecondsLongitude, 1):00.0}{ SecondsSymbol }";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as DMSCoordinate);
+        }
+
+        public bool Equals(DMSCoordinate other)
+        {
+            return other != null &&
+                   base.Equals(other) &&
+                   DegreesLattitude == other.DegreesLattitude &&
+                   DegreesLongitude == other.DegreesLongitude &&
+                   MinutesLattitude == other.MinutesLattitude &&
+                   MinutesLongitude == other.MinutesLongitude &&
+                   SecondsLattitude == other.SecondsLattitude &&
+                   SecondsLongitude == other.SecondsLongitude;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 2097953291;
+            hashCode = hashCode * -1521134295 + base.GetHashCode();
+            hashCode = hashCode * -1521134295 + DegreesLattitude.GetHashCode();
+            hashCode = hashCode * -1521134295 + DegreesLongitude.GetHashCode();
+            hashCode = hashCode * -1521134295 + MinutesLattitude.GetHashCode();
+            hashCode = hashCode * -1521134295 + MinutesLongitude.GetHashCode();
+            hashCode = hashCode * -1521134295 + SecondsLattitude.GetHashCode();
+            hashCode = hashCode * -1521134295 + SecondsLongitude.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator ==(DMSCoordinate left, DMSCoordinate right)
+        {
+            return EqualityComparer<DMSCoordinate>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(DMSCoordinate left, DMSCoordinate right)
+        {
+            return !(left == right);
         }
     }
 }

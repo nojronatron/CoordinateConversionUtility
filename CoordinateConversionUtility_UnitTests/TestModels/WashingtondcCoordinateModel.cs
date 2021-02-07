@@ -19,7 +19,7 @@ namespace CoordinateConversionUtility_UnitTests.TestModels
         }
         public static string strDD()
         {
-            return $"{ 38.9200m }{ DegreesSymbol }, { -77.0650m }{ DegreesSymbol }";
+            return $"{ 38.9200m:f5}{ DegreesSymbol }, { -77.0650m:f5}{ DegreesSymbol }";
         }
         public static string strArrlDDM()
         {

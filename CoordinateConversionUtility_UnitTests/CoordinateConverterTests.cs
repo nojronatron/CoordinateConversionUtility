@@ -1,86 +1,168 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CoordinateConversionUtility;
 using System;
+using CoordinateConversionUtility.Models;
+using CoordinateConversionUtility_UnitTests.TestModels;
+using CoordinateConversionUtility.Models.Tests;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoordinateConversionUtility.Tests
 {
     [TestClass()]
-    public class CoordinateConverterTests
+    public class CoordinateConverterTests : UnitTestsBase
     {
         [TestMethod()]
-        public void CoordinateConverterTest()
+        public void CoordinateConverterCTORTest()
         {
-            Assert.Fail();
+            var cc = new CoordinateConverter();
+            
+            var expectedType = "CoordinateConversionUtility.CoordinateConverter";
+            var actualType = cc.GetType().FullName;
+
+            Assert.AreEqual(expectedType, actualType);
         }
 
         [TestMethod()]
-        public void GetGridsquareTest()
+        public void ConvertGridsquareToDDMTestNW()
         {
-            Assert.Fail();
+            var sccm = new SanClementeCoordinatesModel();
+            var cc = new CoordinateConverter();
+            var gridsquare = SanClementeCoordinatesModel.strGridsquare();
+
+            var expectedResult = new DDMCoordinate(sccm.DegreesLat, sccm.DdmMinsLat, sccm.DegreesLon, sccm.DdmMinsLon);
+            var actualResult = cc.ConvertGridsquareToDDM(gridsquare);
+
+            var latDiff = Math.Abs(expectedResult.GetShortDegreesLat() - actualResult.GetShortDegreesLat());
+            var lonDiff = Math.Abs(expectedResult.GetShortDegreesLon() - actualResult.GetShortDegreesLon());
+
+            var latMinsDiff = Math.Abs(expectedResult.GetMinsLat() - actualResult.GetMinsLat());
+            var lonMinsDiff = Math.Abs(expectedResult.GetMinsLon() - actualResult.GetMinsLon());
+
+            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            dict.Add("latDiff", latDiff);
+            dict.Add("lonDiff", lonDiff);
+            dict.Add("latMinsDiff", latMinsDiff);
+            dict.Add("lonMinsDiff", lonMinsDiff);
+            DisplayOutput(expectedResult.ToString(), actualResult.ToString(), dict);
+
+            Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
+            Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
+
+            Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
+            Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
+
+            //var areEqual = expectedResult.Equals(actualResult);
+            //Assert.IsTrue(areEqual);
         }
 
         [TestMethod()]
-        public void SetGridsquareTest()
+        public void ConvertGridsquareToDDMTestNE()
         {
-            Assert.Fail();
+            var mcm = new MunichCoordinatesModel();
+            var cc = new CoordinateConverter();
+            var gridsquare = MunichCoordinatesModel.strGridSquare();
+
+            var expectedResult = new DDMCoordinate(mcm.DegreesLat, mcm.DdmMinsLat, mcm.DegreesLon, mcm.DdmMinsLon);
+            var actualResult = cc.ConvertGridsquareToDDM(gridsquare);
+
+            var latDiff = Math.Abs(expectedResult.GetShortDegreesLat() - actualResult.GetShortDegreesLat());
+            var lonDiff = Math.Abs(expectedResult.GetShortDegreesLon() - actualResult.GetShortDegreesLon());
+
+            var latMinsDiff = Math.Abs(expectedResult.GetMinsLat() - actualResult.GetMinsLat());
+            var lonMinsDiff = Math.Abs(expectedResult.GetMinsLon() - actualResult.GetMinsLon());
+
+            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            dict.Add("latDiff", latDiff);
+            dict.Add("lonDiff", lonDiff);
+            dict.Add("latMinsDiff", latMinsDiff);
+            dict.Add("lonMinsDiff", lonMinsDiff);
+            DisplayOutput(expectedResult.ToString(), actualResult.ToString(), dict);
+
+            Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
+            Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
+
+            Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
+            Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold); //  Longitude Minutes calculations are off by 1 full degree
         }
 
         [TestMethod()]
-        public void GetLatDegreesTest()
+        public void ConvertGridsquareToDDMTestSW()
         {
-            Assert.Fail();
+            var wcm = new WellingtonCoordinateModel();
+            var cc = new CoordinateConverter();
+            var gridsquare = WellingtonCoordinateModel.strGridsquare();
+
+            var expectedResult = new DDMCoordinate(wcm.ShortDegreesLattitude(), wcm.DdmMinsLat, wcm.ShortDegreesLongitude(), wcm.DdmMinsLon);
+            var actualResult = cc.ConvertGridsquareToDDM(gridsquare);
+
+            var latDiff = Math.Abs(expectedResult.GetShortDegreesLat() - actualResult.GetShortDegreesLat());
+            var lonDiff = Math.Abs(expectedResult.GetShortDegreesLon() - actualResult.GetShortDegreesLon());
+
+            var latMinsDiff = Math.Abs(expectedResult.GetMinsLat() - actualResult.GetMinsLat());
+            var lonMinsDiff = Math.Abs(expectedResult.GetMinsLon() - actualResult.GetMinsLon());
+
+            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            dict.Add("latDiff", latDiff);
+            dict.Add("lonDiff", lonDiff);
+            dict.Add("latMinsDiff", latMinsDiff);
+            dict.Add("lonMinsDiff", lonMinsDiff);
+            DisplayOutput(expectedResult.ToString(), actualResult.ToString(), dict);
+
+            Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
+            Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
+
+            Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
+            Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
         [TestMethod()]
-        public void AddLatDegreesRemainderTest()
+        public void ConvertGridsquareToDDMTestSE()
         {
-            Assert.Fail();
-        }
+            var mvcm = new MontevideoCoordinateModel();
+            var cc = new CoordinateConverter();
+            var gridsquare = MontevideoCoordinateModel.strGridsquare();
 
-        [TestMethod()]
-        public void GetLatMinutesTest()
-        {
-            Assert.Fail();
-        }
+            var expectedResult = new DDMCoordinate(mvcm.ShortDegreesLattitude(), mvcm.DdmMinsLat, mvcm.ShortDegreesLongitude(), mvcm.DdmMinsLon);
+            var actualResult = cc.ConvertGridsquareToDDM(gridsquare);
 
-        [TestMethod()]
-        public void GetLonDegreesTest()
-        {
-            Assert.Fail();
-        }
+            var latDiff = Math.Abs(expectedResult.GetShortDegreesLat() - actualResult.GetShortDegreesLat());
+            var lonDiff = Math.Abs(expectedResult.GetShortDegreesLon() - actualResult.GetShortDegreesLon());
 
-        [TestMethod()]
-        public void AddLonDegreesRemainderTest()
-        {
-            Assert.Fail();
-        }
+            var latMinsDiff = Math.Abs(expectedResult.GetMinsLat() - actualResult.GetMinsLat());
+            var lonMinsDiff = Math.Abs(expectedResult.GetMinsLon() - actualResult.GetMinsLon());
 
-        [TestMethod()]
-        public void GetLonMinutesTest()
-        {
-            Assert.Fail();
-        }
+            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            dict.Add("latDiff", latDiff);
+            dict.Add("lonDiff", lonDiff);
+            dict.Add("latMinsDiff", latMinsDiff);
+            dict.Add("lonMinsDiff", lonMinsDiff);
+            DisplayOutput(expectedResult.ToString(), actualResult.ToString(), dict);
 
-        [TestMethod()]
-        public void ConvertGridsquareToDDMTest()
-        {
-            Assert.Fail();
+            Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
+            Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
+
+            Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
+            Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
+
+            //var areEqual = expectedResult.Equals(actualResult);
+            //Assert.IsTrue(areEqual);
         }
 
         [TestMethod()]
         public void ConvertDDMtoGridsquareTest()
         {
-            Assert.Fail();
+            var sccm = new SanClementeCoordinatesModel();
+            var degreesLat = Math.Truncate(sccm.DegreesLat);
+            var degreesLon = Math.Truncate(sccm.DegreesLon);
+            var minutesLat = sccm.DdmMinsLat;
+            var minutesLon = sccm.DdmMinsLon;
+            var ddm = new DDMCoordinate(degreesLat, minutesLat, degreesLon, minutesLon);
+            var cc = new CoordinateConverter();
+
+            var expectedResult = SanClementeCoordinatesModel.strGridsquare();
+            var actualResult = cc.ConvertDDMtoGridsquare(ddm);
+
+            Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [TestMethod()]
-        public void ConvertDMStoGridsquareTest()
-        {
-            Assert.Fail();
-        }
     }
 }

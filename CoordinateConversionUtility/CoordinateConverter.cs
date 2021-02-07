@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Text;
-using System.Diagnostics.Contracts;
 using CoordinateConversionUtility.Models;
 using CoordinateConversionUtility.Helpers;
 
@@ -58,28 +57,36 @@ namespace CoordinateConversionUtility
 
                 if (LookupTablesHelper.GenerateTableLookups())
                 {
+                    var tempLatDegrees = 0.0m;
                     decimal adjustedLatDegrees = 0;
+                    var tempLatMinutes = 0.0m;
+
+                    var tempLonDegrees = 0.0m;
                     decimal adjustedLonDegrees = 0;
+                    var tempLonMinutes = 0.0m;
 
                     if (GridSquareHelper.ValidateGridsquareInput(gridsquare, out string validGridsquare))
                     {
-                        DDMlatDegrees = ConversionHelper.GetLatDegrees(LookupTablesHelper, gridsquare);
-                        LatDirection = ConversionHelper.ExtractPolarity(DDMlatDegrees);
-                        var latDegreesRemainder = ConversionHelper.AddLatDegreesRemainder(DDMlatDegrees, LatDirection, gridsquare);
-                        DDMlatMinutes = ConversionHelper.GetLatMinutes(LookupTablesHelper, LatDirection, DDMlatDegrees, gridsquare, out adjustedLatDegrees);
+                        tempLatDegrees = ConversionHelper.GetLatDegrees(LookupTablesHelper, validGridsquare, out short latDirection);
+                        LatDirection = latDirection;
+                        //LatDirection = ConversionHelper.ExtractPolarity(DDMlatDegrees);
+                        
+                        decimal latDegreesWithRemainder = ConversionHelper.AddLatDegreesRemainder(tempLatDegrees, LatDirection, validGridsquare);
+                        DDMlatMinutes = ConversionHelper.GetLatMinutes(LookupTablesHelper, latDegreesWithRemainder, LatDirection, validGridsquare, out adjustedLatDegrees);
 
-                        DDMlonDegrees = ConversionHelper.GetLonDegrees(LookupTablesHelper, gridsquare);
-                        LonDirection = ConversionHelper.ExtractPolarity(DDMlonDegrees);
-                        var lonDegreesRemainder = ConversionHelper.AddLonDegreesRemainder(DDMlonDegrees, LonDirection, gridsquare);
-                        DDMlonMinutes = ConversionHelper.GetLonMinutes(LookupTablesHelper, LonDirection, DDMlonDegrees, gridsquare, out adjustedLonDegrees);
+                        DDMlonDegrees = ConversionHelper.GetLonDegrees(LookupTablesHelper, validGridsquare, out short lonDirection);
+                        LonDirection = lonDirection;
+                        //LonDirection = ConversionHelper.ExtractPolarity(DDMlonDegrees);
+                        decimal lonDegreesWithRemainder = ConversionHelper.AddLonDegreesRemainder(DDMlonDegrees, LonDirection, validGridsquare);
+                        DDMlonMinutes = ConversionHelper.GetLonMinutes(LookupTablesHelper, lonDegreesWithRemainder, LonDirection, validGridsquare, out adjustedLonDegrees);
 
-                        var nearestEvenLatMinute = ConversionHelper.GetNearestEvenMultiple(DDMlatMinutes, 1);
-                        var nearestEvenLonMinute = ConversionHelper.GetNearestEvenMultiple(DDMlonMinutes, 2);
+                        //var nearestEvenLatMinute = ConversionHelper.GetNearestEvenMultiple(DDMlatMinutes, 1);
+                        //var nearestEvenLonMinute = ConversionHelper.GetNearestEvenMultiple(DDMlonMinutes, 2);
                     }
 
                     DdmResult = new DDMCoordinate(
-                        adjustedLatDegrees * LatDirection, DDMlatMinutes,
-                        adjustedLonDegrees * LonDirection, DDMlonMinutes);
+                        adjustedLatDegrees, DDMlatMinutes,
+                        adjustedLonDegrees, DDMlonMinutes);
 
                     return DdmResult;
                 }
@@ -95,34 +102,47 @@ namespace CoordinateConversionUtility
         /// <returns></returns>
         public string ConvertDDMtoGridsquare(DDMCoordinate ddmCoordinates)
         {
-            if (ddmCoordinates != null)
+            if (ddmCoordinates == null)
             {
-                var gridsquare = new StringBuilder();
+                return string.Empty;
+            }
 
-                if (LookupTablesHelper.GenerateTableLookups())
-                {
-                    DDMlatDegrees = ddmCoordinates.GetShortDegreesLat();
-                    DDMlonDegrees = ddmCoordinates.GetShortDegreesLon();
-                    DDMlatMinutes = ddmCoordinates.MinutesLattitude;
-                    DDMlonMinutes = ddmCoordinates.MinutesLongitude;
-                    LatDirection = ConversionHelper.ExtractPolarityNS(ddmCoordinates.ToString());
-                    LonDirection = ConversionHelper.ExtractPolarityEW(ddmCoordinates.ToString());
+            var gridsquare = new StringBuilder();
 
-                    gridsquare.Append(GridSquareHelper.GetFirstGridsquareCharacter(DDMlonDegrees, LonDirection));
-                    gridsquare.Append(GridSquareHelper.GetSecondGridsquareCharacter(DDMlatDegrees, LatDirection));
-                    gridsquare.Append(GridSquareHelper.GetThirdGridsquareCharacter(DDMlonDegrees, LonDirection));
-                    gridsquare.Append(GridSquareHelper.GetFourthGridsquareCharacter(RemainderLat, LatDirection));
-                    gridsquare.Append(GridSquareHelper.GetFifthGridsquareCharacter(RemainderLon, LonDirection, nearestEvenMultiple));
-                    gridsquare.Append(GridSquareHelper.GetSixthGridsquareCharacter( //LatDirection, DDMlatMinutes, nearestEvenMultiple));
-                return $"{ gridsquare.ToString() }";
+            if (LookupTablesHelper.GenerateTableLookups())
+            {
+                DDMlatDegrees = ddmCoordinates.GetShortDegreesLat();
+                DDMlonDegrees = ddmCoordinates.GetShortDegreesLon();
+                DDMlatMinutes = ddmCoordinates.MinutesLattitude;
+                DDMlonMinutes = ddmCoordinates.MinutesLongitude;
+                LatDirection = ConversionHelper.ExtractPolarityNS(ddmCoordinates.ToString());
+                LonDirection = ConversionHelper.ExtractPolarityEW(ddmCoordinates.ToString());
+
+                gridsquare.Append(GridSquareHelper.GetFirstGridsquareCharacter(DDMlonDegrees, LonDirection, out decimal remainderLon));
+                gridsquare.Append(GridSquareHelper.GetSecondGridsquareCharacter(DDMlatDegrees, LatDirection, out decimal remainderLat));
+
+                gridsquare.Append(GridSquareHelper.GetThirdGridsquareCharacter(remainderLon, LonDirection, out decimal minsRemainderLon));
+                gridsquare.Append(GridSquareHelper.GetFourthGridsquareCharacter(remainderLat, LatDirection, out decimal minsRemainderLat));
+
+                var ddmLonMinsWithRemainder = LonDirection * (minsRemainderLon + DDMlonMinutes);
+                decimal nearestEvenMultipleLon = ConversionHelper.GetNearestEvenMultiple(ddmLonMinsWithRemainder, 2);
+                //gridsquare.Append(GridSquareHelper.GetFifthGridsquareCharacter(ddmLonMinsWithRemainder, LonDirection, nearestEvenMultipleLon));
+                //decimal nearestEvenMultipleLon = ConversionHelper.GetNearestEvenMultiple(DDMlonMinutes, 2);
+                gridsquare.Append(GridSquareHelper.GetFifthGridsquareCharacter(minsRemainderLon, LonDirection, nearestEvenMultipleLon));
+
+                var ddmLatMinsWithRemainder = LatDirection * (minsRemainderLat + DDMlatMinutes);
+                decimal nearestEvenMultipleLat = ConversionHelper.GetNearestEvenMultiple(ddmLatMinsWithRemainder, 1);
+                //gridsquare.Append(GridSquareHelper.GetSixthGridsquareCharacter(ddmLatMinsWithRemainder, LatDirection, nearestEvenMultipleLat));
+                //decimal nearestEvenMultipleLat = ConversionHelper.GetNearestEvenMultiple(DDMlatMinutes, 1);
+                gridsquare.Append(GridSquareHelper.GetSixthGridsquareCharacter(minsRemainderLat, LatDirection, nearestEvenMultipleLat));
             }
             else
             {
-                return string.Empty;    //  if input is empty output is empty
+                return "??????";
             }
+
+            return gridsquare.ToString();
         }
-
-
         //public string GetGridsquare() => Gridsquare.ToString();
 
         //public void SetGridsquare(string gridsquare)

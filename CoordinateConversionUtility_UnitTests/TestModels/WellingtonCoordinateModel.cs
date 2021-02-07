@@ -10,6 +10,10 @@ namespace CoordinateConversionUtility_UnitTests.TestModels
         {
             DegreesLat = -41.2833m;
             DegreesLon = 174.7450m;
+            DdmMinsLat = 16.99m;
+            DdmMinsLon = 44.70m;
+            DmsSecondsLat = 59.40m;
+            DmsSecondsLon = 42.00m;
         }
         public static string strGridsquare()
         {
@@ -17,20 +21,27 @@ namespace CoordinateConversionUtility_UnitTests.TestModels
         }
         public static string strDD()
         {
-            return $"{ -41.2833m }{ DegreesSymbol }, { 174.7450m }{ DegreesSymbol }";
+            return $"{ -41.2833m:f5}{ DegreesSymbol }, { 174.7450m:f5}{ DegreesSymbol }";
         }
+
+        /// <summary>
+        /// Test program output against this calculated DDM.
+        /// </summary>
+        /// <returns></returns>
         public static string strDDM()
         {
             //  Confirmed correct: 41°17.50'S, 174°45.00'E
-            //  This is a RESULT DDM to test program output against
             return $"41{ DegreesSymbol }17.50{ MinutesSymbol }S, " +
             $"174{ DegreesSymbol }45.00{ MinutesSymbol }E";
             
         }
+
+        /// <summary>
+        /// DDM Coordinates at the middle of the current gridsquare.
+        /// </summary>
+        /// <returns></returns>
         public static string strArrlDDM()
         {
-            //  these are the ARRL coordinates that point to middle of gridsquare
-            //  Submit this method to test accurrate gridsquare result e.g.: ConvertGridsquareToDDM()
             return $"41{ DegreesSymbol }17.0{ MinutesSymbol }S, " +
                    $"174{ DegreesSymbol }44.7{ MinutesSymbol }E";
         }

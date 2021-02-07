@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CoordinateConversionUtility.Models
 {
     /// <summary>
     /// Decimal Degrees coordinate class
     /// </summary>
-    public class DDCoordinate : CoordinateBase
+    public class DDCoordinate : CoordinateBase, IEquatable<DDCoordinate>
     {
         public DDCoordinate() { }
 
@@ -32,8 +33,8 @@ namespace CoordinateConversionUtility.Models
 
         public DDCoordinate(decimal ddmLatDegrees, decimal ddmLatMins, decimal ddmLonDegrees, decimal ddmLonMins)
         {
-            DegreesLattitude = ddmLatDegrees + (ddmLatMins / 60);
-            DegreesLongitude = ddmLonDegrees + (ddmLonMins / 60);
+            DegreesLattitude = Math.Truncate(ddmLatDegrees) + (ddmLatMins / 60);
+            DegreesLongitude = Math.Truncate(ddmLonDegrees) + (ddmLonMins / 60);
         }
 
         public DDCoordinate(decimal dmsLatDegrees, decimal dmsLatMinutes, decimal dmsLatSeconds,
@@ -126,8 +127,39 @@ namespace CoordinateConversionUtility.Models
 
         public override string ToString()
         {
-            return $"{ DegreesLattitude:f4}{ DegreesSymbol }, { DegreesLongitude:f4}{ DegreesSymbol }";
+            return $"{ DegreesLattitude:f5}{ DegreesSymbol }, { DegreesLongitude:f5}{ DegreesSymbol }";
         }
 
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as DDCoordinate);
+        }
+
+        public bool Equals(DDCoordinate other)
+        {
+            return other != null &&
+                   base.Equals(other) &&
+                   DegreesLattitude == other.DegreesLattitude &&
+                   DegreesLongitude == other.DegreesLongitude;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 2104951357;
+            hashCode = hashCode * -1521134295 + base.GetHashCode();
+            hashCode = hashCode * -1521134295 + DegreesLattitude.GetHashCode();
+            hashCode = hashCode * -1521134295 + DegreesLongitude.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator ==(DDCoordinate left, DDCoordinate right)
+        {
+            return EqualityComparer<DDCoordinate>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(DDCoordinate left, DDCoordinate right)
+        {
+            return !(left == right);
+        }
     }
 }
