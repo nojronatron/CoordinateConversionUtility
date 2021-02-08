@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CoordinateConversionUtility.Models
 {
-    public class DDMCoordinate : DDCoordinate
+    public class DDMCoordinate : DDCoordinate, IEquatable<DDMCoordinate>
     {
         internal decimal _minutesLattitude;
         internal decimal MinutesLattitude
@@ -124,6 +125,42 @@ namespace CoordinateConversionUtility.Models
                    $"{ Math.Round(MinutesLattitude, 2):00.00}{ MinutesSymbol }{ ConversionHelper.GetNSEW(DegreesLattitude, 1) }, " +
                    $"{ Math.Abs(GetShortDegreesLon())}{ DegreesSymbol }" +
                    $"{ Math.Round(MinutesLongitude, 2):00.00}{ MinutesSymbol }{ ConversionHelper.GetNSEW(DegreesLongitude, 2) }";
+        }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as DDMCoordinate);
+        }
+
+        public bool Equals(DDMCoordinate other)
+        {
+            return other != null &&
+                   base.Equals(other) &&
+                   DegreesLattitude == other.DegreesLattitude &&
+                   DegreesLongitude == other.DegreesLongitude &&
+                   MinutesLattitude == other.MinutesLattitude &&
+                   MinutesLongitude == other.MinutesLongitude;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = -248276796;
+            hashCode = hashCode * -1521134295 + base.GetHashCode();
+            hashCode = hashCode * -1521134295 + DegreesLattitude.GetHashCode();
+            hashCode = hashCode * -1521134295 + DegreesLongitude.GetHashCode();
+            hashCode = hashCode * -1521134295 + MinutesLattitude.GetHashCode();
+            hashCode = hashCode * -1521134295 + MinutesLongitude.GetHashCode();
+            return hashCode;
+        }
+
+        public static bool operator ==(DDMCoordinate left, DDMCoordinate right)
+        {
+            return EqualityComparer<DDMCoordinate>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(DDMCoordinate left, DDMCoordinate right)
+        {
+            return !(left == right);
         }
     }
 }

@@ -1,54 +1,57 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoordinateConversionUtility_UnitTests.TestModels
 {
-    public class SanClementeCoordinatesModel : SymbolHelper
+    class SanClementeCoordinatesModel : RootCoordinateModel
     {
-        public string ArrlDDM()
+        internal static string NS => "N";
+        internal static string EW => "W";
+        public SanClementeCoordinatesModel()
         {
-            return $"33{ DegreesSymbol }26.25{ MinutesSymbol }N, 117{ DegreesSymbol }37.50{ MinutesSymbol}W";
-        }   //  	    ARRL DDM:		    33*26.25'N, 117*37.5'W
-        public string ArrlGridsquare()
-        {
-            return "DM13ek";
+            DegreesLat = 33.43749m; //33.4375m;
+            DegreesLon = -117.62495m; //-117.6250m;
+            DdmMinsLat = 26.25m;
+            DdmMinsLon = 37.49m;
+            DmsSecondsLat = 14.9m;
+            DmsSecondsLon = 29.8m;
         }
-        public decimal DegreesLat()
+        public static string strGridsquare()
         {
-            return 33.4375m;
+            return $"DM13ek";
         }
-        public decimal DegreesLon()
+        public static string strDD()
         {
-            return -117.6250m;
-        }   //     //  	    GoogleMapped DD:    33.4375, -117.6250
-        public string GoogleMapsDD()
-        {
-            return $"33.4375{ DegreesSymbol }, -117.6250{ DegreesSymbol }";
+            return $"{ 33.4375m:f5}{ DegreesSymbol }, { -117.6250m:f5}{ DegreesSymbol }";
         }
-        public string GoogleMapsDMS()
+        public static string strDDM()
         {
-            return $"N 33{ DegreesSymbol }26{ MinutesSymbol }15.0{ SecondsSymbol }, " +
-                   $"W 117{ DegreesSymbol }37{ MinutesSymbol }30.0{ SecondsSymbol }";
-        }   //  GoogleMapped DMS:	N 33*26'15", W 117*37'30"
-        public string CalculatedDDM()
-        {
-            return $"33{ DegreesSymbol }26.25{ MinutesSymbol }N, 117{ DegreesSymbol }37.50{ MinutesSymbol }W";
+            return $"33{ DegreesSymbol }26.25{ MinutesSymbol }{ NS }, " +
+                   $"117{ DegreesSymbol }37.50{ MinutesSymbol }{ EW }";
         }
-        public string AttainableDDM()
+
+        /// <summary>
+        /// Coordinates that point to middle of gridsquare RE78ir
+        /// </summary>
+        /// <returns></returns>
+        public static string strArrlDDM()
         {
-            return $"33{ DegreesSymbol }26.25{ MinutesSymbol }N, 117{ DegreesSymbol }37.50{ MinutesSymbol }W";
-            //  <33°27.50'N, 117°40.00'W>. Actual:<33°26.25'N, 117°37.50'W>
+
+            return $"33{ DegreesSymbol }26.25{ MinutesSymbol }{ NS }, " +
+                   $"117{ DegreesSymbol }37.50{ MinutesSymbol }{ EW }";
+        }
+        public static string strDMS()
+        {
+            return $"{ NS } 41{ DegreesSymbol }15{ MinutesSymbol }00{ SecondsSymbol}, " +
+                   $"{ EW } 174{ DegreesSymbol }45{ MinutesSymbol }00{ SecondsSymbol }";
         }
         /*
 	    ARRL DDM:		    33*26.25'N, 117*37.5'W
 	    ARRL Gridsquare:    DM13ek
-	    GoogleMapped DD:    33.4375, -117.6250
-	    GoogleMapped DMS:	N 33*26'15", W 117*37'30"
+	    GoogleMapped DD:    33.43749, -117.62495
+	    GoogleMapped DMS:	N 33*26'15.0", W 117*37'29.8"
 	    Calculated DDM:	    33*26.25'N, 117*37.50'W
         Attainable DDM:     33*27.50'N, 117*40.00'W
+        Calculated Gridsquare: DM13gk
         */
     }
 }

@@ -1,9 +1,8 @@
 ﻿using CoordinateConversionUtility_UnitTests.TestModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 
-namespace CoordinateConversionUtility.Tests
+namespace CoordinateConversionUtility.Helpers.Tests
 {
     [TestClass()]
     public class ConversionHelperTests
@@ -14,17 +13,6 @@ namespace CoordinateConversionUtility.Tests
         internal static char SecondsSymbol => (char)34;      //  double quote
         internal static char SpaceCharacter => (char)32;    //  spacebar
         internal char[] trimChars = { CommaSymbol, DegreesSymbol, MinutesSymbol, SecondsSymbol, SpaceCharacter };
-
-        private static void DisplayOutput(string expectedResult, string actualResult, Dictionary<string,decimal> diffs)
-        {
-            Console.WriteLine($"Expected: { expectedResult }");
-            Console.WriteLine($"Actual: { actualResult }");
-
-            foreach (KeyValuePair<string,decimal> diff in diffs)
-            {
-                Console.WriteLine($"{diff.Key}: {diff.Value.ToString()}");
-            }
-        }
 
         [TestMethod()]
         public void ExtractPolarityTest()

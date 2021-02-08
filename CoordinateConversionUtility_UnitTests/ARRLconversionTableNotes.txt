@@ -14,8 +14,8 @@ Munich
 
 
 Montevideo
-	ARRL DDM: 			34*54.6'S, 56*12.7'W
-	ARRL Gridsquare:	 GF15vc
+	ARRL DDM: 34*54.6'S, 56*12.7'W
+	ARRL Gridsquare: GF15vc
 	GoogleMapped DD:	-34.9100,-56.2117
 	GoogleMapped DMS:	S 34°54'36.0", W 56°12'42.1"
 	Calculated DDM:		34*54.6'S, 56*12.70'W
@@ -24,14 +24,11 @@ Montevideo
 	Status: Fixed Model 24-Feb-2020
 
 Washington DC
-	ARRL DDM:	 		38*55.2'N, 77*3.9'W
-	ARRL Gridsquare:	FM18lw
-	GoogleMapped DD:	38.9200,-77.0650
-	GoogleMapped DMS:	38°55'12.0"N 77°03'54.0"W
-	Calculated DDM:		38*55.2'N, 77*03.90'W
-	Attainable DDM:		38*57.50'N, 77*05.00'W
-	Failure(s):			
-	Status:	Testing 24-Feb-2020
+	ARRL: 38*55.2'N, 77*3.9'W
+	DMS:  N38*55'12", W77*3'54"
+	DD:   38.9200*,-77.0650*
+	corrected DDM to try:	38*57.5'N, 77*02.50'W
+
 
 
 Wellington NZ
@@ -57,13 +54,12 @@ Lynnwood WA
 
 
 SanClemente CA
-	ARRL DDM:			33*26.25'N, 117*37.5'W
+	ARRL DDM:		33*26.25'N, 117*37.5'W
 	ARRL Gridsquare:	DM13ek
 	GoogleMapped DD:	33.4375, -117.6250
 	GoogleMapped DMS:	N 33*26'15", W 117*37'30"
 	Calculated DDM:		33*26.25'N, 117*37.50'W
 	Status: FIXED
-	
 
 Unnamed #2 (Observatory?)
 	ARRL DDM:		32*58.8'N, 105*44.0'W
@@ -95,21 +91,6 @@ For input 44.70, selected table entry is 45.0.
 
 
 
-Lattitudes:
-	Nearest 1.25 minutes (half of 2.5 e.g. Middle of a Gridsquare)
-		DDM	=>	0,		1.25,	2.50,	3.75,	5,		6.25,	7.50,	8.75,	10.0
-		DMS	=>	0'0",	1'15",	2'30",	3'45",	5'0",	6'15",	7'30",	8'45",	10'0"
-	Nearest 2.5 minutes (Gridsquare and DDM conversion table steps)
-		DDM	=>	0,		2.5,	5.0,	7.5,	10.0
-		DMS	=>	0'0",	2'30",	5'0",	7'30",	10'0"
-
-Longitudes:
-	Nearest 2.5 minutes	(half of 5 e.g. Middle of a Gridsquare)
-		DDM	=>	0,		2.5,	5.0,	7.5,	10.0
-		DMS	=>	0'0",	2'30",	5'0",	7'30",	10'0"
-	Nearest 5.0 minutes (Gridsquare and DDM conversion table steps)
-		DDM	=>	0,		5.0,	10.0
-		DMS	=>	0'0",	5'0"	10'0"
 
 
 

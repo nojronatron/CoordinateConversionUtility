@@ -49,7 +49,10 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CoordinateConverterTests.cs" />
     <Compile Include="Helpers\ConversionHelperTests.cs" />
+    <Compile Include="Helpers\GridSquareHelperTests.cs" />
+    <Compile Include="Helpers\LookupTablesHelperTests.cs" />
     <Compile Include="Models\DDCoordinateTests.cs" />
     <Compile Include="Models\DDMCoordinateTests.cs" />
     <Compile Include="Models\DMSCoordinateTests.cs" />
@@ -57,11 +60,10 @@
     <Compile Include="TestModels\LynnwoodCoordinatesModel.cs" />
     <Compile Include="TestModels\MontevideoCoordinateModel.cs" />
     <Compile Include="TestModels\MunichCoordinatesModel.cs" />
-    <Compile Include="TestModels\SymbolHelper.cs" />
+    <Compile Include="TestModels\RootCoordinateModel.cs" />
     <Compile Include="TestModels\SanClementeCoordinatesModel.cs" />
     <Compile Include="TestModels\WashingtondcCoordinateModel.cs" />
     <Compile Include="TestModels\WellingtonCoordinateModel.cs" />
-    <Compile Include="CoordConvUtilUnitTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
