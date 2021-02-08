@@ -91,7 +91,7 @@ namespace CoordinateConversionUtility.Tests
             var cc = new CoordinateConverter();
             var gridsquare = WellingtonCoordinateModel.strGridsquare();
 
-            var expectedResult = new DDMCoordinate(wcm.ShortDegreesLattitude(), wcm.DdmMinsLat, wcm.ShortDegreesLongitude(), wcm.DdmMinsLon);
+            var expectedResult = new DDMCoordinate(WellingtonCoordinateModel.strAttainableDDM());
             var actualResult = cc.ConvertGridsquareToDDM(gridsquare);
 
             var latDiff = Math.Abs(expectedResult.GetShortDegreesLat() - actualResult.GetShortDegreesLat());
@@ -148,7 +148,7 @@ namespace CoordinateConversionUtility.Tests
         }
 
         [TestMethod()]
-        public void ConvertDDMtoGridsquareTest()
+        public void ConvertDDMtoGridsquareTest_NW()
         {
             var sccm = new SanClementeCoordinatesModel();
             var degreesLat = Math.Truncate(sccm.DegreesLat);
@@ -159,6 +159,57 @@ namespace CoordinateConversionUtility.Tests
             var cc = new CoordinateConverter();
 
             var expectedResult = SanClementeCoordinatesModel.strGridsquare();
+            var actualResult = cc.ConvertDDMtoGridsquare(ddm);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod()]
+        public void ConvertDDMtoGridsquareTest_NE()
+        {
+            var mcm = new MunichCoordinatesModel();
+            var degreesLat = Math.Truncate(mcm.DegreesLat);
+            var degreesLon = Math.Truncate(mcm.DegreesLon);
+            var minutesLat = mcm.DdmMinsLat;
+            var minutesLon = mcm.DdmMinsLon;
+            var ddm = new DDMCoordinate(degreesLat, minutesLat, degreesLon, minutesLon);
+            var cc = new CoordinateConverter();
+
+            var expectedResult = MunichCoordinatesModel.strGridSquare();
+            var actualResult = cc.ConvertDDMtoGridsquare(ddm);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod()]
+        public void ConvertDDMtoGridsquareTest_SE()
+        {
+            var wcm = new WellingtonCoordinateModel();
+            var degreesLat = Math.Truncate(wcm.DegreesLat);
+            var degreesLon = Math.Truncate(wcm.DegreesLon);
+            var minutesLat = wcm.DdmMinsLat;
+            var minutesLon = wcm.DdmMinsLon;
+            var ddm = new DDMCoordinate(degreesLat, minutesLat, degreesLon, minutesLon);
+            var cc = new CoordinateConverter();
+
+            var expectedResult = WellingtonCoordinateModel.strGridsquare();
+            var actualResult = cc.ConvertDDMtoGridsquare(ddm);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod()]
+        public void ConvertDDMtoGridsquareTest_SW()
+        {
+            var mcm = new MontevideoCoordinateModel();
+            var degreesLat = Math.Truncate(mcm.DegreesLat);
+            var degreesLon = Math.Truncate(mcm.DegreesLon);
+            var minutesLat = mcm.DdmMinsLat;
+            var minutesLon = mcm.DdmMinsLon;
+            var ddm = new DDMCoordinate(degreesLat, minutesLat, degreesLon, minutesLon);
+            var cc = new CoordinateConverter();
+
+            var expectedResult = MontevideoCoordinateModel.strGridsquare();
             var actualResult = cc.ConvertDDMtoGridsquare(ddm);
 
             Assert.AreEqual(expectedResult, actualResult);

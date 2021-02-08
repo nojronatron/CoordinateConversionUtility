@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CoordinateConversionUtility.Helpers
@@ -8,7 +7,7 @@ namespace CoordinateConversionUtility.Helpers
     /// <summary>
     /// List of proposed functions: 
     ///     Validate a string formatted as a GridSquare
-    ///     More TBD
+    ///     Lookup Gridsquare characters.
     /// </summary>
     public class GridSquareHelper
     {
@@ -28,7 +27,7 @@ namespace CoordinateConversionUtility.Helpers
         /// <param name="validGridsquare"></param>
         /// <returns></returns>
         internal bool ValidateGridsquareInput(string gridsquare, out string validGridsquare)
-        {   // validates gridsquare input, sets property Gridsquare with validated portion, return True if valid, False otherwise
+        {
             validGridsquare = "?";
 
             if (string.IsNullOrEmpty(gridsquare))
@@ -41,7 +40,7 @@ namespace CoordinateConversionUtility.Helpers
             MatchCollection matches = rx.Matches(tempGridsquare);
 
             if (rx.IsMatch(tempGridsquare))
-            {   // Found a gridsquare pattern in {gridsquare}
+            {
                 validGridsquare = matches[0].Value.ToString(currentCulture);
                 return true;
             }
@@ -52,41 +51,29 @@ namespace CoordinateConversionUtility.Helpers
         /// <summary>
         /// Sets 6th character of Gridsquare based on DDM_LatMins and Remainder_Lat
         /// </summary>
-        internal string GetSixthGridsquareCharacter(decimal RemainderLat, decimal LatDirection, decimal nearestEvenMultiple)
+        internal string GetSixthGridsquareCharacter(decimal LatDirection, decimal nearestEvenMultiple)
         {
-            var Gridsquare = new StringBuilder();
-            decimal latMinsLookupValue = 0m;
-            // check remainder and zero it out if in 2-degree increments otherwise...
-            //   ...remove all but the remaining single-degree increment
             if (LatDirection > 0)
             {
-                latMinsLookupValue = -60m + nearestEvenMultiple;
-                //latMinsLookupValue = nearestEvenMultiple;//GetNearestEvenMultiple(latMinsLookupValue, 1);
+                decimal latMinsLookupValue = -60m + nearestEvenMultiple;
 
                 if (LookupTablesHelper.GetTable6C2GLookup.TryGetValue(latMinsLookupValue, out string table6LookupResult))
                 {
-                    Gridsquare.Append(table6LookupResult.ToLower(currentCulture));
+                    return table6LookupResult.ToLower();
                 }
             }
-            else if (LatDirection < 0)
-            {
-                latMinsLookupValue = LatDirection * latMinsLookupValue;
 
-                if (latMinsLookupValue % 2.5m != 0)
-                {
-                    latMinsLookupValue -= (latMinsLookupValue % 2.5m);
-                }
+            if (LatDirection < 0)
+            {
+                decimal latMinsLookupValue = nearestEvenMultiple;
+
                 if (LookupTablesHelper.GetTable6C2GLookup.TryGetValue(latMinsLookupValue, out string table6LookupResult))
                 {
-                    Gridsquare.Append(table6LookupResult.ToLower(currentCulture));
+                    return table6LookupResult.ToLower();
                 }
             }
-            else
-            {
-                Gridsquare.Append("?");
-            }
 
-            return Gridsquare.ToString();
+            return "?";
         }
 
         /// <summary>
@@ -94,53 +81,34 @@ namespace CoordinateConversionUtility.Helpers
         /// LonDirection is integer 1 (East) or integer -1 (West).
         /// Arg nearestEvenMultiple must conform to 5.0 minutes spacing in Table 3: 3rd Longitude Character.
         /// </summary>
-        internal string GetFifthGridsquareCharacter(decimal RemainderLon, int LonDirection, decimal nearestEvenMultiple)
+        internal string GetFifthGridsquareCharacter(int LonDirection, decimal nearestEvenMultiple)
         {
-            decimal lonMinutesLookupValue;
-            decimal remainderCorrectionValue = 0;
-            var Gridsquare = new StringBuilder();
+            if (LonDirection == 0 || nearestEvenMultiple == 0)
+            {
+                return "?";
+            }
 
-            //if (RemainderLon > 1)
-            //{
-            //    throw new ArgumentOutOfRangeException($"RemainderLon was > 1 in { System.Reflection.MethodBase.GetCurrentMethod().Name }");
-            //}
-            //else if (RemainderLon == 1)
-            //{
-            //    remainderCorrectionValue = 60;    //  convert the remainder degrees to minutes
-            //    RemainderLon = 0;               //  zero-out the remainder now it has been used
-            //}
-
-            // use remainder from Table1Lookup and Table2Lookup, express it as Minutes and Add to actual Minutes
             if (LonDirection > 0)
             {
-                //lonMinutesLookupValue = 0 - 120 + DDMlonMinutes + remainderCorrectionValue;
-                lonMinutesLookupValue = nearestEvenMultiple;//GetNearestEvenMultiple(lonMinutesLookupValue, 2);
+                decimal lonMinutesLookupValue = 0 - 120 + nearestEvenMultiple;
 
                 if (LookupTablesHelper.GetTable3C2GLookup.TryGetValue(lonMinutesLookupValue, out string table3LookupResult))
                 {
-                    Gridsquare.Append(table3LookupResult.ToLower());
+                    return table3LookupResult.ToLower();
                 }
-            }
-            else if (LonDirection < 0)
-            {
-                lonMinutesLookupValue = 0 - nearestEvenMultiple - remainderCorrectionValue;
-
-                if (lonMinutesLookupValue % 5 != 0)
-                {
-                    lonMinutesLookupValue -= (lonMinutesLookupValue % 5);   //  move the pointer down the table to the next multiple of 5
-                }
-                int intLonMinsLookupValue = (int)lonMinutesLookupValue * LonDirection;
-                if (LookupTablesHelper.GetTable3C2GLookup.TryGetValue(intLonMinsLookupValue, out string table3LookupResult))
-                {
-                    Gridsquare.Append(table3LookupResult.ToLower());
-                }
-            }
-            else
-            {
-                Gridsquare.Append("?");
             }
 
-            return Gridsquare.ToString();
+            if (LonDirection < 0)
+            {
+                decimal lonMinutesLookupValue = nearestEvenMultiple;
+
+                if (LookupTablesHelper.GetTable3C2GLookup.TryGetValue(lonMinutesLookupValue, out string table3LookupResult))
+                {
+                    return table3LookupResult.ToLower();
+                }
+            }
+
+            return "?";
         }
 
         /// <summary>
@@ -148,25 +116,23 @@ namespace CoordinateConversionUtility.Helpers
         /// </summary>
         internal string GetFourthGridsquareCharacter(decimal RemainderLat, int LatDirection, out decimal minsRemainderLat)
         {
-            //  NOTE: Fourth Gridsquare character is arranged in single-digit increments therefore no remainder
-            decimal latLookupValue; // = RemainderLat;
-            //  TODO: GetFourthGridsquareCharacter: is a remainder neccessary?
-            minsRemainderLat = 0;   //  mins remainder would be degrees in equivalent minutes (30)
+            minsRemainderLat = 0;
 
-            if (LatDirection < 0)
+            if (LatDirection != 0)
             {
-                latLookupValue = RemainderLat + 9;
-            }
-            else if (LatDirection > 0)
-            {
-                latLookupValue = RemainderLat;
-            }
-            else
-            {
-                return "?";
-            }
 
-            return $"{ latLookupValue }";
+                if (LatDirection < 0)
+                {
+                    return $"{ RemainderLat + 9 }";
+                }
+
+                if (LatDirection > 0)
+                {
+                    return $"{ RemainderLat }";
+                }
+            }
+         
+            return "?";
         }
 
         /// <summary>
@@ -174,7 +140,7 @@ namespace CoordinateConversionUtility.Helpers
         /// </summary>
         internal string GetThirdGridsquareCharacter(decimal RemainderLon, int LonDirection, out decimal minsRemainderLon)
         {
-            decimal calculationNumber;
+            decimal calculationNumber = 0.0m;
 
             if (LonDirection < 0)
             {
@@ -203,8 +169,7 @@ namespace CoordinateConversionUtility.Helpers
                 minsRemainderLon = 0m;   //  decrement remainder
             }
 
-            decimal lonDegreesCalculatedResult = Math.Abs(Math.Truncate(calculationNumber));
-            return $"{ lonDegreesCalculatedResult }";
+            return $"{ Math.Abs(Math.Truncate(calculationNumber)) }";
         }
 
         /// <summary>
@@ -212,57 +177,36 @@ namespace CoordinateConversionUtility.Helpers
         /// </summary>
         internal string GetSecondGridsquareCharacter(decimal DDMlatDegrees, int LatDirection, out decimal RemainderLat)
         {
-            //  TODO: GetSecondGridsquareCharacter: refactor to reduce code decision-branches
-            if (DDMlatDegrees < 0)
+            RemainderLat = 0.0m;
+
+            if (LatDirection == 0)
             {
-                LatDirection = -1;
-            }
-            else if (DDMlatDegrees > 0)
-            {
-                LatDirection = 1;
-            }
-            else
-            {
-                RemainderLat = 0;
                 return "?";
             }
 
             decimal latDegreesLookupValue = DDMlatDegrees;
-            var Gridsquare = new StringBuilder();
             RemainderLat = latDegreesLookupValue % 10;
-
-            //  TODO: RemainderLat: pretty sure this is a bug
-            if (RemainderLat != 0)
-            {
-                latDegreesLookupValue -= RemainderLat;
-            }
+            latDegreesLookupValue -= RemainderLat;
 
             if (LatDirection > 0)
             {
 
                 if (LookupTablesHelper.GetTable4C2GLookupPositive.TryGetValue(latDegreesLookupValue, out string table4LookupResult))
                 {
-                    Gridsquare.Append(table4LookupResult);
+                    return $"{ table4LookupResult }";
                 }
             }
-            else if (LatDirection < 0)
+
+            if (LatDirection < 0)
             {
 
                 if (LookupTablesHelper.GetTable4C2GLookupNegative.TryGetValue(Math.Abs(latDegreesLookupValue) * LatDirection, out string table4LookupResult))
                 {
-                    Gridsquare.Append(table4LookupResult);
+                    return $"{ table4LookupResult }";
                 }
-                else
-                {
-                    Gridsquare.Append("?");
-                }
-            }
-            else
-            {
-                Gridsquare.Append("?");
             }
 
-            return Gridsquare.ToString();
+            return $"?";
         }
 
         /// <summary>
@@ -270,25 +214,15 @@ namespace CoordinateConversionUtility.Helpers
         /// </summary>
         internal string GetFirstGridsquareCharacter(decimal DDMlonDegrees, int LonDirection, out decimal RemainderLon)
         {
-            //  TODO: GetFirstGridsquareCharacter: Refactor to reduce code/decision branches
-            if (LonDirection < 0)
+            if (LonDirection == 0)
             {
-                LonDirection = -1;
-            }
-            else if (LonDirection > 0)
-            {
-                LonDirection = 1;
-            }
-            else
-            {
-                RemainderLon = 0;
+                RemainderLon = 0.0m;
                 return "?";
             }
 
             decimal lonDegreesLookupValue;
             RemainderLon = DDMlonDegrees % 20;
 
-            //  TODO: RemainderLon calcualtion: pretty sure this is a bug
             if (RemainderLon != 0)
             {
                 lonDegreesLookupValue = LonDirection * (Math.Abs(DDMlonDegrees) - Math.Abs(RemainderLon));
@@ -305,7 +239,8 @@ namespace CoordinateConversionUtility.Helpers
                     return table1LookupResult;
                 }
             }
-            else if (LonDirection > 0)
+            
+            if (LonDirection > 0)
             {
                 if (LookupTablesHelper.GetTable1C2GLookupPositive.TryGetValue(lonDegreesLookupValue, out string table1LookupResult))
                 {
