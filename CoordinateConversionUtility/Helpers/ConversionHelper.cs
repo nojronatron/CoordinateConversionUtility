@@ -161,6 +161,20 @@ namespace CoordinateConversionUtility
             return true;
         }
 
+        public static bool IsValid(string gridsquare, out string validGridsquare)
+        {
+            var gsh = new GridSquareHelper();
+
+            if (gsh.ValidateGridsquareInput(gridsquare, out string vGridsquare))
+            {
+                validGridsquare = vGridsquare;
+                return true;
+            };
+
+            validGridsquare = string.Empty;
+            return false;
+        }
+
         private static bool LatDecimalIsValid(decimal lattitudeDecimal)
         {
             if (-90 <= lattitudeDecimal && lattitudeDecimal <= 90)
