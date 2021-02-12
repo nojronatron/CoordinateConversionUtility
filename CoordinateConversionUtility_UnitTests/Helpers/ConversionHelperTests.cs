@@ -15,6 +15,66 @@ namespace CoordinateConversionUtility.Helpers.Tests
         internal char[] trimChars = { CommaSymbol, DegreesSymbol, MinutesSymbol, SecondsSymbol, SpaceCharacter };
 
         [TestMethod()]
+        public void ValidateLattitude()
+        {
+            var expectedResult = true;
+            var expectedOutput = -35m;
+            
+            var strLattitude = "-35";
+
+            decimal actualOutput = 0.0m;
+            bool actualResult = ConversionHelper.ValidateIsLattitude(strLattitude, out actualOutput);
+
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedOutput, actualOutput);
+        }
+
+        [TestMethod()]
+        public void ValidateLongitude()
+        {
+            var expectedresult = true;
+            var expectedOutput = -123m;
+
+            var strLongitude = "-123";
+
+            decimal actualOutput = 0.0m;
+            bool actualResult = ConversionHelper.ValidateIsLongitude(strLongitude, out actualOutput);
+
+            Assert.AreEqual(expectedresult, actualResult);
+            Assert.AreEqual(expectedOutput, actualOutput);
+        }
+
+        [TestMethod()]
+        public void ValidateMinutes()
+        {
+            var expectedResultMins = true;
+            var expectedOutputMins = 45.55m;
+
+            var strMinutes = "45.55";
+
+            decimal actualMinsOutput = 0.0m;
+            bool actualresultMins = ConversionHelper.ValidateIsSecsOrMins(strMinutes, out actualMinsOutput);
+
+            Assert.AreEqual(expectedResultMins, actualresultMins);
+            Assert.AreEqual(expectedOutputMins, actualMinsOutput);
+        }
+
+        [TestMethod()]
+        public void ValidateSeconds()
+        { 
+            var expectedResultSecs = true;
+            var expectedOutputSecs = 34.21m;
+
+            var strSeconds = "34.21";
+
+            decimal actualOutputSecs = 0.0m;
+            bool actualResultSecs = ConversionHelper.ValidateIsSecsOrMins(strSeconds, out actualOutputSecs);
+
+            Assert.AreEqual(expectedResultSecs, actualResultSecs);
+            Assert.AreEqual(expectedOutputSecs, actualOutputSecs);
+        }
+
+        [TestMethod()]
         public void ExtractPolarityTest()
         {
             var expectedNorthResult = 1;
