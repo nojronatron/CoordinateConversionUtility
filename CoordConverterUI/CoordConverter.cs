@@ -1,6 +1,7 @@
 ﻿using CoordinateConversionUtility;
 using CoordinateConversionUtility.Helpers;
 using System;
+using System.Collections.Generic;
 
 namespace CoordConverterUI
 {
@@ -8,12 +9,11 @@ namespace CoordConverterUI
     {
         static void Main(string[] args)
         {
+            var ih = new InputHelper();
             Console.Clear();
             Console.WriteLine("***** Coordinate Converter *****\n");
             if (args == null || args.Length == 0)
             {
-                Console.WriteLine("Provide an input to get a result.");
-                Console.WriteLine();
                 PrintUsageInstructions();
             }
 
@@ -21,114 +21,147 @@ namespace CoordConverterUI
             {
                 string currentArg = args[0].Trim().ToUpper();
 
-                //  HELP option called
                 if (currentArg.Contains("-H") || currentArg.Contains("--HELP"))
                 {
                     Console.WriteLine("Help");
                     PrintUsageInstructions();
                 }
 
-                //  GRIDSQUARE input default so return a DDM
                 else if (currentArg.Length == 6)
                 {
-                    Console.WriteLine("Maybe a gridsquare. . .");
-                    var ccu = new CoordinateConverter();
-                    Console.WriteLine(ccu.ConvertGridsquareToDDM(currentArg).ToString());
+                    if (ih.IsGridsquare(currentArg, out string argGridsquare))
+                    {
+                        var ccu = new CoordinateConverter();
+                        Console.WriteLine(ccu.ConvertGridsquareToDDM(argGridsquare).ToString());
+                    }
+                    else
+                    {
+                        Console.WriteLine("Command not recognized.");
+                        PrintUsageInstructions();
+                    }
                 }
 
-                //  No args but longer than a gridsquare so probably a DDM
                 else if (currentArg.Length > 6)
                 {
-                    var ih = new InputHelper();
                     if(ih.IsDDM(currentArg, false, out string validDDM))
                     {
                         Console.WriteLine($"Resulting DDM: { validDDM }.");
                     }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input.");
+                    PrintUsageInstructions();
                 }
 
             }
 
             else if (args.Length > 1)
             {
-                for (int idx=0; idx < args.Length; idx++)
+                Queue<string> argsQueue = new Queue<string>(args);
+                
+                while(argsQueue.Count > 1)
                 {
-                    if (args[idx].Contains("-ddm"))
-                    {
-                        Console.WriteLine("-ddm command detected.");
-                        var ih = new InputHelper();
-                        if (ih.GetCommand(args[idx]) == "-ddm")
-                        {
-                            Console.WriteLine("-ddm command detected.");
-                        }
+                    var inputCommand = ih.GetCommand(argsQueue.Dequeue().Trim().ToUpper());
+                    var currentInput = argsQueue.Dequeue().Trim().ToUpper();
+                    var outputCommand = string.Empty;
+                    var result = string.Empty;
 
-                        if (ih.IsDDM(args[idx + 1], false, out string validDDM))
-                        {
-                            Console.WriteLine($"Resulting DDM: { validDDM }.");
-                        }
+                    if (argsQueue.Count > 0)
+                    {
+                        outputCommand = ih.GetCommand(argsQueue.Dequeue().Trim().ToUpper());
                     }
 
-                    else if (args[idx].Contains("-direwolf"))
+                    switch (inputCommand)
                     {
-                        Console.WriteLine("-direwolf command detected.");
-                        var ih = new InputHelper();
+                        case "-direwolf":
+                            {
+                                if (ih.IsDDM(currentInput, true, out string validDWDDM))
+                                {
+                                    if (outputCommand.Length > 0)
+                                    {
+                                        result = ih.OutputCommandProcessor(inputCommand, validDWDDM, outputCommand);
+                                    }
+                                    else
+                                    {
+                                        result = validDWDDM;
+                                    }
+                                }
 
-                        if (ih.IsDDM(args[idx + 1], true, out string validDWDDM))
-                        {
-                            Console.WriteLine($"Resulting DIREWOLF DDM: { validDWDDM }.");
-                        }
+                                break;
+                            }
+                        case "-grid":
+                            {
+                                if (ih.IsGridsquare(currentInput, out string validGrid))
+                                {
+                                    if (outputCommand.Length > 0)
+                                    {
+                                        result = ih.OutputCommandProcessor(inputCommand, validGrid, outputCommand);
+                                    }
+                                    else
+                                    {
+                                        CoordinateConverter cc = new CoordinateConverter();
+                                        var ddm = cc.ConvertGridsquareToDDM(validGrid);
+                                        result = ddm.ToString();
+                                    }
+                                }
+                                break;
+                            }
+                        case "-dms":
+                            {
+                                if (ih.IsDMS(currentInput, out string validDMS))
+                                {
+                                    if (outputCommand.Length > 0)
+                                    {
+                                        result = ih.OutputCommandProcessor(inputCommand, validDMS, outputCommand);
+                                    }
+                                    else
+                                    {
+                                        result = validDMS;
+                                    }
+                                }
+                                break;
+                            }
+                        case "-ddm":
+                            {
+                                if (ih.IsDDM(currentInput, false, out string validDDM))
+                                {
+                                    if (outputCommand.Length > 0)
+                                    {
+                                        result = ih.OutputCommandProcessor(inputCommand, validDDM, outputCommand);
+                                    }
+                                    else
+                                    {
+                                        result = validDDM;
+                                    }
+                                }
+                                break;
+                            }
+                        case "-dd":
+                            {
+                                if (ih.IsDD(currentInput, out string validDD))
+                                {
+                                    if (outputCommand.Length > 0)
+                                    {
+                                        result = ih.OutputCommandProcessor(inputCommand, validDD, outputCommand);
+                                    }
+                                    else
+                                    {
+                                        result = validDD;
+                                    }
+                                }
+                                break;
+                            }
+                        default:
+                            {
+                                //  -h, --help, or something else
+                                Console.WriteLine("Invalid input.");
+                                PrintUsageInstructions();
+                                break;
+                            }
                     }
 
-                    else if (args[idx].Contains("-dd"))
-                    {
-                        Console.WriteLine("-dd command detected.");
-                        var ih = new InputHelper();
-
-                        if (ih.GetCommand(args[idx]) == "-dd")
-                        {
-                            Console.WriteLine("-dd command detected.");
-                        }
-
-                        if (ih.IsDD(args[idx + 1], out string validDD))
-                        {
-                            Console.WriteLine($"Resulting DD: { validDD }.");
-                        }
-                    }
-
-                    else if (args[idx].Contains("-dms"))
-                    {
-                        Console.WriteLine("-dms command detected.");
-                        var ih = new InputHelper();
-
-                        if (ih.GetCommand(args[idx]) == "-dms")
-                        {
-                            Console.WriteLine("-dms command detected.");
-                        }
-
-                        if (ih.IsDMS(args[idx + 1], out string validDMS))
-                        {
-                            Console.WriteLine($"Resulting DMS: { validDMS }.");
-                        }
-                    }
-
-                    else if (args[idx].Contains("-grid"))
-                    {
-                        Console.WriteLine("-grid command detected.");
-                        var ih = new InputHelper();
-
-                        if (ih.GetCommand(args[idx]) == "-grid")
-                        {
-                            Console.WriteLine("-grid command detected.");
-                        }
-
-                        var currentArg = args[idx + 1];
-                        if (ih.IsGridsquare(currentArg, out string validatedGridsquare))
-                        {
-                            var ccu = new CoordinateConverter();
-                            var ccuString = ccu.ConvertGridsquareToDDM(validatedGridsquare);
-                            Console.WriteLine($"Resulting DDM: { ccuString }.");
-                        }
-                    }
-
+                    Console.WriteLine(result);
                 }
 
             }

@@ -17,6 +17,12 @@ namespace CoordinateConversionUtility.Models
                 if (value >= 0 && value <= 60)
                 {
                     _secondsLattitude = value;
+                    LatSecsValid = true;
+                }
+                else
+                {
+                    _secondsLattitude = 0.0m;
+                    LatSecsValid = false;
                 }
             }
         }
@@ -33,11 +39,34 @@ namespace CoordinateConversionUtility.Models
                 if (value >= 0 && value <= 60)
                 {
                     _secondsLongitude = value;
+                    LonSecsValid = true;
+                }
+                else
+                {
+                    _secondsLongitude = 0.0m;
+                    LonSecsValid = false;
                 }
             }
         }
+        internal bool LatSecsValid { get; set; }
+        internal bool LonSecsValid { get; set; }
+        new public bool IsValid => (LatIsValid && LonIsValid && LatMinsValid && LonMinsValid && LatSecsValid && LonSecsValid);
 
-        public DMSCoordinate() { }
+        public DMSCoordinate() 
+        {
+            DegreesLattitude = 0.0m;
+            DegreesLongitude = 0.0m;
+            MinutesLattitude = 0.0m;
+            MinutesLongitude = 0.0m;
+            SecondsLattitude = 0.0m;
+            SecondsLongitude = 0.0m;
+            LatIsValid = false;
+            LonIsValid = false;
+            LatMinsValid = false;
+            LonMinsValid = false;
+            LatSecsValid = false;
+            LonSecsValid = false;
+        }
         public DMSCoordinate(decimal ddLat, decimal ddLon)
         {
             DegreesLattitude = ddLat;
@@ -81,7 +110,12 @@ namespace CoordinateConversionUtility.Models
                 MinutesLongitude = 0.0m;
                 SecondsLattitude = 0.0m;
                 SecondsLongitude = 0.0m;
-                throw new ArgumentNullException(nameof(dmsLatAndLon));
+                LatIsValid = false;
+                LonIsValid = false;
+                LatMinsValid = false;
+                LonMinsValid = false;
+                LatSecsValid = false;
+                LonSecsValid = false;
             }
 
             string[] splitLatAndLon = dmsLatAndLon.Split(CommaSymbol);
@@ -97,17 +131,29 @@ namespace CoordinateConversionUtility.Models
             {
                 DegreesLattitude = decLatDegrees;
             }
+            else
+            {
+                LatIsValid = false;
+            }
 
             temp = dmsLat.Substring(degreeIDX, (minutesIDX - degreeIDX)).Trim(trimChars);
             if (decimal.TryParse(temp, out decimal decLatMinutes))
             {
                 MinutesLattitude = decLatMinutes;
             }
+            else
+            {
+                LatMinsValid = false;
+            }
 
             temp = dmsLat.Substring(minutesIDX, (secondsIDX - minutesIDX)).Trim(trimChars);
             if (decimal.TryParse(temp, out decimal decLatSeconds))
             {
                 SecondsLattitude = decLatSeconds;
+            }
+            else
+            {
+                LatSecsValid = false;
             }
 
             dmsLon = dmsLon.Trim();
@@ -122,17 +168,29 @@ namespace CoordinateConversionUtility.Models
             {
                 DegreesLongitude = decLonDegrees;
             }
+            else
+            {
+                LatIsValid = false;
+            }
 
             temp = dmsLon.Substring(degreeIDX, (minutesIDX - degreeIDX)).Trim(trimChars);
             if (decimal.TryParse(temp, out decimal decLonMinutes))
             {
                 MinutesLongitude = decLonMinutes;
             }
+            else
+            {
+                LonMinsValid = false;
+            }
 
             temp = dmsLon.Substring(minutesIDX, (secondsIDX - minutesIDX)).Trim(trimChars);
             if (decimal.TryParse(temp, out decimal decLonSeconds))
             {
                 SecondsLongitude = decLonSeconds;
+            }
+            else
+            {
+                LonSecsValid = false;
             }
 
             int north = ConversionHelper.ExtractPolarityNS(dmsLatAndLon);

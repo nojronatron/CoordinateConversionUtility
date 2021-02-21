@@ -8,27 +8,19 @@ namespace CoordinateConversionUtility.Models
     /// </summary>
     public class DDCoordinate : CoordinateBase, IEquatable<DDCoordinate>
     {
-        public DDCoordinate() { }
+        public override bool IsValid => base.IsValid;
+        public DDCoordinate() 
+        {
+            DegreesLattitude = 0.0m;
+            LonIsValid = false; 
+            DegreesLongitude = 0.0m;
+            LatIsValid = false;
+        }
 
         public DDCoordinate(decimal lattitude, decimal longitude)
         {
-            if (-90m <= lattitude && lattitude <= 90m)
-            {
-                DegreesLattitude = lattitude;
-            }
-            else
-            {
-                DegreesLattitude = -91m;
-            }
-
-            if (-180m <= longitude && longitude <= 180m)
-            {
-                DegreesLongitude = longitude;
-            }
-            else
-            {
-                DegreesLongitude = -181m;
-            }
+            DegreesLattitude = lattitude;
+            DegreesLongitude = longitude;
         }
 
         public DDCoordinate(decimal ddmLatDegrees, decimal ddmLatMins, decimal ddmLonDegrees, decimal ddmLonMins)
@@ -49,9 +41,9 @@ namespace CoordinateConversionUtility.Models
             if (string.IsNullOrEmpty(ddLatAndLon) || string.IsNullOrWhiteSpace(ddLatAndLon))   //  check for null
             {
                 DegreesLattitude = 0.0m;
+                LonIsValid = false;
                 DegreesLongitude = 0.0m;
-
-                throw new ArgumentNullException(nameof(ddLatAndLon));
+                LatIsValid = false;
             }
 
             string[] splitLatAndLon = ddLatAndLon.Split(CommaSymbol);
@@ -67,12 +59,10 @@ namespace CoordinateConversionUtility.Models
             {
                 DegreesLattitude = decLatDegrees;
             }
-
-            int north = 1;
-
-            if (temp.IndexOf((char)45) > -1)
+            else
             {
-                north = -1;
+                DegreesLattitude = 0.0m;
+                LonIsValid = false;
             }
 
             degreeIDX = ddLon.IndexOf(DegreesSymbol);
@@ -83,16 +73,11 @@ namespace CoordinateConversionUtility.Models
             {
                 DegreesLongitude = decLonDegrees;
             }
-
-            int east = 1;
-
-            if (temp.IndexOf((char)45) > -1)
+            else
             {
-                east = -1;
+                DegreesLongitude = 0.0m;
+                LatIsValid = false;
             }
-
-            DegreesLattitude *= north;
-            DegreesLongitude *= east;
         }
 
         public decimal GetLattitudeDD()

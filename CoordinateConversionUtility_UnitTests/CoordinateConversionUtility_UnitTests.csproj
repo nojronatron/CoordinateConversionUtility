@@ -52,6 +52,7 @@
     <Compile Include="CoordinateConverterTests.cs" />
     <Compile Include="Helpers\ConversionHelperTests.cs" />
     <Compile Include="Helpers\GridSquareHelperTests.cs" />
+    <Compile Include="Helpers\InputHelperTests.cs" />
     <Compile Include="Helpers\LookupTablesHelperTests.cs" />
     <Compile Include="Models\DDCoordinateTests.cs" />
     <Compile Include="Models\DDMCoordinateTests.cs" />

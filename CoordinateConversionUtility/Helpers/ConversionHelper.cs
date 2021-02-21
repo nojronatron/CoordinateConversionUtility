@@ -80,6 +80,11 @@ namespace CoordinateConversionUtility
             return 0;
         }
 
+        /// <summary>
+        /// Takes a DDM-ish string of characters and returns N, S, E, or W based on the index of the letter found.
+        /// </summary>
+        /// <param name="strDdmLatOrLon"></param>
+        /// <returns></returns>
         public static string GetNSEW(string strDdmLatOrLon)
         {
             if (string.IsNullOrEmpty(strDdmLatOrLon))
