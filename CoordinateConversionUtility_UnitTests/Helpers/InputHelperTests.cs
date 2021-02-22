@@ -160,6 +160,36 @@ namespace CoordinateConversionUtility.Helpers.Tests
         }
 
         [TestMethod()]
+        public void Test_IsDDM_DDMdefaultNorth()
+        {
+            var testDDMinput = "48 8.81, 11 36.49E";
+            var expectedResult = false;
+            var expectedValidatedDDM = string.Empty;
+
+            var ih = new InputHelper();
+            var actualResult = ih.IsDDM(testDDMinput, false, out string actualValidatedDDM);
+
+            Assert.AreEqual(actualResult, expectedResult);
+            Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
+        }
+
+
+        [TestMethod()]
+        public void Test_IsDDM_DDMdefaultEast()
+        {
+            var testDDMinput = "48 8.81N, 11 36.94";
+            var expectedResult = false;
+            var expectedValidatedDDM = string.Empty;
+
+            var ih = new InputHelper();
+            var actualResult = ih.IsDDM(testDDMinput, false, out string actualValidatedDDM);
+
+            Assert.AreEqual(actualResult, expectedResult);
+            Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
+        }
+
+
+        [TestMethod()]
         public void Test_IsDDM_Direwolf()
         {
             var testDirewolfInput = "S34 54.6000, W56  12.7014";

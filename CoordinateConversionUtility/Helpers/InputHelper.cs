@@ -267,7 +267,7 @@ namespace CoordinateConversionUtility.Helpers
             validDD = string.Empty;
             MatchCollection patternMatches = Regex.Matches(coordinateToParse, DdPattern, RegexOptions.IgnoreCase, Timespan);
 
-            if (patternMatches.Count > 0)
+            if (patternMatches.Count == 2)
             {
                 string ddLattitudeRaw = LimitInputSpacing(patternMatches[0].Value);
                 string ddLongitudeRaw = LimitInputSpacing(patternMatches[1].Value);
@@ -319,7 +319,7 @@ namespace CoordinateConversionUtility.Helpers
 
             MatchCollection patternMatches = Regex.Matches(coordinateToParse, pattern, RegexOptions.IgnoreCase, Timespan);
 
-            if (patternMatches.Count > 0)
+            if (patternMatches.Count == 2)
             {
                 string ddmLattitudeRaw = string.Empty;
                 string firstPatternMatch = LimitInputSpacing(patternMatches[0].Value);
@@ -426,7 +426,7 @@ namespace CoordinateConversionUtility.Helpers
             var tempDMSCoordinate = new DDMCoordinate();
             MatchCollection patternMatches = Regex.Matches(coordinateToParse, DmsPattern, RegexOptions.IgnoreCase, Timespan);
 
-            if (patternMatches.Count > 0)
+            if (patternMatches.Count == 2)
             {
                 string dmsLatDegreesRaw = LimitInputSpacing(patternMatches[0].Groups[1].Value);
                 string dmsLonDegreesRaw = LimitInputSpacing(patternMatches[1].Groups[1].Value);

@@ -10,8 +10,6 @@ namespace CoordConverterUI
         static void Main(string[] args)
         {
             var ih = new InputHelper();
-            Console.Clear();
-            Console.WriteLine("***** Coordinate Converter *****\n");
             if (args == null || args.Length == 0)
             {
                 PrintUsageInstructions();
@@ -23,7 +21,6 @@ namespace CoordConverterUI
 
                 if (currentArg.Contains("-H") || currentArg.Contains("--HELP"))
                 {
-                    Console.WriteLine("Help");
                     PrintUsageInstructions();
                 }
 
