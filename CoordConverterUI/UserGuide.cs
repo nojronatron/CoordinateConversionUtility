@@ -10,7 +10,7 @@ namespace CoordConverterUI
             @"Coordinate Converter Utility by Jon Rumsey",
 
             @"*** WARNING! DO NOT USE FOR NAVIGATIONAL PURPOSES! ***
-    Accuracy is limited. Gridsquares to within 1.0 Degree Lat or Lon. Coords are within 5 mins and 0.0001 degree, Lat or Lon.)",
+    Accuracy is limited. Gridsquares to within 1.0 Degree Lat or Lon. Coords are within 5 mins and 0.0001 degree, Lat or Lon.",
 
             @"Coordinate Converter Utility has a few conversion capabilties:
     1. Accepts a valid 6-character gridsquare and returns the approximate center point, in DDM.
@@ -29,14 +29,16 @@ namespace CoordConverterUI
     Negative signs OR N, S, E and W indicators are required.",
 
             @"Input Command Options:
+    CoordinateConverter.exe [-in_cmd] [user_input]
     CoordinateConverter.exe -grid gridsquare | -dd 'ddish' | -ddm 'ddmish' | -dms 'dmsish' | -direwolf 'DW1.6' | -h | --help
         => Describes the user input format (gridsquare, ddish, etc) or launches this help.",
 
             @"Output Options:
-    CoordinateConverter.exe -Input_Command user_input -grid => user_input converted to a Gridsquare.
-    CoordinateConverter.exe -Input_Command user_input -dd => user_input is converted to a DD coordinate.
-    CoordinateConverter.exe -Input_Command user_input -ddm => user_input is converted to a DDM coordinate.
-    CoordinateConverter.exe -Input_Command user_input -dms => user_input is converted to a DMS coordinate.",
+    CoordinateConverter.exe -in_cmd user_input -out_cmd
+    CoordinateConverter.exe -in_cmd user_input -grid => user_input converted to a Gridsquare.
+    CoordinateConverter.exe -in_cmd user_input -dd => user_input is converted to a DD coordinate.
+    CoordinateConverter.exe -in_cmd user_input -ddm => user_input is converted to a DDM coordinate.
+    CoordinateConverter.exe -in_cmd user_input -dms => user_input is converted to a DMS coordinate.",
 
             @"Default Behaviors:
     CoordinateConverter.exe => Displays this Help file.
