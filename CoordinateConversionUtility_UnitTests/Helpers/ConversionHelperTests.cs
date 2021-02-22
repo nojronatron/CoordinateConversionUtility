@@ -1,19 +1,13 @@
-﻿using CoordinateConversionUtility_UnitTests.TestModels;
+﻿using CoordinateConversionUtility.Models.Tests;
+using CoordinateConversionUtility_UnitTests.TestModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
 namespace CoordinateConversionUtility.Helpers.Tests
 {
     [TestClass()]
-    public class ConversionHelperTests
+    public class ConversionHelperTests : UnitTestsBase
     {
-        internal static char CommaSymbol => (char)44;    //  comma symbol
-        internal static char DegreesSymbol => (char)176; //  degree symbol
-        internal static char MinutesSymbol => (char)39;      //  single quote
-        internal static char SecondsSymbol => (char)34;      //  double quote
-        internal static char SpaceCharacter => (char)32;    //  spacebar
-        internal char[] trimChars = { CommaSymbol, DegreesSymbol, MinutesSymbol, SecondsSymbol, SpaceCharacter };
-
         [TestMethod()]
         public void ValidateLattitude()
         {
@@ -194,8 +188,6 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void IsNotValidTest_Lat()
         {
-            //  DegreesLat = 48.1467m;
-            //  DegreesLon = 11.6083m;
             decimal lattitude = 93.1467m;
             decimal longitude = 11.6083m;
 
@@ -242,5 +234,92 @@ namespace CoordinateConversionUtility.Helpers.Tests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
+        [TestMethod()]
+        public void LatDecimalIsValid_PassingPosAndNeg()
+        {
+            decimal positiveLat = 48.1467m;
+            decimal negativeLat = -48.1467m;
+            decimal zeroLat = 0.0m;
+
+            bool expectedResult = true;
+            var positiveLatActualResult = ConversionHelper.LatDecimalIsValid(positiveLat);
+            var negativeLatACtualResult = ConversionHelper.LatDecimalIsValid(negativeLat);
+            var zeroLatActualResult = ConversionHelper.LatDecimalIsValid(zeroLat);
+
+            Assert.AreEqual(expectedResult, positiveLatActualResult);
+            Assert.AreEqual(expectedResult, negativeLatACtualResult);
+            Assert.AreEqual(expectedResult, zeroLatActualResult);
+        }
+
+        [TestMethod()]
+        public void LonDecimalIsValid_PassingPosAndNeg()
+        {
+            decimal positiveLon = 179.1467m;
+            decimal negativeLon = -179.1467m;
+            decimal zeroLon = 0.0m;
+
+            bool expectedResult = true;
+            var positiveLonActualResult = ConversionHelper.LonDecimalIsValid(positiveLon);
+            var negativeLonActualResult = ConversionHelper.LonDecimalIsValid(negativeLon);
+            var zeroLonActualResult = ConversionHelper.LonDecimalIsValid(zeroLon);
+
+            Assert.AreEqual(expectedResult, positiveLonActualResult);
+            Assert.AreEqual(expectedResult, negativeLonActualResult);
+            Assert.AreEqual(expectedResult, zeroLonActualResult);
+        }
+
+        [TestMethod()]
+        public void LatDecimalIsValid_FalseScenarios()
+        {
+            decimal test1 = 90.000001m;
+            decimal test2 = 90.1m;
+            decimal test3 = 91.0m;
+            decimal test4 = -90.000001m;
+            decimal test5 = -90.1m;
+            decimal test6 = -91.0m;
+
+            bool expectedResult = false;
+
+            var test1Actual = ConversionHelper.LatDecimalIsValid(test1);
+            var test2Actual = ConversionHelper.LatDecimalIsValid(test2);
+            var test3Actual = ConversionHelper.LatDecimalIsValid(test3);
+            var test4Actual = ConversionHelper.LatDecimalIsValid(test4);
+            var test5Actual = ConversionHelper.LatDecimalIsValid(test5);
+            var test6Actual = ConversionHelper.LatDecimalIsValid(test6);
+
+            Assert.AreEqual(expectedResult, test1Actual);
+            Assert.AreEqual(expectedResult, test2Actual);
+            Assert.AreEqual(expectedResult, test3Actual);
+            Assert.AreEqual(expectedResult, test4Actual);
+            Assert.AreEqual(expectedResult, test5Actual);
+            Assert.AreEqual(expectedResult, test6Actual);
+        }
+
+        [TestMethod()]
+        public void LonDecimalIsValid_FalseScenarios()
+        {
+            decimal test1 = 180.000001m;
+            decimal test2 = 180.1m;
+            decimal test3 = 181.0m;
+            decimal test4 = -180.000001m;
+            decimal test5 = -180.1m;
+            decimal test6 = -181.0m;
+
+            bool expectedResult = false;
+
+            var test1Actual = ConversionHelper.LonDecimalIsValid(test1);
+            var test2Actual = ConversionHelper.LonDecimalIsValid(test2);
+            var test3Actual = ConversionHelper.LonDecimalIsValid(test3);
+            var test4Actual = ConversionHelper.LonDecimalIsValid(test4);
+            var test5Actual = ConversionHelper.LonDecimalIsValid(test5);
+            var test6Actual = ConversionHelper.LonDecimalIsValid(test6);
+
+            Assert.AreEqual(expectedResult, test1Actual);
+            Assert.AreEqual(expectedResult, test2Actual);
+            Assert.AreEqual(expectedResult, test3Actual);
+            Assert.AreEqual(expectedResult, test4Actual);
+            Assert.AreEqual(expectedResult, test5Actual);
+            Assert.AreEqual(expectedResult, test6Actual);
+        }
     }
 }
