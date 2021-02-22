@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="CoordinateConversionUtil.cs" />
     <Compile Include="Helpers\ConversionHelper.cs" />
+    <Compile Include="Helpers\InputHelper.cs" />
     <Compile Include="Helpers\LookupTablesHelper.cs" />
     <Compile Include="Models\CoordinateBase.cs" />
     <Compile Include="Models\DDCoordinate.cs" />

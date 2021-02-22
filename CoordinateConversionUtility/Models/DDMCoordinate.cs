@@ -17,6 +17,12 @@ namespace CoordinateConversionUtility.Models
                 if (value >= -60 && value <= 60)
                 {
                     _minutesLattitude = value;
+                    LatMinsValid = true;
+                }
+                else
+                {
+                    _minutesLattitude = 0.0m;
+                    LatMinsValid = false;
                 }
             }
         }
@@ -34,10 +40,24 @@ namespace CoordinateConversionUtility.Models
                 {
                     _minutesLongitude = value;
                 }
+                else
+                {
+                    _minutesLongitude = 0.0m;
+                    LonMinsValid = false;
+                }
             }
         }
+        internal virtual bool LatMinsValid { get; set; }
+        internal virtual bool LonMinsValid { get; set; }
+        new public bool IsValid => (LatIsValid && LonIsValid && LatMinsValid && LonMinsValid);
 
-        public DDMCoordinate() { }
+        public DDMCoordinate() 
+        {
+            LatIsValid = false;
+            LonIsValid = false;
+            LatMinsValid = false;
+            LonMinsValid = false;
+        }
         public DDMCoordinate(decimal ddLat, decimal ddLon)
         {
             DegreesLattitude = ddLat;
@@ -67,7 +87,10 @@ namespace CoordinateConversionUtility.Models
         {
             if (ddmLatAndLon is null)   //  check for null
             {
-                throw new ArgumentNullException(nameof(ddmLatAndLon));
+                DegreesLattitude = 0.0m;
+                DegreesLongitude = 0.0m;
+                LatIsValid = false;
+                LonIsValid = false;
             }
 
             char[] splitChars = { CommaSymbol, DegreesSymbol, MinutesSymbol };

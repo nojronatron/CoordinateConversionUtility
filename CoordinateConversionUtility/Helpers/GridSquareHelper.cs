@@ -26,7 +26,7 @@ namespace CoordinateConversionUtility.Helpers
         /// <param name="gridsquare"></param>
         /// <param name="validGridsquare"></param>
         /// <returns></returns>
-        internal bool ValidateGridsquareInput(string gridsquare, out string validGridsquare)
+        public bool ValidateGridsquareInput(string gridsquare, out string validGridsquare)
         {
             validGridsquare = "?";
 

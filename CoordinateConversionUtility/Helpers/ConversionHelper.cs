@@ -80,6 +80,11 @@ namespace CoordinateConversionUtility
             return 0;
         }
 
+        /// <summary>
+        /// Takes a DDM-ish string of characters and returns N, S, E, or W based on the index of the letter found.
+        /// </summary>
+        /// <param name="strDdmLatOrLon"></param>
+        /// <returns></returns>
         public static string GetNSEW(string strDdmLatOrLon)
         {
             if (string.IsNullOrEmpty(strDdmLatOrLon))
@@ -161,7 +166,21 @@ namespace CoordinateConversionUtility
             return true;
         }
 
-        private static bool LatDecimalIsValid(decimal lattitudeDecimal)
+        public static bool IsValid(string gridsquare, out string validGridsquare)
+        {
+            var gsh = new GridSquareHelper();
+
+            if (gsh.ValidateGridsquareInput(gridsquare, out string vGridsquare))
+            {
+                validGridsquare = vGridsquare;
+                return true;
+            };
+
+            validGridsquare = string.Empty;
+            return false;
+        }
+
+        public static bool LatDecimalIsValid(decimal lattitudeDecimal)
         {
             if (-90 <= lattitudeDecimal && lattitudeDecimal <= 90)
             {
@@ -171,11 +190,77 @@ namespace CoordinateConversionUtility
             return false;
         }
 
-        private static bool LonDecimalIsValid(decimal longitudeDecimal)
+        public static bool LonDecimalIsValid(decimal longitudeDecimal)
         {
             if (-180 <= longitudeDecimal && longitudeDecimal <= 180)
             {
                 return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Take a string and convert it to a decimal and return true if decimal is between -90 and +90, else return false and out decimal 0.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <param name="validLattitude"></param>
+        /// <returns></returns>
+        public static bool ValidateIsLattitude(string number, out decimal validLattitude)
+        {
+            validLattitude = 0.0m;
+
+            if (decimal.TryParse(number, out decimal lattitude))
+            {
+                if (ConversionHelper.LatDecimalIsValid(lattitude))
+                {
+                    validLattitude = lattitude;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Take a string and convert it to a decimal and return true if decimal is between -180 and +180, else return false and out decimal 0.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <param name="validLongitude"></param>
+        /// <returns></returns>
+        public static bool ValidateIsLongitude(string number, out decimal validLongitude)
+        {
+            validLongitude = 0.0m;
+
+            if(decimal.TryParse(number, out decimal longitude))
+            {
+                if (ConversionHelper.LonDecimalIsValid(longitude))
+                {
+                    validLongitude = longitude;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Take a string and convert it to a decimal and return true if decimal is between -60 and +60, else return false and out decimal 0.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <param name="validMinutes"></param>
+        /// <returns></returns>
+        public static bool ValidateIsSecsOrMins(string number, out decimal validMinutes)
+        {
+            validMinutes = 0.0m;
+
+            if (decimal.TryParse(number, out decimal minutes))
+            {
+                if (minutes > -60 && minutes < 60)
+                {
+                    validMinutes = minutes;
+                    return true;
+                }
             }
 
             return false;
