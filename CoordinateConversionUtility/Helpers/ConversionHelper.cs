@@ -266,6 +266,14 @@ namespace CoordinateConversionUtility
             return false;
         }
 
+        /// <summary>
+        /// Takes an initialized LookupTablesHelper instance and a valid Gridsquare and returns a signed Lattitude per the table lookup.
+        /// LatDirection: If positive, then returned decimal is positive (North); if negative, then returned decimal is negative (South).
+        /// </summary>
+        /// <param name="lookupTablesHelper"></param>
+        /// <param name="Gridsquare"></param>
+        /// <param name="LatDirection"></param>
+        /// <returns></returns>
         public static decimal GetLatDegrees(LookupTablesHelper lookupTablesHelper, string Gridsquare, out short LatDirection)
         {   
             LatDirection = 0;
@@ -296,6 +304,13 @@ namespace CoordinateConversionUtility
             return Math.Abs(latDegreesLookupResult) * LatDirection;
         }
 
+        /// <summary>
+        /// Accepts DDM Lat Degree and associated gridsquare and returns Lat Degrees with added Remainder calculated from fourth gridsquare character.
+        /// </summary>
+        /// <param name="DDMLatDegress"></param>
+        /// <param name="LatDirection"></param>
+        /// <param name="Gridsquare"></param>
+        /// <returns></returns>
         public static decimal AddLatDegreesRemainder(decimal DDMLatDegress, int LatDirection, string Gridsquare)
         {   
             if (string.IsNullOrEmpty(Gridsquare) || string.IsNullOrWhiteSpace(Gridsquare))
@@ -329,6 +344,18 @@ namespace CoordinateConversionUtility
             return result;
         }
 
+        /// <summary>
+        /// Takes gridsquare character 6 and uses LookupTableHelper to find and return minutes Latitude.
+        /// If greater than one degree Latgitude, one degree is removed from minutes and one degree is added to DDMLatDegrees.
+        /// DDMLatDegrees is rounded to the nearest 1.25 minutes Latitude and output via adjustedLatDegrees, as an UNSIGNED decimal.
+        /// LatDirection is necessary to ensure correct sign is applied at decimal return.
+        /// </summary>
+        /// <param name="lookupTablesHelper"></param>
+        /// <param name="DDMLatDegrees"></param>
+        /// <param name="LatDirection"></param>
+        /// <param name="Gridsquare"></param>
+        /// <param name="adjustedLatDegrees"></param>
+        /// <returns></returns>
         public static decimal GetLatMinutes(LookupTablesHelper lookupTablesHelper, decimal DDMLatDegrees, int LatDirection, string Gridsquare, out decimal adjustedLatDegrees)
         {   
             adjustedLatDegrees = 0.0m;
@@ -377,6 +404,14 @@ namespace CoordinateConversionUtility
             return Math.Abs(testVariable) + LatMinsRound;
         }
 
+        /// <summary>
+        /// Takes an initialized LookupTablesHelper instance and a valid Gridsquare and returns a signed Longitude per the table lookup.
+        /// LonDirection: If positive, then returned decimal is positive (North); if negative, then returned decimal is negative (South).
+        /// </summary>
+        /// <param name="lookupTablesHelper"></param>
+        /// <param name="Gridsquare"></param>
+        /// <param name="LonDirection"></param>
+        /// <returns></returns>
         public static decimal GetLonDegrees(LookupTablesHelper lookupTablesHelper, string Gridsquare, out short LonDirection)
         {   
             LonDirection = 0;
@@ -409,6 +444,13 @@ namespace CoordinateConversionUtility
             return Math.Abs(lonDegreesLookupResult) * LonDirection;
         }
 
+        /// <summary>
+        /// Accepts DDM Lon Degree and associated gridsquare and returns Lon Degrees with added Remainder calculated from fifth gridsquare character.
+        /// </summary>
+        /// <param name="DDMLonDegress"></param>
+        /// <param name="LonDirection"></param>
+        /// <param name="Gridsquare"></param>
+        /// <returns></returns>
         public static decimal AddLonDegreesRemainder(decimal DDMlonDegrees, int LonDirection, string Gridsquare)
         {   
             if (string.IsNullOrEmpty(Gridsquare) || string.IsNullOrWhiteSpace(Gridsquare) || LonDirection == 0)
@@ -433,6 +475,18 @@ namespace CoordinateConversionUtility
             return (testResult + DDMlonDegrees);
         }
 
+        /// <summary>
+        /// Takes gridsquare character 5 and uses LookupTableHelper to find and return minutes Longitude.
+        /// If greater than one degree Longitude, one degree is removed from minutes and one degree is added to DDMLonDegrees.
+        /// DDMLonDegrees is rounded to the nearest 2.5 minutes Longitude and output via adjustedLonDegrees, as an UNSIGNED decimal.
+        /// LonDirection is necessary to ensure correct sign is applied at decimal return.
+        /// </summary>
+        /// <param name="lookupTablesHelper"></param>
+        /// <param name="DDMlonDegrees"></param>
+        /// <param name="LonDirection"></param>
+        /// <param name="Gridsquare"></param>
+        /// <param name="adjustedDDMlonDegrees"></param>
+        /// <returns></returns>
         public static decimal GetLonMinutes(LookupTablesHelper lookupTablesHelper, decimal DDMlonDegrees, int LonDirection, string Gridsquare, out decimal adjustedDDMlonDegrees)
         {   
             adjustedDDMlonDegrees = 0m;
@@ -485,6 +539,7 @@ namespace CoordinateConversionUtility
 
         /// <summary>
         /// Returns decimal value that maps to nearest even multiple of Lat (1) or Lon (2) coordinates, or 0.0m if solution not found.
+        /// Biased toward the lower-end nearby number due to how the table lookups work (look UP in the next column for value).
         /// </summary>
         /// <param name="minutesInput"></param>
         /// <param name="latOrLon"></param>
@@ -493,7 +548,7 @@ namespace CoordinateConversionUtility
         {
             decimal interval = 0.0m;
 
-            if (latOrLon == 1)  //  1 = lattitude
+            if (latOrLon == 1)
             {   
                 interval = 2.5m;
             }
