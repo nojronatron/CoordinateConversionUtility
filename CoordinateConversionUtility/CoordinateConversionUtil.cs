@@ -6,43 +6,34 @@ using CoordinateConversionUtility.Helpers;
 namespace CoordinateConversionUtility
 {
     /// <summary>
-    /// Coordinate Converter core library. Responsibilities:
-    ///     Provide a means for another service or app to get conversions between different coordinate systems.
-    ///     Orchestrate the conversion process(es).
-    ///     Arrange any other required objects/instances (TBD).
-    /// Calling App or Service must decide how to present results to user or other dependent system,
-    ///     although ToString() is customized on coordinate objects.
+    /// Provides a means to convert back and forth between a gridsquare and DDM style coordinate.
+    /// Calling App or Service must decide how to present results to user.
     /// </summary>
     public class CoordinateConverter
     {
         private GridSquareHelper GridSquareHelper { get; set; }
         private LookupTablesHelper LookupTablesHelper { get; set; }
-        public StringBuilder GridsquareResult { get; set; }
-        public DDMCoordinate DdmResult { get; set; }
 
         public CoordinateConverter()
         {
             GridSquareHelper = new GridSquareHelper();
             LookupTablesHelper = new LookupTablesHelper();
-            DdmResult = null;
-            GridsquareResult = null;
         }
 
         /// <summary>
-        /// Takes a 6-character string gridsquare, verifies the formatting, and returns a DDMCoordinate object.
+        /// Takes a 6-character string gridsquare and processes it using LookupTablesHelper and GridsquareHelper to return a DDMCoordinate object.
+        /// If solution cannot be found a null DDMCoordinate type is returned.
         /// </summary>
         /// <param name="gridsquare"></param>
         /// <returns></returns>
         public DDMCoordinate ConvertGridsquareToDDM(string gridsquare)
         {
-            DdmResult = null;
+            DDMCoordinate DdmResult = null;
 
             if (!string.IsNullOrEmpty(gridsquare) && !string.IsNullOrWhiteSpace(gridsquare))
             {
                 if (LookupTablesHelper.GenerateTableLookups() && GridSquareHelper.ValidateGridsquareInput(gridsquare, out string validGridsquare))
                 {
-                    try
-                    {
                         decimal tempLatDegrees = ConversionHelper.GetLatDegrees(LookupTablesHelper, validGridsquare, out short latDirection);
                         decimal latDegreesWithRemainder = ConversionHelper.AddLatDegreesRemainder(tempLatDegrees, latDirection, validGridsquare);
                         decimal DDMlatMinutes = ConversionHelper.GetLatMinutes(
@@ -56,11 +47,6 @@ namespace CoordinateConversionUtility
                         DdmResult = new DDMCoordinate(
                             adjustedLatDegrees, DDMlatMinutes,
                             adjustedLonDegrees, DDMlonMinutes);
-                    }
-                    catch
-                    {
-                        DdmResult = null;
-                    }
                 }
             }
 
@@ -68,7 +54,8 @@ namespace CoordinateConversionUtility
         }
 
         /// <summary>
-        /// Returns a string representation of the calculated GridSquare from a DDM Coordinate object.
+        /// Takes a DDMCoordinate objects and processes it using ConversionHelper an GridSquareHelper to return a Gridsquare string.
+        /// If solution cannot be found a string with encoded error condition is returned and should be handled by the caller.
         /// </summary>
         /// <param name="ddmCoordinates"></param>
         /// <returns></returns>
@@ -76,45 +63,41 @@ namespace CoordinateConversionUtility
         {
             if (ddmCoordinates == null)
             {
-                return "NOcrds";
+                return "BadInp";
             }
 
-            GridsquareResult = new StringBuilder();
-
-            if (LookupTablesHelper.GenerateTableLookups())
+            if (false == LookupTablesHelper.GenerateTableLookups())
             {
-                try
-                {
-                    decimal DDMlatDegrees = ddmCoordinates.GetShortDegreesLat();
-                    decimal DDMlonDegrees = ddmCoordinates.GetShortDegreesLon();
-                    decimal DDMlatMinutes = ddmCoordinates.MinutesLattitude;
-                    decimal DDMlonMinutes = ddmCoordinates.MinutesLongitude;
-
-                    short LatDirection = ConversionHelper.ExtractPolarityNS(ddmCoordinates.ToString());
-                    short LonDirection = ConversionHelper.ExtractPolarityEW(ddmCoordinates.ToString());
-
-                    GridsquareResult.Append(GridSquareHelper.GetFirstGridsquareCharacter(DDMlonDegrees, LonDirection, out decimal remainderLon));
-                    GridsquareResult.Append(GridSquareHelper.GetSecondGridsquareCharacter(DDMlatDegrees, LatDirection, out decimal remainderLat));
-
-                    GridsquareResult.Append(GridSquareHelper.GetThirdGridsquareCharacter(remainderLon, LonDirection, out decimal minsRemainderLon));
-                    GridsquareResult.Append(GridSquareHelper.GetFourthGridsquareCharacter(remainderLat, LatDirection));
-
-                    var ddmLonMinsWithRemainder = LonDirection * (minsRemainderLon + DDMlonMinutes);
-                    decimal nearestEvenMultipleLon = ConversionHelper.GetNearestEvenMultiple(ddmLonMinsWithRemainder, 2);
-                    GridsquareResult.Append(GridSquareHelper.GetFifthGridsquareCharacter(LonDirection, nearestEvenMultipleLon));
-
-                    var ddmLatMinsWithRemainder = LatDirection * DDMlatMinutes;
-                    decimal nearestEvenMultipleLat = ConversionHelper.GetNearestEvenMultiple(ddmLatMinsWithRemainder, 1);
-                    GridsquareResult.Append(GridSquareHelper.GetSixthGridsquareCharacter(LatDirection, nearestEvenMultipleLat));
-                }
-                catch
-                {
-                    GridsquareResult.Append("CalcEr");
-                }
+                return "NoTbls";
             }
-            else
+
+            var GridsquareResult = new StringBuilder();
+            
+            decimal DDMlatDegrees = ddmCoordinates.GetShortDegreesLat();
+            decimal DDMlonDegrees = ddmCoordinates.GetShortDegreesLon();
+            decimal DDMlatMinutes = ddmCoordinates.MinutesLattitude;
+            decimal DDMlonMinutes = ddmCoordinates.MinutesLongitude;
+
+            short LatDirection = ConversionHelper.ExtractPolarityNS(ddmCoordinates.ToString());
+            short LonDirection = ConversionHelper.ExtractPolarityEW(ddmCoordinates.ToString());
+
+            GridsquareResult.Append(GridSquareHelper.GetFirstGridsquareCharacter(DDMlonDegrees, LonDirection, out decimal remainderLon));
+            GridsquareResult.Append(GridSquareHelper.GetSecondGridsquareCharacter(DDMlatDegrees, LatDirection, out decimal remainderLat));
+
+            GridsquareResult.Append(GridSquareHelper.GetThirdGridsquareCharacter(remainderLon, LonDirection, out decimal minsRemainderLon));
+            GridsquareResult.Append(GridSquareHelper.GetFourthGridsquareCharacter(remainderLat, LatDirection));
+
+            var ddmLonMinsWithRemainder = LonDirection * (minsRemainderLon + DDMlonMinutes);
+            decimal nearestEvenMultipleLon = ConversionHelper.GetNearestEvenMultiple(ddmLonMinsWithRemainder, 2);
+            GridsquareResult.Append(GridSquareHelper.GetFifthGridsquareCharacter(LonDirection, nearestEvenMultipleLon));
+
+            var ddmLatMinsWithRemainder = LatDirection * DDMlatMinutes;
+            decimal nearestEvenMultipleLat = ConversionHelper.GetNearestEvenMultiple(ddmLatMinsWithRemainder, 1);
+            GridsquareResult.Append(GridSquareHelper.GetSixthGridsquareCharacter(LatDirection, nearestEvenMultipleLat));
+
+            if (GridsquareResult.Length != 6)
             {
-                GridsquareResult.Append("NoTbls");
+                return "NoCalc";
             }
 
             return GridsquareResult.ToString();
