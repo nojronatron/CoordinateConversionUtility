@@ -21,7 +21,8 @@ namespace CoordinateConversionUtility.Helpers
         }
 
         /// <summary>
-        /// Takes a string input and tests the format as a Gridsquare (AA11AA). Returns bool and out string the valid-format Gridsquare.
+        /// Takes a string input and tests the format as a Gridsquare (AA11AA). Returns true and  out string the valid-format Gridsquare if valid.
+        /// If input is not validated, returns false and a question mark.
         /// </summary>
         /// <param name="gridsquare"></param>
         /// <param name="validGridsquare"></param>
@@ -49,9 +50,13 @@ namespace CoordinateConversionUtility.Helpers
         }
 
         /// <summary>
-        /// Sets 6th character of Gridsquare based on DDM_LatMins and Remainder_Lat
+        /// Takes direction of lattitude and the nearest even multiple (per lookup tables) and returns the resulting gridsquare character as a string.
+        /// If no directional is supplied then a question mark is returned.
         /// </summary>
-        internal string GetSixthGridsquareCharacter(decimal LatDirection, decimal nearestEvenMultiple)
+        /// <param name="LatDirection"></param>
+        /// <param name="nearestEvenMultiple"></param>
+        /// <returns></returns>
+        internal string GetSixthGridsquareCharacter(short LatDirection, decimal nearestEvenMultiple)
         {
             if (LatDirection > 0)
             {
@@ -77,34 +82,34 @@ namespace CoordinateConversionUtility.Helpers
         }
 
         /// <summary>
-        /// Returns 5th Gridsquare character based on remainder from Longitude Degrees and Minutes lookups.
-        /// LonDirection is integer 1 (East) or integer -1 (West).
-        /// Arg nearestEvenMultiple must conform to 5.0 minutes spacing in Table 3: 3rd Longitude Character.
+        /// Takes direction of longitude and the nearest even multiple (per lookup table) and returns the resulting gridsquare character as a string.
+        /// If no directional is supplied then a question mark is returned.
         /// </summary>
-        internal string GetFifthGridsquareCharacter(int LonDirection, decimal nearestEvenMultiple)
+        /// <param name="LonDirection"></param>
+        /// <param name="nearestEvenMultiple"></param>
+        /// <returns></returns>
+        internal string GetFifthGridsquareCharacter(short LonDirection, decimal nearestEvenMultiple)
         {
-            if (LonDirection == 0 || nearestEvenMultiple == 0)
+            if (LonDirection != 0 || nearestEvenMultiple != 0)
             {
-                return "?";
-            }
-
-            if (LonDirection > 0)
-            {
-                decimal lonMinutesLookupValue = 0 - 120 + nearestEvenMultiple;
-
-                if (LookupTablesHelper.GetTable3C2GLookup.TryGetValue(lonMinutesLookupValue, out string table3LookupResult))
+                if (LonDirection > 0)
                 {
-                    return table3LookupResult.ToLower();
+                    decimal lonMinutesLookupValue = 0 - 120 + nearestEvenMultiple;
+
+                    if (LookupTablesHelper.GetTable3C2GLookup.TryGetValue(lonMinutesLookupValue, out string table3LookupResult))
+                    {
+                        return table3LookupResult.ToLower();
+                    }
                 }
-            }
 
-            if (LonDirection < 0)
-            {
-                decimal lonMinutesLookupValue = nearestEvenMultiple;
-
-                if (LookupTablesHelper.GetTable3C2GLookup.TryGetValue(lonMinutesLookupValue, out string table3LookupResult))
+                if (LonDirection < 0)
                 {
-                    return table3LookupResult.ToLower();
+                    decimal lonMinutesLookupValue = nearestEvenMultiple;
+
+                    if (LookupTablesHelper.GetTable3C2GLookup.TryGetValue(lonMinutesLookupValue, out string table3LookupResult))
+                    {
+                        return table3LookupResult.ToLower();
+                    }
                 }
             }
 
@@ -112,11 +117,15 @@ namespace CoordinateConversionUtility.Helpers
         }
 
         /// <summary>
-        /// Returns 4th GridSquare character based on Remainder_Lat and LatDirection.
+        /// Takes remaining lattitude minutes and returns a string character representing the fourth gridsquare character.
         /// </summary>
-        internal string GetFourthGridsquareCharacter(decimal RemainderLat, int LatDirection, out decimal minsRemainderLat)
+        /// <param name="RemainderLat"></param>
+        /// <param name="LatDirection"></param>
+        /// <param name="minsRemainderLat"></param>
+        /// <returns></returns>
+        internal string GetFourthGridsquareCharacter(decimal RemainderLat, int LatDirection)//, out decimal minsRemainderLat)
         {
-            minsRemainderLat = 0;
+            //minsRemainderLat = 0;
 
             if (LatDirection != 0)
             {
@@ -131,13 +140,18 @@ namespace CoordinateConversionUtility.Helpers
                     return $"{ RemainderLat }";
                 }
             }
-         
+
             return "?";
         }
 
         /// <summary>
-        /// Returns 3rd GridSquare character based on LonDirection and Remainder_Lon.
+        /// Takes remaining longitude minutes and returns a string character representing the third gridsquare character.
+        /// Will output any minutes longitude remaining after gridsquare calculation.
         /// </summary>
+        /// <param name="RemainderLon"></param>
+        /// <param name="LonDirection"></param>
+        /// <param name="minsRemainderLon"></param>
+        /// <returns></returns>
         internal string GetThirdGridsquareCharacter(decimal RemainderLon, int LonDirection, out decimal minsRemainderLon)
         {
             decimal calculationNumber = 0.0m;
@@ -173,8 +187,13 @@ namespace CoordinateConversionUtility.Helpers
         }
 
         /// <summary>
-        /// Returns 2nd GridSquare character based on DDM_LatDegrees (whole number).
+        /// Takes lattitude degrees whole-number and directional indicator. Does a lookup of degrees lattitude and returns the character representing the second gridsquare character.
+        /// Also outputs decimal representing remaining degrees lattitude. Invalid directional input or failed lookup causes a question mark return string without any processing.
         /// </summary>
+        /// <param name="DDMlatDegrees"></param>
+        /// <param name="LatDirection"></param>
+        /// <param name="RemainderLat"></param>
+        /// <returns></returns>
         internal string GetSecondGridsquareCharacter(decimal DDMlatDegrees, int LatDirection, out decimal RemainderLat)
         {
             RemainderLat = 0.0m;
@@ -210,8 +229,13 @@ namespace CoordinateConversionUtility.Helpers
         }
 
         /// <summary>
-        /// Returns the 1st GridSquare character based on DDM_LonDegrees (whole number).
+        /// Takes longitude degrees whole-number and directional indicator. Does a lookup of degrees longitude and returns the character representing the first gridsquare character.
+        /// Also outputs decimal representing remaining degrees longitude. Invalid directional input or failed lookup causes a question mark return string without any processing.
         /// </summary>
+        /// <param name="DDMlonDegrees"></param>
+        /// <param name="LonDirection"></param>
+        /// <param name="RemainderLon"></param>
+        /// <returns></returns>
         internal string GetFirstGridsquareCharacter(decimal DDMlonDegrees, int LonDirection, out decimal RemainderLon)
         {
             if (LonDirection == 0)
