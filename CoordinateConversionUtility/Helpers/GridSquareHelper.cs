@@ -58,23 +58,16 @@ namespace CoordinateConversionUtility.Helpers
         /// <returns></returns>
         internal string GetSixthGridsquareCharacter(short LatDirection, decimal nearestEvenMultiple)
         {
-            if (LatDirection > 0)
+            if (LatDirection != 0 && ConversionHelper.ValidEvenMultipleLat(nearestEvenMultiple))
             {
-                decimal latMinsLookupValue = -60m + nearestEvenMultiple;
-
-                if (LookupTablesHelper.GetTable6C2GLookup.TryGetValue(latMinsLookupValue, out string table6LookupResult))
+                if (LatDirection > 0)
                 {
-                    return table6LookupResult.ToLower();
+                    nearestEvenMultiple -= 60.0m;
                 }
-            }
 
-            if (LatDirection < 0)
-            {
-                decimal latMinsLookupValue = nearestEvenMultiple;
-
-                if (LookupTablesHelper.GetTable6C2GLookup.TryGetValue(latMinsLookupValue, out string table6LookupResult))
+                if (LookupTablesHelper.GetTable6C2GLookup.TryGetValue(nearestEvenMultiple, out string table6LookupResult))
                 {
-                    return table6LookupResult.ToLower();
+                    return table6LookupResult.ToLower(currentCulture);
                 }
             }
 
@@ -90,26 +83,16 @@ namespace CoordinateConversionUtility.Helpers
         /// <returns></returns>
         internal string GetFifthGridsquareCharacter(short LonDirection, decimal nearestEvenMultiple)
         {
-            if (LonDirection != 0 || nearestEvenMultiple != 0)
+            if (LonDirection != 0 && ConversionHelper.ValidEvenMultipleLon(nearestEvenMultiple))
             {
                 if (LonDirection > 0)
                 {
-                    decimal lonMinutesLookupValue = 0 - 120 + nearestEvenMultiple;
-
-                    if (LookupTablesHelper.GetTable3C2GLookup.TryGetValue(lonMinutesLookupValue, out string table3LookupResult))
-                    {
-                        return table3LookupResult.ToLower();
-                    }
+                    nearestEvenMultiple -= 120;
                 }
 
-                if (LonDirection < 0)
+                if (LookupTablesHelper.GetTable3C2GLookup.TryGetValue(nearestEvenMultiple, out string table3LookupResult))
                 {
-                    decimal lonMinutesLookupValue = nearestEvenMultiple;
-
-                    if (LookupTablesHelper.GetTable3C2GLookup.TryGetValue(lonMinutesLookupValue, out string table3LookupResult))
-                    {
-                        return table3LookupResult.ToLower();
-                    }
+                    return table3LookupResult.ToLower(currentCulture);
                 }
             }
 
@@ -123,13 +106,10 @@ namespace CoordinateConversionUtility.Helpers
         /// <param name="LatDirection"></param>
         /// <param name="minsRemainderLat"></param>
         /// <returns></returns>
-        internal string GetFourthGridsquareCharacter(decimal RemainderLat, int LatDirection)//, out decimal minsRemainderLat)
+        internal static string GetFourthGridsquareCharacter(decimal RemainderLat, int LatDirection)
         {
-            //minsRemainderLat = 0;
-
-            if (LatDirection != 0)
+            if (LatDirection != 0 && ConversionHelper.ValidRemainderLat(RemainderLat))
             {
-
                 if (LatDirection < 0)
                 {
                     return $"{ RemainderLat + 9 }";
@@ -152,35 +132,34 @@ namespace CoordinateConversionUtility.Helpers
         /// <param name="LonDirection"></param>
         /// <param name="minsRemainderLon"></param>
         /// <returns></returns>
-        internal string GetThirdGridsquareCharacter(decimal RemainderLon, int LonDirection, out decimal minsRemainderLon)
+        internal static string GetThirdGridsquareCharacter(decimal RemainderLon, int LonDirection, out decimal minsRemainderLon)
         {
             decimal calculationNumber = 0.0m;
+            minsRemainderLon = 0.0m;
 
-            if (LonDirection < 0)
+            if (RemainderLon > -21.0m && ConversionHelper.ValidRemainderLon(RemainderLon))
             {
-
-                if (RemainderLon % 2 != 0)
+                if (LonDirection < 0)
                 {
-                    calculationNumber = ((RemainderLon) + 21) / 2 - 1;
-                    RemainderLon = 1;   // used up max even portion of RemainderLon so odd single is left and must be accounted for in last grid character
+                    if (RemainderLon % 2 != 0)
+                    {
+                        calculationNumber = ((RemainderLon + 21) / 2) - 1;
+                        RemainderLon = 1;
+                    }
+                    else
+                    {
+                        calculationNumber = (18 + RemainderLon) / 2;
+                    }
                 }
                 else
                 {
-                    calculationNumber = (18 + RemainderLon) / 2;
+                    calculationNumber = Math.Abs(RemainderLon) / 2;
                 }
-            }
-            else
-            {
-                calculationNumber = Math.Abs(RemainderLon) / 2;
-            }
 
-            if (RemainderLon % 2 != 0)  //  third character lookup is in 2-degree increments so an odd-number will result in a remainder of 1 degree or 60 minutes
-            {
-                minsRemainderLon = 60m;
-            }
-            else
-            {
-                minsRemainderLon = 0m;   //  decrement remainder
+                if (RemainderLon % 2 != 0)
+                {
+                    minsRemainderLon = 60.0m;
+                }
             }
 
             return $"{ Math.Abs(Math.Truncate(calculationNumber)) }";
@@ -198,30 +177,28 @@ namespace CoordinateConversionUtility.Helpers
         {
             RemainderLat = 0.0m;
 
-            if (LatDirection == 0)
+            if (LatDirection != 0 && ConversionHelper.LatDecimalIsValid(DDMlatDegrees))
             {
-                return "?";
-            }
+                RemainderLat = DDMlatDegrees % 10;
+                decimal latDegreesLookupValue = DDMlatDegrees - RemainderLat;
+                var validLookupArg = Math.Abs(latDegreesLookupValue) * LatDirection;
 
-            decimal latDegreesLookupValue = DDMlatDegrees;
-            RemainderLat = latDegreesLookupValue % 10;
-            latDegreesLookupValue -= RemainderLat;
-
-            if (LatDirection > 0)
-            {
-
-                if (LookupTablesHelper.GetTable4C2GLookupPositive.TryGetValue(latDegreesLookupValue, out string table4LookupResult))
+                if (LatDirection > 0)
                 {
-                    return $"{ table4LookupResult }";
+
+                    if (LookupTablesHelper.GetTable4C2GLookupPositive.TryGetValue(validLookupArg, out string table4LookupResult))
+                    {
+                        return $"{ table4LookupResult }";
+                    }
                 }
-            }
 
-            if (LatDirection < 0)
-            {
-
-                if (LookupTablesHelper.GetTable4C2GLookupNegative.TryGetValue(Math.Abs(latDegreesLookupValue) * LatDirection, out string table4LookupResult))
+                if (LatDirection < 0)
                 {
-                    return $"{ table4LookupResult }";
+
+                    if (LookupTablesHelper.GetTable4C2GLookupNegative.TryGetValue(validLookupArg, out string table4LookupResult))
+                    {
+                        return $"{ table4LookupResult }";
+                    }
                 }
             }
 
@@ -238,42 +215,41 @@ namespace CoordinateConversionUtility.Helpers
         /// <returns></returns>
         internal string GetFirstGridsquareCharacter(decimal DDMlonDegrees, int LonDirection, out decimal RemainderLon)
         {
-            if (LonDirection == 0)
+            RemainderLon = 0.0m;
+            if (LonDirection != 0 && ConversionHelper.LonDecimalIsValid(DDMlonDegrees))
             {
-                RemainderLon = 0.0m;
-                return "?";
-            }
+                decimal lonDegreesLookupValue;
+                RemainderLon = DDMlonDegrees % 20;
 
-            decimal lonDegreesLookupValue;
-            RemainderLon = DDMlonDegrees % 20;
-
-            if (RemainderLon != 0)
-            {
-                lonDegreesLookupValue = LonDirection * (Math.Abs(DDMlonDegrees) - Math.Abs(RemainderLon));
-            }
-            else
-            {
-                lonDegreesLookupValue = DDMlonDegrees;
-            }
-
-            if (LonDirection < 0)
-            {
-                if (LookupTablesHelper.GetTable1C2GLookupNegative.TryGetValue(Math.Abs(lonDegreesLookupValue) * LonDirection, out string table1LookupResult))
+                if (RemainderLon != 0)
                 {
-                    return table1LookupResult;
+                    lonDegreesLookupValue = LonDirection * (Math.Abs(DDMlonDegrees) - Math.Abs(RemainderLon));
                 }
-            }
-            
-            if (LonDirection > 0)
-            {
-                if (LookupTablesHelper.GetTable1C2GLookupPositive.TryGetValue(lonDegreesLookupValue, out string table1LookupResult))
+                else
                 {
-                    return table1LookupResult;
+                    lonDegreesLookupValue = DDMlonDegrees;
+                }
+
+                var validLookupArg = Math.Abs(lonDegreesLookupValue) * LonDirection;
+
+                if (LonDirection < 0)
+                {
+                    if (LookupTablesHelper.GetTable1C2GLookupNegative.TryGetValue(validLookupArg, out string table1LookupResult))
+                    {
+                        return table1LookupResult;
+                    }
+                }
+
+                if (LonDirection > 0)
+                {
+                    if (LookupTablesHelper.GetTable1C2GLookupPositive.TryGetValue(lonDegreesLookupValue, out string table1LookupResult))
+                    {
+                        return table1LookupResult;
+                    }
                 }
             }
 
             return "?";
         }
-
     }
 }

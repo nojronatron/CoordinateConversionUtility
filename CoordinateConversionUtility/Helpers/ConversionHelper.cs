@@ -80,6 +80,25 @@ namespace CoordinateConversionUtility
             return 0;
         }
 
+        internal static bool ValidEvenMultipleLat(decimal nearestEvenMultiple)
+        {
+            return (nearestEvenMultiple >= -60.0m && nearestEvenMultiple <= 60.0m);
+        }
+
+        internal static bool ValidEvenMultipleLon(decimal nearestEvenMultiple)
+        {
+            return (nearestEvenMultiple >= -120.0m && nearestEvenMultiple <= 120.0m);
+        }
+
+        internal static bool ValidRemainderLat(decimal remainderLattitude)
+        {
+            return (remainderLattitude >= -10.0m && remainderLattitude <= 10.0m);
+        }
+
+        internal static bool ValidRemainderLon(decimal remainderLongitude)
+        {
+            return (remainderLongitude >= -20.0m && remainderLongitude <= 20.0m);
+        }
         /// <summary>
         /// Takes a DDM-ish string of characters and returns N, S, E, or W based on the index of the letter found.
         /// </summary>
