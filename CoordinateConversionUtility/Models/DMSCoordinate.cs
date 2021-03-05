@@ -52,7 +52,7 @@ namespace CoordinateConversionUtility.Models
         internal bool LonSecsValid { get; set; }
         new public bool IsValid => (LatIsValid && LonIsValid && LatMinsValid && LonMinsValid && LatSecsValid && LonSecsValid);
 
-        public DMSCoordinate() 
+        public DMSCoordinate()
         {
             DegreesLattitude = 0.0m;
             DegreesLongitude = 0.0m;
@@ -71,10 +71,10 @@ namespace CoordinateConversionUtility.Models
         {
             DegreesLattitude = ddLat;
             DegreesLongitude = ddLon;
-            MinutesLattitude = Math.Abs( (ddLat - Math.Truncate(ddLat)) * 60 );
-            MinutesLongitude = Math.Abs( (ddLon - Math.Truncate(ddLon)) * 60 );
-            SecondsLattitude = Math.Abs( (MinutesLattitude - Math.Truncate(MinutesLattitude)) * 60 );
-            SecondsLongitude = Math.Abs( (MinutesLongitude - Math.Truncate(MinutesLongitude)) * 60 );
+            MinutesLattitude = Math.Abs((ddLat - Math.Truncate(ddLat)) * 60);
+            MinutesLongitude = Math.Abs((ddLon - Math.Truncate(ddLon)) * 60);
+            SecondsLattitude = Math.Abs((MinutesLattitude - Math.Truncate(MinutesLattitude)) * 60);
+            SecondsLongitude = Math.Abs((MinutesLongitude - Math.Truncate(MinutesLongitude)) * 60);
         }
 
         public DMSCoordinate(decimal ddmDegreesLat, decimal ddmMinsLat, decimal ddmDegreesLon, decimal ddmMinsLon)

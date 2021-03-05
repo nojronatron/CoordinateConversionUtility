@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using CoordinateConversionUtility_UnitTests.TestModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using CoordinateConversionUtility_UnitTests.TestModels;
 
 namespace CoordinateConversionUtility.Models.Tests
 {
@@ -96,7 +96,7 @@ namespace CoordinateConversionUtility.Models.Tests
         {
             var lcm = new LynnwoodCoordinatesModel();
             DMSCoordinate dms = new DMSCoordinate(
-                lcm.DegreesLat, Math.Truncate(lcm.DdmMinsLat), lcm.DmsSecondsLat, 
+                lcm.DegreesLat, Math.Truncate(lcm.DdmMinsLat), lcm.DmsSecondsLat,
                 lcm.DegreesLon, Math.Truncate(lcm.DdmMinsLon), lcm.DmsSecondsLon);
 
             var expectedResult = LynnwoodCoordinatesModel.strDMS();

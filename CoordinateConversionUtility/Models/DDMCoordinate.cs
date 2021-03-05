@@ -51,7 +51,7 @@ namespace CoordinateConversionUtility.Models
         internal virtual bool LonMinsValid { get; set; }
         new public bool IsValid => (LatIsValid && LonIsValid && LatMinsValid && LonMinsValid);
 
-        public DDMCoordinate() 
+        public DDMCoordinate()
         {
             LatIsValid = false;
             LonIsValid = false;
@@ -62,8 +62,8 @@ namespace CoordinateConversionUtility.Models
         {
             DegreesLattitude = ddLat;
             DegreesLongitude = ddLon;
-            MinutesLattitude = Math.Abs( (ddLat - Math.Truncate(ddLat)) * 60 );
-            MinutesLongitude = Math.Abs( (ddLon - Math.Truncate(ddLon)) * 60 );
+            MinutesLattitude = Math.Abs((ddLat - Math.Truncate(ddLat)) * 60);
+            MinutesLongitude = Math.Abs((ddLon - Math.Truncate(ddLon)) * 60);
         }
 
         public DDMCoordinate(decimal latDegrees, decimal latMinutes, decimal lonDegrees, decimal lonMinutes)
@@ -74,7 +74,7 @@ namespace CoordinateConversionUtility.Models
             MinutesLongitude = lonMinutes;
         }
 
-        public DDMCoordinate(decimal dmsLatDegrees, decimal dmsLatMinutes, decimal dmsLatSeconds, 
+        public DDMCoordinate(decimal dmsLatDegrees, decimal dmsLatMinutes, decimal dmsLatSeconds,
             decimal dmsLonDegrees, decimal dmsLonMinutes, decimal dmsLonSeconds)
         {
             DegreesLattitude = dmsLatDegrees;
@@ -85,51 +85,53 @@ namespace CoordinateConversionUtility.Models
 
         public DDMCoordinate(string ddmLatAndLon)
         {
-            if (ddmLatAndLon is null)   //  check for null
+            if (ddmLatAndLon is null || string.IsNullOrEmpty(ddmLatAndLon) || string.IsNullOrWhiteSpace(ddmLatAndLon))   //  check for null
             {
                 DegreesLattitude = 0.0m;
                 DegreesLongitude = 0.0m;
                 LatIsValid = false;
                 LonIsValid = false;
             }
-
-            char[] splitChars = { CommaSymbol, DegreesSymbol, MinutesSymbol };
-            string[] strDdmLatAndLon = ddmLatAndLon.Split(splitChars);
-
-            string temp = string.Empty;
-            decimal tempDegreesLat = 0m;
-            decimal tempDegreesLon = 0m;
-            temp = strDdmLatAndLon[0];//.Split((char)176)[0];
-
-            if (decimal.TryParse(temp, out decimal decLatDegrees))
+            else
             {
-                tempDegreesLat = decLatDegrees;
+                char[] splitChars = { CommaSymbol, DegreesSymbol, MinutesSymbol };
+                string[] strDdmLatAndLon = ddmLatAndLon.Split(splitChars);
+
+                string temp = string.Empty;
+                decimal tempDegreesLat = 0m;
+                decimal tempDegreesLon = 0m;
+                temp = strDdmLatAndLon[0];
+
+                if (decimal.TryParse(temp, out decimal decLatDegrees))
+                {
+                    tempDegreesLat = decLatDegrees;
+                }
+
+                temp = strDdmLatAndLon[1];
+                if (decimal.TryParse(temp, out decimal decLatMinutes))
+                {
+                    MinutesLattitude = decLatMinutes;
+                }
+
+                temp = strDdmLatAndLon[3];
+
+                if (decimal.TryParse(temp, out decimal decLonDegrees))
+                {
+                    tempDegreesLon = decLonDegrees;
+                }
+
+                temp = strDdmLatAndLon[4];
+
+                if (decimal.TryParse(temp, out decimal decLonMinutes))
+                {
+                    MinutesLongitude = decLonMinutes;
+                }
+
+                int north = ConversionHelper.ExtractPolarityNS($"{ strDdmLatAndLon[2] }");
+                int east = ConversionHelper.ExtractPolarityEW($"{ strDdmLatAndLon[5] }");
+                DegreesLattitude = tempDegreesLat * north;
+                DegreesLongitude = tempDegreesLon * east;
             }
-
-            temp = strDdmLatAndLon[1];//.Split((char)176)[1];
-            if (decimal.TryParse(temp, out decimal decLatMinutes))
-            {
-                MinutesLattitude = decLatMinutes;// / 60;
-            }
-
-            temp = strDdmLatAndLon[3];//.Split((char)176)[0];
-
-            if (decimal.TryParse(temp, out decimal decLonDegrees))
-            {
-                tempDegreesLon = decLonDegrees;
-            }
-
-            temp = strDdmLatAndLon[4];//.Split((char)176)[1];
-
-            if (decimal.TryParse(temp, out decimal decLonMinutes))
-            {
-                MinutesLongitude = decLonMinutes;// / 120;
-            }
-
-            int north = ConversionHelper.ExtractPolarityNS($"{ strDdmLatAndLon[2] }");
-            int east = ConversionHelper.ExtractPolarityEW($"{ strDdmLatAndLon[5] }");
-            DegreesLattitude = tempDegreesLat * north;
-            DegreesLongitude = tempDegreesLon * east;
         }
 
         public decimal GetMinsLat()

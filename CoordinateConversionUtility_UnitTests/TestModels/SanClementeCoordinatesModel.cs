@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CoordinateConversionUtility_UnitTests.TestModels
+﻿namespace CoordinateConversionUtility_UnitTests.TestModels
 {
     class SanClementeCoordinatesModel : RootCoordinateModel
     {

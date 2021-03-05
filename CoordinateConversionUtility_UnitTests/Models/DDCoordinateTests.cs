@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using CoordinateConversionUtility_UnitTests.TestModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using CoordinateConversionUtility_UnitTests.TestModels;
 
 namespace CoordinateConversionUtility.Models.Tests
 {
@@ -145,7 +145,7 @@ namespace CoordinateConversionUtility.Models.Tests
         {
             var mcm = new MunichCoordinatesModel();
             var dd = new DDCoordinate(mcm.DegreesLat, mcm.DegreesLon);
-            
+
             var expectedResult = mcm.DegreesLat - Math.Truncate(mcm.DegreesLat);
             var actualResult = dd.GetFractionalLattitude();
 

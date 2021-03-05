@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace CoordinateConversionUtility.Helpers
 {
@@ -46,18 +45,6 @@ namespace CoordinateConversionUtility.Helpers
 
         public LookupTablesHelper()
         {
-            Table1G2CLookup = new Dictionary<string, int>(18);
-            Table3G2CLookup = new Dictionary<string, decimal>(24);
-            Table4G2CLookup = new Dictionary<string, int>(18);
-            Table6G2CLookup = new Dictionary<string, decimal>(24);
-            Table1C2GLookupPositive = new Dictionary<decimal, string>(10);
-            Table1C2GLookupNegative = new Dictionary<decimal, string>(10);
-            Table2C2GLookupPositive = new Dictionary<int, int>(9);
-            Table2C2GLookupNegative = new Dictionary<int, int>(9);
-            Table3C2GLookup = new Dictionary<decimal, string>(24);
-            Table4C2GLookupPositive = new Dictionary<decimal, string>(9);
-            Table4C2GLookupNegative = new Dictionary<decimal, string>(9);
-            Table6C2GLookup = new Dictionary<decimal, string>(24);
         }
 
         /// <summary>
@@ -67,88 +54,95 @@ namespace CoordinateConversionUtility.Helpers
         /// <returns></returns>
         public bool GenerateTableLookups()
         {
+            int tracker = 0;
+            decimal minsLongitude = -115m;
+            decimal minsLattitude = -57.5m;
 
-            try
+            Table3G2CLookup = new Dictionary<string, decimal>(24);
+            Table3C2GLookup = new Dictionary<decimal, string>(24);
+            Table6G2CLookup = new Dictionary<string, decimal>(24);
+            Table6C2GLookup = new Dictionary<decimal, string>(24);
+
+            while (tracker < 24)
             {
-                int tracker = 0;
-                decimal minsLongitude = -115m;
-                decimal minsLattitude = -57.5m;
-
-                while (tracker < 24)
-                {
-                    string letter = alphabet[tracker];
-                    Table3G2CLookup.Add(letter, minsLongitude);
-                    Table3C2GLookup.Add(minsLongitude, letter);
-                    minsLongitude += 5m;
-                    Table6G2CLookup.Add(letter, minsLattitude);
-                    Table6C2GLookup.Add(minsLattitude, letter);
-                    minsLattitude += 2.5m;
-                    tracker++;
-                }
-
-                tracker = 0;
-                int degreesLongitude = -160;
-                int degreesLattitude = -80;
-
-                while (tracker < 18)
-                {
-                    string letter = alphabet[tracker];
-
-                    if (letter == "J")
-                    {   // zero-biased tables!
-                        degreesLongitude -= 20;
-                        degreesLattitude -= 10;
-                        Table1C2GLookupPositive.Add(degreesLongitude, letter);
-                        Table4C2GLookupPositive.Add(degreesLattitude, letter);
-                    }
-
-                    Table1G2CLookup.Add(letter, degreesLongitude);
-
-                    if (letter == "I")
-                    {
-                        Table1C2GLookupNegative.Add(degreesLongitude, letter);
-                        Table4C2GLookupNegative.Add(degreesLattitude, letter);
-                    }
-
-                    if (degreesLongitude < 0)
-                    {
-                        Table1C2GLookupNegative.Add(degreesLongitude, letter);
-                        Table4C2GLookupNegative.Add(degreesLattitude, letter);
-                    }
-
-                    if (degreesLongitude > 0)
-                    {
-                        Table1C2GLookupPositive.Add(degreesLongitude, letter);
-                        Table4C2GLookupPositive.Add(degreesLattitude, letter);
-                    }
-
-                    Table4G2CLookup.Add(letter, degreesLattitude);
-                    degreesLongitude += 20;
-                    degreesLattitude += 10;
-                    tracker++;
-                }
-
-                tracker = 0;
-                int degreesNegativeLongitude = -18; // index: -18 to 0; value: 0 to 9
-                degreesLongitude = 2;               // Index: 2 to 20; value: 0 to 9
-                int degreesNegativeLattitude = -9;  // index: -9 to 0; value: 0 to 9
-                degreesLattitude = 1;               // index: 1 to 10; value: 0 to 9
-
-                while (tracker < 10)
-                {
-                    Table2C2GLookupPositive.Add(degreesLongitude, tracker);
-                    Table2C2GLookupNegative.Add(degreesNegativeLongitude, tracker);
-                    degreesLongitude += 2;
-                    degreesNegativeLongitude += 2;
-                    degreesLattitude++;
-                    degreesNegativeLattitude++;
-                    tracker++;
-                }
+                string letter = alphabet[tracker];
+                Table3G2CLookup.Add(letter, minsLongitude);
+                Table3C2GLookup.Add(minsLongitude, letter);
+                minsLongitude += 5m;
+                Table6G2CLookup.Add(letter, minsLattitude);
+                Table6C2GLookup.Add(minsLattitude, letter);
+                minsLattitude += 2.5m;
+                tracker++;
             }
-            catch (Exception ex)
+
+            tracker = 0;
+            int degreesLongitude = -160;
+            int degreesLattitude = -80;
+
+            Table1C2GLookupPositive = new Dictionary<decimal, string>(10);
+            Table4C2GLookupPositive = new Dictionary<decimal, string>(9);
+            Table1C2GLookupNegative = new Dictionary<decimal, string>(10);
+            Table4C2GLookupNegative = new Dictionary<decimal, string>(9);
+            Table1G2CLookup = new Dictionary<string, int>(18);
+            Table4G2CLookup = new Dictionary<string, int>(18);
+
+            while (tracker < 18)
             {
-                Console.WriteLine(ex.Message);
-                return false;
+                string letter = alphabet[tracker];
+
+                if (letter == "J")
+                {
+                    degreesLongitude -= 20;
+                    degreesLattitude -= 10;
+                    Table1C2GLookupPositive.Add(degreesLongitude, letter);
+                    Table4C2GLookupPositive.Add(degreesLattitude, letter);
+                }
+
+                Table1G2CLookup.Add(letter, degreesLongitude);
+
+                if (letter == "I")
+                {
+                    Table1C2GLookupNegative.Add(degreesLongitude, letter);
+                    Table4C2GLookupNegative.Add(degreesLattitude, letter);
+                }
+
+                if (degreesLongitude < 0)
+                {
+                    Table1C2GLookupNegative.Add(degreesLongitude, letter);
+                    Table4C2GLookupNegative.Add(degreesLattitude, letter);
+                }
+
+                if (degreesLongitude > 0)
+                {
+                    Table1C2GLookupPositive.Add(degreesLongitude, letter);
+                    Table4C2GLookupPositive.Add(degreesLattitude, letter);
+                }
+
+                Table4G2CLookup.Add(letter, degreesLattitude);
+
+                degreesLongitude += 20;
+                degreesLattitude += 10;
+                tracker++;
+            }
+
+            tracker = 0;
+            int degreesNegativeLongitude = -18;
+            degreesLongitude = 2;
+            int degreesNegativeLattitude = -9;
+            degreesLattitude = 1;
+
+            Table2C2GLookupPositive = new Dictionary<int, int>(9);
+            Table2C2GLookupNegative = new Dictionary<int, int>(9);
+
+            while (tracker < 10)
+            {
+                Table2C2GLookupPositive.Add(degreesLongitude, tracker);
+                Table2C2GLookupNegative.Add(degreesNegativeLongitude, tracker);
+                degreesLongitude += 2;
+                degreesNegativeLongitude += 2;
+                degreesLattitude++;
+                degreesNegativeLattitude++;
+                tracker++;
             }
 
             return true;

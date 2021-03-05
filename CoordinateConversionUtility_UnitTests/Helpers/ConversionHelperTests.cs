@@ -1,7 +1,6 @@
 ﻿using CoordinateConversionUtility.Models.Tests;
 using CoordinateConversionUtility_UnitTests.TestModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace CoordinateConversionUtility.Helpers.Tests
 {

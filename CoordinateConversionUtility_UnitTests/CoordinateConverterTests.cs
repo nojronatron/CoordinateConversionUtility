@@ -1,8 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using CoordinateConversionUtility.Models;
-using CoordinateConversionUtility_UnitTests.TestModels;
+﻿using CoordinateConversionUtility.Models;
 using CoordinateConversionUtility.Models.Tests;
+using CoordinateConversionUtility_UnitTests.TestModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 
 namespace CoordinateConversionUtility.Tests
@@ -14,7 +14,7 @@ namespace CoordinateConversionUtility.Tests
         public void CoordinateConverterCTORTest()
         {
             var cc = new CoordinateConverter();
-            
+
             var expectedType = "CoordinateConversionUtility.CoordinateConverter";
             var actualType = cc.GetType().FullName;
 

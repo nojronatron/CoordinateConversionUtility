@@ -1,7 +1,7 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using CoordinateConversionUtility_UnitTests.TestModels;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using CoordinateConversionUtility_UnitTests.TestModels;
 
 namespace CoordinateConversionUtility.Models.Tests
 {
@@ -134,7 +134,7 @@ namespace CoordinateConversionUtility.Models.Tests
             Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
             dict.Add("stringToDDM", 0.0m);
             DisplayOutput(expectedResult, actualResult, dict);
-            
+
             Assert.IsTrue(expectedLength == actualLength);
         }
 

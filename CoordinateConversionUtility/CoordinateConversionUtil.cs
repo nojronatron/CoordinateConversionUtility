@@ -1,7 +1,6 @@
-﻿using System;
-using System.Text;
+﻿using CoordinateConversionUtility.Helpers;
 using CoordinateConversionUtility.Models;
-using CoordinateConversionUtility.Helpers;
+using System.Text;
 
 namespace CoordinateConversionUtility
 {
@@ -34,19 +33,19 @@ namespace CoordinateConversionUtility
             {
                 if (LookuptablesHelper.GenerateTableLookups() && GridsquareHelper.ValidateGridsquareInput(gridsquare, out string validGridsquare))
                 {
-                        decimal tempLatDegrees = ConversionHelper.GetLatDegrees(LookuptablesHelper, validGridsquare, out short latDirection);
-                        decimal latDegreesWithRemainder = ConversionHelper.AddLatDegreesRemainder(tempLatDegrees, latDirection, validGridsquare);
-                        decimal DDMlatMinutes = ConversionHelper.GetLatMinutes(
-                            LookuptablesHelper, latDegreesWithRemainder, latDirection, validGridsquare, out decimal adjustedLatDegrees);
+                    decimal tempLatDegrees = ConversionHelper.GetLatDegrees(LookuptablesHelper, validGridsquare, out short latDirection);
+                    decimal latDegreesWithRemainder = ConversionHelper.AddLatDegreesRemainder(tempLatDegrees, latDirection, validGridsquare);
+                    decimal DDMlatMinutes = ConversionHelper.GetLatMinutes(
+                        LookuptablesHelper, latDegreesWithRemainder, latDirection, validGridsquare, out decimal adjustedLatDegrees);
 
-                        decimal tempLonDegrees = ConversionHelper.GetLonDegrees(LookuptablesHelper, validGridsquare, out short lonDirection);
-                        decimal lonDegreesWithRemainder = ConversionHelper.AddLonDegreesRemainder(tempLonDegrees, lonDirection, validGridsquare);
-                        decimal DDMlonMinutes = ConversionHelper.GetLonMinutes(
-                            LookuptablesHelper, lonDegreesWithRemainder, lonDirection, validGridsquare, out decimal adjustedLonDegrees);
+                    decimal tempLonDegrees = ConversionHelper.GetLonDegrees(LookuptablesHelper, validGridsquare, out short lonDirection);
+                    decimal lonDegreesWithRemainder = ConversionHelper.AddLonDegreesRemainder(tempLonDegrees, lonDirection, validGridsquare);
+                    decimal DDMlonMinutes = ConversionHelper.GetLonMinutes(
+                        LookuptablesHelper, lonDegreesWithRemainder, lonDirection, validGridsquare, out decimal adjustedLonDegrees);
 
-                        DdmResult = new DDMCoordinate(
-                            adjustedLatDegrees, DDMlatMinutes,
-                            adjustedLonDegrees, DDMlonMinutes);
+                    DdmResult = new DDMCoordinate(
+                        adjustedLatDegrees, DDMlatMinutes,
+                        adjustedLonDegrees, DDMlonMinutes);
                 }
             }
 
@@ -72,7 +71,7 @@ namespace CoordinateConversionUtility
             }
 
             var GridsquareResult = new StringBuilder();
-            
+
             decimal DDMlatDegrees = ddmCoordinates.GetShortDegreesLat();
             decimal DDMlonDegrees = ddmCoordinates.GetShortDegreesLon();
             decimal DDMlatMinutes = ddmCoordinates.MinutesLattitude;
