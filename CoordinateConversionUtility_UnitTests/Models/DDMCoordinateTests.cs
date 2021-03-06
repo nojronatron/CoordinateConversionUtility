@@ -37,11 +37,13 @@ namespace CoordinateConversionUtility.Models.Tests
             var latMinsDiff = Math.Abs(ddm.GetMinsLat() - mvcm.DdmMinsLat);
             var lonMinsDiff = Math.Abs(ddm.GetMinsLon() - mvcm.DdmMinsLon);
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            dict.Add("latMinsDiff", latMinsDiff);
-            dict.Add("lonMinsDiff", lonMinsDiff);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "latDiff", latDiff },
+                { "lonDiff", lonDiff },
+                { "latMinsDiff", latMinsDiff },
+                { "lonMinsDiff", lonMinsDiff }
+            };
             DisplayOutput(expectedResult, actualResult, dict);
 
             Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
@@ -71,11 +73,13 @@ namespace CoordinateConversionUtility.Models.Tests
             var latMinsDiff = Math.Abs(ddm.GetMinsLat() - mvcm.DdmMinsLat);
             var lonMinsDiff = Math.Abs(ddm.GetMinsLon() - mvcm.DdmMinsLon);
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            dict.Add("latMinsDiff", latMinsDiff);
-            dict.Add("lonMinsDiff", lonMinsDiff);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "latDiff", latDiff },
+                { "lonDiff", lonDiff },
+                { "latMinsDiff", latMinsDiff },
+                { "lonMinsDiff", lonMinsDiff }
+            };
             DisplayOutput(expectedResult, actualResult, dict);
 
             Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
@@ -107,11 +111,14 @@ namespace CoordinateConversionUtility.Models.Tests
             var latMinsDiff = Math.Abs(ddm.GetMinsLat() - mvcm.DdmMinsLat);
             var lonMinsDiff = Math.Abs(ddm.GetMinsLon() - mvcm.DdmMinsLon);
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            dict.Add("latMinsDiff", latMinsDiff);
-            dict.Add("lonMinsDiff", lonMinsDiff);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "latDiff", latDiff },
+                { "lonDiff", lonDiff },
+                { "latMinsDiff", latMinsDiff },
+                { "lonMinsDiff", lonMinsDiff }
+            };
+
             DisplayOutput(expectedResult, actualResult, dict);
 
             Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
@@ -131,8 +138,10 @@ namespace CoordinateConversionUtility.Models.Tests
             var actualResult = ddm.ToString();
             var actualLength = actualResult.Length;
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            dict.Add("stringToDDM", 0.0m);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "stringToDDM", 0.0m }
+            };
             DisplayOutput(expectedResult, actualResult, dict);
 
             Assert.IsTrue(expectedLength == actualLength);

@@ -17,7 +17,7 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DMSCoordinate dms = new DMSCoordinate(ddLat, ddLon);
 
-            string expectedResult = LynnwoodCoordinatesModel.strDMS();
+            string expectedResult = LynnwoodCoordinatesModel.StrDMS();
             string actualResult = dms.ToString();
 
             var latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(lcm.DegreesLat));
@@ -53,7 +53,7 @@ namespace CoordinateConversionUtility.Models.Tests
             var lcm = new LynnwoodCoordinatesModel();
             DMSCoordinate dms = new DMSCoordinate(lcm.ShortDegreesLattitude(), lcm.DdmMinsLat, lcm.ShortDegreesLongitude(), lcm.DdmMinsLon);
 
-            string expectedResult = LynnwoodCoordinatesModel.strDMS();
+            string expectedResult = LynnwoodCoordinatesModel.StrDMS();
             string actualResult = dms.ToString();
 
             if (expectedResult != actualResult)
@@ -99,7 +99,7 @@ namespace CoordinateConversionUtility.Models.Tests
                 lcm.DegreesLat, Math.Truncate(lcm.DdmMinsLat), lcm.DmsSecondsLat,
                 lcm.DegreesLon, Math.Truncate(lcm.DdmMinsLon), lcm.DmsSecondsLon);
 
-            var expectedResult = LynnwoodCoordinatesModel.strDMS();
+            var expectedResult = LynnwoodCoordinatesModel.StrDMS();
             var actualResult = dms.ToString();
 
             var latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(lcm.DegreesLat));
@@ -133,7 +133,7 @@ namespace CoordinateConversionUtility.Models.Tests
         public void CTOR_DmsStringToDMS_Test()
         {
             var lcm = new LynnwoodCoordinatesModel();
-            string expectedResult = LynnwoodCoordinatesModel.strDMS();
+            string expectedResult = LynnwoodCoordinatesModel.StrDMS();
 
             DMSCoordinate dms = new DMSCoordinate(expectedResult);
             string actualResult = dms.ToString();

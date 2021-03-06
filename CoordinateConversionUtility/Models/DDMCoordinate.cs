@@ -97,10 +97,9 @@ namespace CoordinateConversionUtility.Models
                 char[] splitChars = { CommaSymbol, DegreesSymbol, MinutesSymbol };
                 string[] strDdmLatAndLon = ddmLatAndLon.Split(splitChars);
 
-                string temp = string.Empty;
+                string temp = strDdmLatAndLon[0];
                 decimal tempDegreesLat = 0m;
                 decimal tempDegreesLon = 0m;
-                temp = strDdmLatAndLon[0];
 
                 if (decimal.TryParse(temp, out decimal decLatDegrees))
                 {

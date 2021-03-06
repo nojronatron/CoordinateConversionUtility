@@ -11,21 +11,21 @@
             DmsSecondsLat = 31.2m;
             DmsSecondsLon = 36.0m;
         }
-        public static string strGridSquare()
+        public static string StrGridSquare()
         {
             return $"CN87UT";
         }
-        public static string strDD()
+        public static string StrDD()
         {
             return $"{ 47.82533m:f5}{ DegreesSymbol }, { -122.29333m:f5}{ DegreesSymbol }";
         }
-        public static string strDDM()
+        public static string StrDDM()
         {
             return $"47{ DegreesSymbol }49.52{ MinutesSymbol }N, " +
                    $"122{ DegreesSymbol }17.60{ MinutesSymbol }W";
         }
 
-        public static string strDMS()
+        public static string StrDMS()
         {
             return $"N 47{ DegreesSymbol }49{ MinutesSymbol }31.1{ SecondsSymbol}, " +
                    $"W 122{ DegreesSymbol }17{ MinutesSymbol }36.2{ SecondsSymbol }";

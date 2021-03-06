@@ -90,7 +90,7 @@ namespace CoordinateConversionUtility.Helpers
                         if (inputCommand == "-grid")
                         {
                             cc = new CoordinateConverter();
-                            var ddm = cc.ConvertGridsquareToDDM(inputArg);
+                            DDMCoordinate ddm = cc.ConvertGridsquareToDDM(inputArg);
                             dms = new DMSCoordinate(ddm.GetShortDegreesLat(), ddm.GetMinsLat(), ddm.GetShortDegreesLon(), ddm.GetMinsLon());
                         }
                         if (inputCommand == "-dms")
@@ -152,7 +152,7 @@ namespace CoordinateConversionUtility.Helpers
                         if (inputCommand == "-grid")
                         {
                             cc = new CoordinateConverter();
-                            var ddm = cc.ConvertGridsquareToDDM(inputArg);
+                            DDMCoordinate ddm = cc.ConvertGridsquareToDDM(inputArg);
                             dd = new DDCoordinate(ddm.GetShortDegreesLat(), ddm.GetMinsLat(), ddm.GetShortDegreesLon(), ddm.GetMinsLon());
                         }
                         if (inputCommand == "-dms")
@@ -298,8 +298,7 @@ namespace CoordinateConversionUtility.Helpers
         public static bool IsDDM(string coordinateToParse, bool direwolf, out string validDDM)
         {
             validDDM = string.Empty;
-            string pattern = string.Empty;
-            var tempDDMCoordinate = new DDMCoordinate();
+            string pattern;
 
             if (direwolf)
             {
@@ -314,11 +313,11 @@ namespace CoordinateConversionUtility.Helpers
 
             if (patternMatches.Count == 2)
             {
-                string ddmLattitudeRaw = string.Empty;
+                string ddmLattitudeRaw;
                 string firstPatternMatch = LimitInputSpacing(patternMatches[0].Value);
                 firstPatternMatch = firstPatternMatch.ToUpper(currentCulture);
 
-                string ddmLongitudeRaw = string.Empty;
+                string ddmLongitudeRaw;
                 string secondPatternMatch = LimitInputSpacing(patternMatches[1].Value);
                 secondPatternMatch = secondPatternMatch.ToUpper(currentCulture);
 
@@ -371,10 +370,10 @@ namespace CoordinateConversionUtility.Helpers
 
                 ddmLongitudeRaw = ddmLongitudeRaw.Remove(ewIdx, 1);
                 ddmLongitudeRaw = ddmLongitudeRaw.Trim();
-                decimal latDegrees = 0m;
-                decimal latMinutes = 0m;
-                decimal lonDegrees = 0m;
-                decimal lonMinutes = 0m;
+                decimal latDegrees = default;
+                decimal latMinutes = default;
+                decimal lonDegrees = default;
+                decimal lonMinutes = default;
 
                 if (ConversionHelper.ValidateIsLattitude(ddmLattitudeRaw.Split(' ')[0], out decimal validLattitude))
                 {
@@ -396,7 +395,7 @@ namespace CoordinateConversionUtility.Helpers
                     lonMinutes = Math.Abs(validLonMins);
                 }
 
-                tempDDMCoordinate = new DDMCoordinate(latDegrees, latMinutes, lonDegrees, lonMinutes);
+                var tempDDMCoordinate = new DDMCoordinate(latDegrees, latMinutes, lonDegrees, lonMinutes);
                 validDDM = tempDDMCoordinate.ToString();
                 return true;
             }
@@ -416,7 +415,6 @@ namespace CoordinateConversionUtility.Helpers
         public static bool IsDMS(string coordinateToParse, out string validDMS)
         {
             validDMS = string.Empty;
-            var tempDMSCoordinate = new DDMCoordinate();
             MatchCollection patternMatches = Regex.Matches(coordinateToParse, DmsPattern, RegexOptions.IgnoreCase, Timespan);
 
             if (patternMatches.Count == 2)
@@ -499,7 +497,7 @@ namespace CoordinateConversionUtility.Helpers
                     lonSeconds = Math.Abs(validLonSecs);
                 }
 
-                tempDMSCoordinate = new DMSCoordinate(latDegrees, latMinutes, latSeconds, lonDegrees, lonMinutes, lonSeconds);
+                var tempDMSCoordinate = new DMSCoordinate(latDegrees, latMinutes, latSeconds, lonDegrees, lonMinutes, lonSeconds);
                 validDMS = tempDMSCoordinate.ToString();
                 return true;
             }

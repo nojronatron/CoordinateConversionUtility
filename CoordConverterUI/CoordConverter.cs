@@ -54,7 +54,7 @@ namespace CoordConverterUI
 
             else if (args.Length > 1)
             {
-                Queue<string> argsQueue = new Queue<string>(args);
+                var argsQueue = new Queue<string>(args);
 
                 while (argsQueue.Count > 1)
                 {
@@ -96,7 +96,7 @@ namespace CoordConverterUI
                                     }
                                     else
                                     {
-                                        CoordinateConverter cc = new CoordinateConverter();
+                                        var cc = new CoordinateConverter();
                                         var ddm = cc.ConvertGridsquareToDDM(validGrid);
                                         result = ddm.ToString();
                                     }
@@ -173,7 +173,7 @@ namespace CoordConverterUI
 
         private static void PrintUsageInstructions()
         {
-            UserGuide ug = new UserGuide();
+            var ug = new UserGuide();
             foreach (string section in ug.UsageInstructions)
             {
                 Console.WriteLine(section);

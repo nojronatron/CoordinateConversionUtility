@@ -4,7 +4,7 @@ namespace CoordConverterUI
 {
     internal class UserGuide
     {
-        private string[] text =
+        private readonly string[] text =
         {
             @"Coordinate Converter Utility by Jon Rumsey",
 

@@ -110,7 +110,7 @@ namespace CoordinateConversionUtility
                 return string.Empty;
             }
 
-            StringBuilder nsew = new StringBuilder(2);
+            var nsew = new StringBuilder(2);
 
             if (strDdmLatOrLon.IndexOf('N') > -1)
             {
@@ -383,21 +383,17 @@ namespace CoordinateConversionUtility
                 return 0.0m;
             }
 
-            var testVariable = 0.0m;
-            decimal latMinsLookupResult = 0m;
-
-            if (lookupTablesHelper.GetTable6G2CLookup.TryGetValue(Gridsquare[5].ToString(currentCulture).ToUpper(currentCulture), out latMinsLookupResult))
+            if (lookupTablesHelper.GetTable6G2CLookup.TryGetValue(Gridsquare[5].ToString(currentCulture).ToUpper(currentCulture), out decimal latMinsLookupResult))
             {
-                testVariable = latMinsLookupResult;
 
                 if (LatDirection > 0)
                 {
-                    testVariable += 57.5m;
+                    latMinsLookupResult += 57.5m;
 
-                    if (testVariable > 60)
+                    if (latMinsLookupResult > 60)
                     {
                         adjustedLatDegrees++;
-                        testVariable -= 60;
+                        latMinsLookupResult -= 60;
                     }
 
                     adjustedLatDegrees += DDMLatDegrees;
@@ -405,10 +401,10 @@ namespace CoordinateConversionUtility
 
                 if (LatDirection < 0)
                 {
-                    if (testVariable < -60)
+                    if (latMinsLookupResult < -60)
                     {
                         adjustedLatDegrees--;
-                        testVariable += 60;
+                        latMinsLookupResult += 60;
                     }
 
                     adjustedLatDegrees -= Math.Abs(DDMLatDegrees);
@@ -419,7 +415,7 @@ namespace CoordinateConversionUtility
                 return 0m;
             }
 
-            return Math.Abs(testVariable) + LatMinsRound;
+            return Math.Abs(latMinsLookupResult) + LatMinsRound;
         }
 
         /// <summary>
@@ -564,7 +560,7 @@ namespace CoordinateConversionUtility
         /// <returns></returns>
         public static decimal GetNearestEvenMultiple(decimal minutesInput, int latOrLon)
         {
-            decimal interval = 0.0m;
+            decimal interval;
 
             if (latOrLon == 1)
             {

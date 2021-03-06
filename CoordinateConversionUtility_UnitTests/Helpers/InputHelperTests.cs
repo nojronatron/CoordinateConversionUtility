@@ -99,7 +99,6 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_IsDD_Pass()
         {
-            var mcm = new MontevideoCoordinateModel();
             var expectedResult = true;
             var expectedValidatedDD = MontevideoCoordinateModel.strDD();
 
