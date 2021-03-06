@@ -164,5 +164,44 @@ namespace CoordinateConversionUtility.Models.Tests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
+        [TestMethod()]
+        public void IsValid_90_180_Passes_Test()
+        {
+            var lattitude = 90.0m;
+            var longitude = 180.0m;
+            var expectedResult = true;
+
+            var dd = new DDCoordinate(lattitude, longitude);
+            var actualResult = dd.IsValid;
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod()]
+        public void IsValid_InvalidLat_Test()
+        {
+            var lattitude = 91.0m;
+            var longitude = 180.0m;
+            var expectedResult = false;
+
+            var dd = new DDCoordinate(lattitude, longitude);
+            var actualResult = dd.IsValid;
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod()]
+        public void IsValid_InvalidLon_Test()
+        {
+            var lattitude = 90.0m;
+            var longitude = -181.0m;
+            var expectedResult = false;
+
+            var dd = new DDCoordinate(lattitude, longitude);
+            var actualResult = dd.IsValid;
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
     }
 }

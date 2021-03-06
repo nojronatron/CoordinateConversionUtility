@@ -1,10 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using CoordinateConversionUtility.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CoordinateConversionUtility.Models.Tests
 {
@@ -204,6 +198,17 @@ namespace CoordinateConversionUtility.Models.Tests
 
             Assert.AreEqual(expectedResult, actualResult);
             Assert.AreEqual(expectedOutResult, actualOutResult);
+        }
+
+        [TestMethod()]
+        public void IsValid_CannotValidateBaseInstance_Test()
+        {
+            bool expectedResult = false;
+            var cb = new CoordinateBase();
+
+            bool actualResult = cb.IsValid;
+
+            Assert.AreEqual(expectedResult, actualResult);
         }
 
     }
