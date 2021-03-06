@@ -54,6 +54,7 @@
     <Compile Include="Helpers\GridSquareHelperTests.cs" />
     <Compile Include="Helpers\InputHelperTests.cs" />
     <Compile Include="Helpers\LookupTablesHelperTests.cs" />
+    <Compile Include="Models\CoordinateBaseTests.cs" />
     <Compile Include="Models\DDCoordinateTests.cs" />
     <Compile Include="Models\DDMCoordinateTests.cs" />
     <Compile Include="Models\DMSCoordinateTests.cs" />

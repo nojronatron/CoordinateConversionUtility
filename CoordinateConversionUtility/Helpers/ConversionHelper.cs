@@ -174,20 +174,6 @@ namespace CoordinateConversionUtility
             return CoordinateBase.ValidateLatDegrees(lattitude) && CoordinateBase.ValidateLonDegrees(longitude);
         }
 
-        public static bool IsValidGridsquare(string gridsquare, out string validGridsquare)
-        {
-            var gridsquareHelper = new GridSquareHelper();
-
-            if (gridsquareHelper.ValidateGridsquareInput(gridsquare, out string vGridsquare))
-            {
-                validGridsquare = vGridsquare;
-                return true;
-            };
-
-            validGridsquare = string.Empty;
-            return false;
-        }
-
         public static bool LatDecimalIsValid(decimal lattitudeDecimal)
         {
             return CoordinateBase.ValidateLatDegrees(lattitudeDecimal);
