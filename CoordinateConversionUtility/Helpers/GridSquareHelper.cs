@@ -31,19 +31,19 @@ namespace CoordinateConversionUtility.Helpers
         {
             validGridsquare = "?";
 
-            if (string.IsNullOrEmpty(gridsquare))
+            if (!string.IsNullOrEmpty(gridsquare) && !string.IsNullOrWhiteSpace(gridsquare))
             {
+                string tempGridsquare = gridsquare.ToUpper(currentCulture).Trim();
+                Regex rx = new Regex(@"[A-Z]{2}[0-9]{2}[A-Z]{2}");
+                MatchCollection matches = rx.Matches(tempGridsquare);
+
+                if (rx.IsMatch(tempGridsquare))
+                {
+                    validGridsquare = matches[0].Value.ToString(currentCulture);
+                    return true;
+                }
+
                 return false;
-            }
-
-            string tempGridsquare = gridsquare.ToUpper(currentCulture).Trim();
-            Regex rx = new Regex(@"[A-Z]{2}[0-9]{2}[A-Z]{2}");
-            MatchCollection matches = rx.Matches(tempGridsquare);
-
-            if (rx.IsMatch(tempGridsquare))
-            {
-                validGridsquare = matches[0].Value.ToString(currentCulture);
-                return true;
             }
 
             return false;

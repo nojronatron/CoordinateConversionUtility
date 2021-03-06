@@ -39,7 +39,7 @@ namespace CoordConverterUI
 
                 else if (currentArg.Length > 6)
                 {
-                    if (InputHelper.IsDDM(currentArg, false, out string validDDM))
+                    if (InputHelper.ParseAsDDMCoordinate(currentArg, false, out string validDDM))
                     {
                         Console.WriteLine($"Resulting DDM: { validDDM }.");
                     }
@@ -72,7 +72,7 @@ namespace CoordConverterUI
                     {
                         case "-direwolf":
                             {
-                                if (InputHelper.IsDDM(currentInput, true, out string validDWDDM))
+                                if (InputHelper.ParseAsDDMCoordinate(currentInput, true, out string validDWDDM))
                                 {
                                     if (outputCommand.Length > 0)
                                     {
@@ -105,7 +105,7 @@ namespace CoordConverterUI
                             }
                         case "-dms":
                             {
-                                if (InputHelper.IsDMS(currentInput, out string validDMS))
+                                if (InputHelper.ParseAsDMSCoordinate(currentInput, out string validDMS))
                                 {
                                     if (outputCommand.Length > 0)
                                     {
@@ -120,7 +120,7 @@ namespace CoordConverterUI
                             }
                         case "-ddm":
                             {
-                                if (InputHelper.IsDDM(currentInput, false, out string validDDM))
+                                if (InputHelper.ParseAsDDMCoordinate(currentInput, false, out string validDDM))
                                 {
                                     if (outputCommand.Length > 0)
                                     {
@@ -135,7 +135,7 @@ namespace CoordConverterUI
                             }
                         case "-dd":
                             {
-                                if (InputHelper.IsDD(currentInput, out string validDD))
+                                if (InputHelper.ParseAsDDCoordinate(currentInput, out string validDD))
                                 {
                                     if (outputCommand.Length > 0)
                                     {

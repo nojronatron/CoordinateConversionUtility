@@ -102,7 +102,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             var expectedResult = true;
             var expectedValidatedDD = MontevideoCoordinateModel.strDD();
 
-            var actualResult = InputHelper.IsDD(expectedValidatedDD, out string actualValidatedDD);
+            var actualResult = InputHelper.ParseAsDDCoordinate(expectedValidatedDD, out string actualValidatedDD);
 
             Assert.AreEqual(expectedResult, actualResult);
             Assert.AreEqual(expectedValidatedDD, actualValidatedDD);
@@ -115,7 +115,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             var expectedResult = true;
             var expectedValidatedDD = MontevideoCoordinateModel.strDD();
 
-            var actualResult = InputHelper.IsDD(testDDinput, out string actualValidatedDD);
+            var actualResult = InputHelper.ParseAsDDCoordinate(testDDinput, out string actualValidatedDD);
 
             Assert.AreNotEqual(actualResult, expectedResult);
             Assert.AreNotEqual(actualValidatedDD, expectedValidatedDD);
@@ -128,7 +128,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             var expectedResult = true;
             var expectedValidatedDDM = MontevideoCoordinateModel.strDDM();
 
-            var actualResult = InputHelper.IsDDM(testDDMinput, false, out string actualValidatedDDM);
+            var actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
 
             Assert.AreEqual(actualResult, expectedResult);
             Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
@@ -141,7 +141,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             var expectedResult = false;
             var expectedValidatedDDM = string.Empty;
 
-            var actualResult = InputHelper.IsDDM(testDDMinput, false, out string actualValidatedDDM);
+            var actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
 
             Assert.AreEqual(actualResult, expectedResult);
             Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
@@ -155,7 +155,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             var expectedResult = false;
             var expectedValidatedDDM = string.Empty;
 
-            var actualResult = InputHelper.IsDDM(testDDMinput, false, out string actualValidatedDDM);
+            var actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
 
             Assert.AreEqual(actualResult, expectedResult);
             Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
@@ -169,7 +169,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             var expectedResult = true;
             var expectedValidatedDDM = MontevideoCoordinateModel.strDDM();
 
-            var actualResult = InputHelper.IsDDM(testDirewolfInput, true, out string actualValidatedDDM);
+            var actualResult = InputHelper.ParseAsDDMCoordinate(testDirewolfInput, true, out string actualValidatedDDM);
 
             Assert.AreEqual(actualResult, expectedResult);
             Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
@@ -182,7 +182,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             var expectedResult = true;
             var expectedValidatedDMS = MontevideoCoordinateModel.strDMS();
 
-            var actualResult = InputHelper.IsDMS(testDMSinput, out string actualValidatedDMS);
+            var actualResult = InputHelper.ParseAsDMSCoordinate(testDMSinput, out string actualValidatedDMS);
 
             Assert.AreEqual(actualResult, expectedResult);
             Assert.AreEqual(actualValidatedDMS, expectedValidatedDMS);

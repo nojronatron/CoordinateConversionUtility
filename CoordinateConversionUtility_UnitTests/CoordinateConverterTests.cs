@@ -37,11 +37,13 @@ namespace CoordinateConversionUtility.Tests
             var latMinsDiff = Math.Abs(expectedResult.GetMinsLat() - actualResult.GetMinsLat());
             var lonMinsDiff = Math.Abs(expectedResult.GetMinsLon() - actualResult.GetMinsLon());
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            dict.Add("latMinsDiff", latMinsDiff);
-            dict.Add("lonMinsDiff", lonMinsDiff);
+            Dictionary<string, decimal> dict = new Dictionary<string, decimal>
+            {
+                { "latDiff", latDiff },
+                { "lonDiff", lonDiff },
+                { "latMinsDiff", latMinsDiff },
+                { "lonMinsDiff", lonMinsDiff }
+            };
             DisplayOutput(expectedResult.ToString(), actualResult.ToString(), dict);
 
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
@@ -49,9 +51,6 @@ namespace CoordinateConversionUtility.Tests
 
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
-
-            //var areEqual = expectedResult.Equals(actualResult);
-            //Assert.IsTrue(areEqual);
         }
 
         [TestMethod()]
@@ -70,24 +69,25 @@ namespace CoordinateConversionUtility.Tests
             var latMinsDiff = Math.Abs(expectedResult.GetMinsLat() - actualResult.GetMinsLat());
             var lonMinsDiff = Math.Abs(expectedResult.GetMinsLon() - actualResult.GetMinsLon());
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            dict.Add("latMinsDiff", latMinsDiff);
-            dict.Add("lonMinsDiff", lonMinsDiff);
+            Dictionary<string, decimal> dict = new Dictionary<string, decimal>
+            {
+                { "latDiff", latDiff },
+                { "lonDiff", lonDiff },
+                { "latMinsDiff", latMinsDiff },
+                { "lonMinsDiff", lonMinsDiff }
+            };
             DisplayOutput(expectedResult.ToString(), actualResult.ToString(), dict);
 
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
 
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
-            Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold); //  Longitude Minutes calculations are off by 1 full degree
+            Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
         [TestMethod()]
         public void ConvertGridsquareToDDMTestSW()
         {
-            var wcm = new WellingtonCoordinateModel();
             var cc = new CoordinateConverter();
             var gridsquare = WellingtonCoordinateModel.strGridsquare();
 
@@ -100,11 +100,13 @@ namespace CoordinateConversionUtility.Tests
             var latMinsDiff = Math.Abs(expectedResult.GetMinsLat() - actualResult.GetMinsLat());
             var lonMinsDiff = Math.Abs(expectedResult.GetMinsLon() - actualResult.GetMinsLon());
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            dict.Add("latMinsDiff", latMinsDiff);
-            dict.Add("lonMinsDiff", lonMinsDiff);
+            Dictionary<string, decimal> dict = new Dictionary<string, decimal>
+            {
+                { "latDiff", latDiff },
+                { "lonDiff", lonDiff },
+                { "latMinsDiff", latMinsDiff },
+                { "lonMinsDiff", lonMinsDiff }
+            };
             DisplayOutput(expectedResult.ToString(), actualResult.ToString(), dict);
 
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
@@ -130,11 +132,13 @@ namespace CoordinateConversionUtility.Tests
             var latMinsDiff = Math.Abs(expectedResult.GetMinsLat() - actualResult.GetMinsLat());
             var lonMinsDiff = Math.Abs(expectedResult.GetMinsLon() - actualResult.GetMinsLon());
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            dict.Add("latMinsDiff", latMinsDiff);
-            dict.Add("lonMinsDiff", lonMinsDiff);
+            Dictionary<string, decimal> dict = new Dictionary<string, decimal>
+            {
+                { "latDiff", latDiff },
+                { "lonDiff", lonDiff },
+                { "latMinsDiff", latMinsDiff },
+                { "lonMinsDiff", lonMinsDiff }
+            };
             DisplayOutput(expectedResult.ToString(), actualResult.ToString(), dict);
 
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
@@ -142,9 +146,6 @@ namespace CoordinateConversionUtility.Tests
 
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
-
-            //var areEqual = expectedResult.Equals(actualResult);
-            //Assert.IsTrue(areEqual);
         }
 
         [TestMethod()]

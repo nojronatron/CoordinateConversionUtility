@@ -1,4 +1,5 @@
-﻿using CoordinateConversionUtility.Models.Tests;
+﻿using CoordinateConversionUtility.Models;
+using CoordinateConversionUtility.Models.Tests;
 using CoordinateConversionUtility_UnitTests.TestModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,8 +16,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
 
             var strLattitude = "-35";
 
-            decimal actualOutput = 0.0m;
-            bool actualResult = ConversionHelper.ValidateIsLattitude(strLattitude, out actualOutput);
+            bool actualResult = CoordinateBase.ValidateIsLatDegrees(strLattitude, out decimal actualOutput);
 
             Assert.AreEqual(expectedResult, actualResult);
             Assert.AreEqual(expectedOutput, actualOutput);
@@ -30,8 +30,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
 
             var strLongitude = "-123";
 
-            decimal actualOutput = 0.0m;
-            bool actualResult = ConversionHelper.ValidateIsLongitude(strLongitude, out actualOutput);
+            bool actualResult = CoordinateBase.ValidateIsLonDegrees(strLongitude, out decimal actualOutput);
 
             Assert.AreEqual(expectedresult, actualResult);
             Assert.AreEqual(expectedOutput, actualOutput);
@@ -45,8 +44,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
 
             var strMinutes = "45.55";
 
-            decimal actualMinsOutput = 0.0m;
-            bool actualresultMins = ConversionHelper.ValidateIsSecsOrMins(strMinutes, out actualMinsOutput);
+            bool actualresultMins = CoordinateBase.ValidateIsSecsOrMins(strMinutes, out decimal actualMinsOutput);
 
             Assert.AreEqual(expectedResultMins, actualresultMins);
             Assert.AreEqual(expectedOutputMins, actualMinsOutput);
@@ -60,8 +58,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
 
             var strSeconds = "34.21";
 
-            decimal actualOutputSecs = 0.0m;
-            bool actualResultSecs = ConversionHelper.ValidateIsSecsOrMins(strSeconds, out actualOutputSecs);
+            bool actualResultSecs = CoordinateBase.ValidateIsSecsOrMins(strSeconds, out decimal actualOutputSecs);
 
             Assert.AreEqual(expectedResultSecs, actualResultSecs);
             Assert.AreEqual(expectedOutputSecs, actualOutputSecs);
@@ -179,7 +176,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             decimal longitude = 11.6083m;
 
             var expectedResult = true;
-            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+            var actualResult = ConversionHelper.IsValidLatDegreesAndLonDegrees(lattitude, longitude);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -191,7 +188,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             decimal longitude = 11.6083m;
 
             var expectedResult = false;
-            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+            var actualResult = ConversionHelper.IsValidLatDegreesAndLonDegrees(lattitude, longitude);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -203,7 +200,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             decimal longitude = 191.6083m;
 
             var expectedResult = false;
-            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+            var actualResult = ConversionHelper.IsValidLatDegreesAndLonDegrees(lattitude, longitude);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -216,7 +213,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             decimal longitude = 11.6083m;
 
             var expectedResult = false;
-            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+            var actualResult = ConversionHelper.IsValidLatDegreesAndLonDegrees(lattitude, longitude);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -228,7 +225,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             decimal longitude = -180.6083m;
 
             var expectedResult = false;
-            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+            var actualResult = ConversionHelper.IsValidLatDegreesAndLonDegrees(lattitude, longitude);
 
             Assert.AreEqual(expectedResult, actualResult);
         }

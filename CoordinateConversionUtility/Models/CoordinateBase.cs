@@ -17,7 +17,7 @@ namespace CoordinateConversionUtility.Models
             }
             set
             {
-                if (-90m <= value && value <= 90m)
+                if (CoordinateBase.ValidateLatDegrees(value))
                 {
                     _degreesLattitude = value;
                     LatIsValid = true;
@@ -37,7 +37,7 @@ namespace CoordinateConversionUtility.Models
             }
             set
             {
-                if (-180m <= value && value <= 180m)
+                if (CoordinateBase.ValidateLonDegrees(value))
                 {
                     _degreesLongitude = value;
                     LonIsValid = true;
@@ -48,6 +48,14 @@ namespace CoordinateConversionUtility.Models
                     LonIsValid = false;
                 }
             }
+        }
+        internal static bool ValidateLatDegrees(decimal degreesLattitude)
+        {
+            return (-90m <= degreesLattitude && degreesLattitude <= 90m);
+        }
+        internal static bool ValidateLonDegrees(decimal degreesLongitude)
+        {
+            return (-180m <= degreesLongitude && degreesLongitude <= 180m);
         }
         internal static char CommaSymbol => (char)44;
         internal static char MinusSymbol => (char)45;
@@ -60,6 +68,72 @@ namespace CoordinateConversionUtility.Models
         /// Constructors set this bit true if successful, false if failures or ambiguity occurs during initialization.
         /// </summary>
         public virtual bool IsValid => LatIsValid && LonIsValid;
+
+        /// <summary>
+        /// Take a string and convert it to a decimal then return the result from asking DMSCoordinate if it is valid or not.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <param name="validMinutes"></param>
+        /// <returns></returns>
+        public static bool ValidateIsSecsOrMins(string number, out decimal validMinutes)
+        {
+            validMinutes = 0.0m;
+
+            if (decimal.TryParse(number, out decimal minutes))
+            {
+                if (DMSCoordinate.ValidateSecondsLattitude(minutes))
+                {
+                    validMinutes = minutes;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Take a string and convert it to a decimal then return the result from asking CoordinateBase if it is valid or not.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <param name="validLatDegrees"></param>
+        /// <returns></returns>
+        public static bool ValidateIsLatDegrees(string number, out decimal validLatDegrees)
+        {
+            validLatDegrees = 0.0m;
+
+            if (decimal.TryParse(number, out decimal lattitude))
+            {
+                if (CoordinateBase.ValidateLatDegrees(lattitude))
+                {
+                    validLatDegrees = lattitude;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Take a string and convert it to a decimal then return the result from asking CoordinateBase if it is valid or not.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <param name="validLonDegrees"></param>
+        /// <returns></returns>
+        public static bool ValidateIsLonDegrees(string number, out decimal validLonDegrees)
+        {
+            validLonDegrees = 0.0m;
+
+            if (decimal.TryParse(number, out decimal longitude))
+            {
+                if (CoordinateBase.ValidateLonDegrees(longitude))
+                {
+                    validLonDegrees = longitude;
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
         public override bool Equals(object obj)
         {
