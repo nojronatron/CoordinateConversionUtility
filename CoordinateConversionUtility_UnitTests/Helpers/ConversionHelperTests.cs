@@ -1,7 +1,6 @@
 ﻿using CoordinateConversionUtility.Models.Tests;
 using CoordinateConversionUtility_UnitTests.TestModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
 namespace CoordinateConversionUtility.Helpers.Tests
 {
@@ -123,7 +122,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             var expectedLongitudeResult = "W";
             var expectedCombinedResult = "NW";
 
-            var lcm = LynnwoodCoordinatesModel.strDDM();
+            var lcm = LynnwoodCoordinatesModel.StrDDM();
             var splitLatAndLon = lcm.ToString().Split(CommaSymbol);
             var lcmLattitude = splitLatAndLon[0];
             var lcmLongitude = splitLatAndLon[1];

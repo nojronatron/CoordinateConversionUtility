@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace CoordConverterUI
 {
     internal class UserGuide
     {
-        private string[] text =
+        private readonly string[] text =
         {
             @"Coordinate Converter Utility by Jon Rumsey",
 
@@ -19,7 +18,7 @@ namespace CoordConverterUI
     4. Accepts a valid DIREWOLF program output coordinate and returns a Grid, DD, DDM, or DMS, well-formatted.
     5. Accepts a gridsquare and returns a DD, DDM, or DMS coordinate.
     6. Accepts a DD, DDM, DMS, or DIREWOLF-formatted DDM and returns the encompassing Gridsquare.",
-            
+
             @"Usage:
     CoordinateConverter.exe -in_cmd 'coordinate'|gridsquare [-out_cmd]",
 
@@ -51,7 +50,7 @@ namespace CoordConverterUI
         };
 
         internal List<string> UsageInstructions { get; set; }
-        
+
         public UserGuide()
         {
             UsageInstructions = new List<string>(text);

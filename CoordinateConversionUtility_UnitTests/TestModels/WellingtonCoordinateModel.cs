@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CoordinateConversionUtility_UnitTests.TestModels
+﻿namespace CoordinateConversionUtility_UnitTests.TestModels
 {
     public class WellingtonCoordinateModel : RootCoordinateModel
     {
@@ -33,7 +31,7 @@ namespace CoordinateConversionUtility_UnitTests.TestModels
             //  Confirmed correct: 41°17.50'S, 174°45.00'E
             return $"41{ DegreesSymbol }16.99{ MinutesSymbol }S, " +
             $"174{ DegreesSymbol }44.70{ MinutesSymbol }E";
-            
+
         }
 
         /// <summary>
@@ -45,13 +43,13 @@ namespace CoordinateConversionUtility_UnitTests.TestModels
             return $"41{ DegreesSymbol }17.0{ MinutesSymbol }S, " +
                    $"174{ DegreesSymbol }44.7{ MinutesSymbol }E";
         }
-		
-		public static string strAttainableDDM()
-		{
+
+        public static string strAttainableDDM()
+        {
             return $"41{ DegreesSymbol }17.50{ MinutesSymbol }S, " +
                    $"174{ DegreesSymbol }45.00{ MinutesSymbol }E";
-		}
-		
+        }
+
         public static string strDMS()
         {
             return $"S 41{ DegreesSymbol }16{ MinutesSymbol }59.9{ SecondsSymbol}, " +

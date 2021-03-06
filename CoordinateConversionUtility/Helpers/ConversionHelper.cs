@@ -1,6 +1,6 @@
 ﻿using CoordinateConversionUtility.Helpers;
-
 using System;
+using System.Globalization;
 using System.Text;
 
 namespace CoordinateConversionUtility
@@ -11,8 +11,7 @@ namespace CoordinateConversionUtility
     /// </summary>
     public static class ConversionHelper
     {
-#pragma warning disable CA1304 // Specify CultureInfo
-#pragma warning disable CA1305 // Specify IFormatProvider
+        private static readonly CultureInfo currentCulture = CultureInfo.CurrentCulture;
         private static decimal LonMinsRound { get; } = 2.5m;         // used in gridsquare rounding calculations to find CENTER of 5th gridsquare character
         private static decimal LatMinsRound { get; } = 1.25m;        // used in gridsquare rounding calculations to find CENTER of 6th gridsquare character
         public static short ExtractPolarity(decimal number)
@@ -111,7 +110,7 @@ namespace CoordinateConversionUtility
                 return string.Empty;
             }
 
-            StringBuilder nsew = new StringBuilder(2);
+            var nsew = new StringBuilder(2);
 
             if (strDdmLatOrLon.IndexOf('N') > -1)
             {
@@ -141,7 +140,7 @@ namespace CoordinateConversionUtility
         /// <param name="LatOrLon"></param>
         /// <returns></returns>
         public static string GetNSEW(decimal degreesLatOrLon, int LatOrLon)
-        { 
+        {
             switch (LatOrLon)
             {
                 case 1:
@@ -251,7 +250,7 @@ namespace CoordinateConversionUtility
         {
             validLongitude = 0.0m;
 
-            if(decimal.TryParse(number, out decimal longitude))
+            if (decimal.TryParse(number, out decimal longitude))
             {
                 if (ConversionHelper.LonDecimalIsValid(longitude))
                 {
@@ -294,7 +293,7 @@ namespace CoordinateConversionUtility
         /// <param name="LatDirection"></param>
         /// <returns></returns>
         public static decimal GetLatDegrees(LookupTablesHelper lookupTablesHelper, string Gridsquare, out short LatDirection)
-        {   
+        {
             LatDirection = 0;
 
             if (lookupTablesHelper == null || string.IsNullOrEmpty(Gridsquare) || string.IsNullOrWhiteSpace(Gridsquare))
@@ -302,15 +301,15 @@ namespace CoordinateConversionUtility
                 return -90m;
             }
 
-            var currentGridsquare = Gridsquare[1].ToString();
+            var currentGridsquare = Gridsquare[1].ToString(currentCulture);
 
-            if (lookupTablesHelper.GetTable4G2CLookup.TryGetValue(currentGridsquare.ToUpper(), out int latDegreesLookupResult))
+            if (lookupTablesHelper.GetTable4G2CLookup.TryGetValue(currentGridsquare.ToUpper(currentCulture), out int latDegreesLookupResult))
             {
-                if (currentGridsquare.ToUpper() == "I" || latDegreesLookupResult < 0)
+                if (currentGridsquare.ToUpper(currentCulture) == "I" || latDegreesLookupResult < 0)
                 {
                     LatDirection = -1;
                 }
-                if (currentGridsquare.ToUpper() == "J" || latDegreesLookupResult > 0)
+                if (currentGridsquare.ToUpper(currentCulture) == "J" || latDegreesLookupResult > 0)
                 {
                     LatDirection = 1;
                 }
@@ -331,7 +330,7 @@ namespace CoordinateConversionUtility
         /// <param name="Gridsquare"></param>
         /// <returns></returns>
         public static decimal AddLatDegreesRemainder(decimal DDMLatDegress, int LatDirection, string Gridsquare)
-        {   
+        {
             if (string.IsNullOrEmpty(Gridsquare) || string.IsNullOrWhiteSpace(Gridsquare))
             {
                 return 0.0m;
@@ -349,7 +348,7 @@ namespace CoordinateConversionUtility
                 lat_MinsAdjustment = -9;
             }
 
-            var fourthGridChar = Gridsquare[3].ToString();
+            var fourthGridChar = Gridsquare[3].ToString(currentCulture);
 
             if (decimal.TryParse(fourthGridChar, out decimal intFourthGridChar))
             {
@@ -376,7 +375,7 @@ namespace CoordinateConversionUtility
         /// <param name="adjustedLatDegrees"></param>
         /// <returns></returns>
         public static decimal GetLatMinutes(LookupTablesHelper lookupTablesHelper, decimal DDMLatDegrees, int LatDirection, string Gridsquare, out decimal adjustedLatDegrees)
-        {   
+        {
             adjustedLatDegrees = 0.0m;
 
             if (lookupTablesHelper == null || string.IsNullOrEmpty(Gridsquare) || string.IsNullOrWhiteSpace(Gridsquare) || LatDirection == 0)
@@ -384,32 +383,28 @@ namespace CoordinateConversionUtility
                 return 0.0m;
             }
 
-            var testVariable = 0.0m;
-            decimal latMinsLookupResult = 0m;
-
-            if (lookupTablesHelper.GetTable6G2CLookup.TryGetValue(Gridsquare[5].ToString().ToUpper(), out latMinsLookupResult))
+            if (lookupTablesHelper.GetTable6G2CLookup.TryGetValue(Gridsquare[5].ToString(currentCulture).ToUpper(currentCulture), out decimal latMinsLookupResult))
             {
-                testVariable = latMinsLookupResult;
 
                 if (LatDirection > 0)
-                {   
-                    testVariable += 57.5m;
+                {
+                    latMinsLookupResult += 57.5m;
 
-                    if (testVariable > 60)
+                    if (latMinsLookupResult > 60)
                     {
-                        adjustedLatDegrees ++;
-                        testVariable -= 60;
+                        adjustedLatDegrees++;
+                        latMinsLookupResult -= 60;
                     }
 
                     adjustedLatDegrees += DDMLatDegrees;
                 }
-                
+
                 if (LatDirection < 0)
-                {   
-                    if (testVariable < -60)
+                {
+                    if (latMinsLookupResult < -60)
                     {
-                        adjustedLatDegrees --;
-                        testVariable += 60;
+                        adjustedLatDegrees--;
+                        latMinsLookupResult += 60;
                     }
 
                     adjustedLatDegrees -= Math.Abs(DDMLatDegrees);
@@ -420,7 +415,7 @@ namespace CoordinateConversionUtility
                 return 0m;
             }
 
-            return Math.Abs(testVariable) + LatMinsRound;
+            return Math.Abs(latMinsLookupResult) + LatMinsRound;
         }
 
         /// <summary>
@@ -432,7 +427,7 @@ namespace CoordinateConversionUtility
         /// <param name="LonDirection"></param>
         /// <returns></returns>
         public static decimal GetLonDegrees(LookupTablesHelper lookupTablesHelper, string Gridsquare, out short LonDirection)
-        {   
+        {
             LonDirection = 0;
 
             if (lookupTablesHelper == null || string.IsNullOrEmpty(Gridsquare) || string.IsNullOrWhiteSpace(Gridsquare))
@@ -440,14 +435,14 @@ namespace CoordinateConversionUtility
                 return 0m;
             }
 
-            if (lookupTablesHelper.GetTable1G2CLookup.TryGetValue(Gridsquare[0].ToString().ToUpper(), out int lonDegreesLookupResult))
+            if (lookupTablesHelper.GetTable1G2CLookup.TryGetValue(Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture), out int lonDegreesLookupResult))
             {
-                if (Gridsquare[0].ToString().ToUpper() == "I" || lonDegreesLookupResult < 0)
-                { 
+                if (Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture) == "I" || lonDegreesLookupResult < 0)
+                {
                     LonDirection = -1;
                 }
-                else if (Gridsquare[0].ToString().ToUpper() == "J" || lonDegreesLookupResult >= 0)
-                {   
+                else if (Gridsquare[0].ToString(currentCulture).ToUpper(currentCulture) == "J" || lonDegreesLookupResult >= 0)
+                {
                     LonDirection = 1;
                 }
                 else
@@ -471,7 +466,7 @@ namespace CoordinateConversionUtility
         /// <param name="Gridsquare"></param>
         /// <returns></returns>
         public static decimal AddLonDegreesRemainder(decimal DDMlonDegrees, int LonDirection, string Gridsquare)
-        {   
+        {
             if (string.IsNullOrEmpty(Gridsquare) || string.IsNullOrWhiteSpace(Gridsquare) || LonDirection == 0)
             {
                 return 0.0m;
@@ -480,14 +475,14 @@ namespace CoordinateConversionUtility
             var testResult = 0.0m;
 
             if (LonDirection > 0)
-            {   
-                testResult = (int.Parse(Gridsquare[2].ToString()) * 2);
+            {
+                testResult = int.Parse(Gridsquare[2].ToString(currentCulture), currentCulture) * 2;
             }
-            
+
             if (LonDirection < 0)
             {
                 int lon_MinsAdjustment = -18;
-                var gridChar = int.Parse(Gridsquare[2].ToString());
+                var gridChar = int.Parse(Gridsquare[2].ToString(currentCulture), currentCulture);
                 testResult = lon_MinsAdjustment + (gridChar * 2);
             }
 
@@ -507,7 +502,7 @@ namespace CoordinateConversionUtility
         /// <param name="adjustedDDMlonDegrees"></param>
         /// <returns></returns>
         public static decimal GetLonMinutes(LookupTablesHelper lookupTablesHelper, decimal DDMlonDegrees, int LonDirection, string Gridsquare, out decimal adjustedDDMlonDegrees)
-        {   
+        {
             adjustedDDMlonDegrees = 0m;
             if (lookupTablesHelper == null || string.IsNullOrEmpty(Gridsquare) || string.IsNullOrWhiteSpace(Gridsquare) || LonDirection == 0)
             {
@@ -516,7 +511,7 @@ namespace CoordinateConversionUtility
 
             var testResult = 0.0m;
 
-            if (lookupTablesHelper.GetTable3G2CLookup.TryGetValue(Gridsquare[4].ToString().ToUpper(), out decimal lonMinsLookupResult))
+            if (lookupTablesHelper.GetTable3G2CLookup.TryGetValue(Gridsquare[4].ToString(currentCulture).ToUpper(currentCulture), out decimal lonMinsLookupResult))
             {
 
                 if (LonDirection > 0)
@@ -565,19 +560,19 @@ namespace CoordinateConversionUtility
         /// <returns></returns>
         public static decimal GetNearestEvenMultiple(decimal minutesInput, int latOrLon)
         {
-            decimal interval = 0.0m;
+            decimal interval;
 
             if (latOrLon == 1)
-            {   
+            {
                 interval = 2.5m;
             }
             else
-            {   
+            {
                 interval = 5.0m;
             }
 
             if (minutesInput % interval == 0)
-            {   
+            {
                 return minutesInput;
             }
 

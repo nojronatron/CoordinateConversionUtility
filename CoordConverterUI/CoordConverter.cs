@@ -9,7 +9,6 @@ namespace CoordConverterUI
     {
         static void Main(string[] args)
         {
-            var ih = new InputHelper();
             if (args == null || args.Length == 0)
             {
                 PrintUsageInstructions();
@@ -26,7 +25,7 @@ namespace CoordConverterUI
 
                 else if (currentArg.Length == 6)
                 {
-                    if (ih.IsGridsquare(currentArg, out string argGridsquare))
+                    if (InputHelper.IsGridsquare(currentArg, out string argGridsquare))
                     {
                         var ccu = new CoordinateConverter();
                         Console.WriteLine(ccu.ConvertGridsquareToDDM(argGridsquare).ToString());
@@ -40,7 +39,7 @@ namespace CoordConverterUI
 
                 else if (currentArg.Length > 6)
                 {
-                    if(ih.IsDDM(currentArg, false, out string validDDM))
+                    if (InputHelper.IsDDM(currentArg, false, out string validDDM))
                     {
                         Console.WriteLine($"Resulting DDM: { validDDM }.");
                     }
@@ -55,29 +54,29 @@ namespace CoordConverterUI
 
             else if (args.Length > 1)
             {
-                Queue<string> argsQueue = new Queue<string>(args);
-                
-                while(argsQueue.Count > 1)
+                var argsQueue = new Queue<string>(args);
+
+                while (argsQueue.Count > 1)
                 {
-                    var inputCommand = ih.GetCommand(argsQueue.Dequeue().Trim().ToUpper());
+                    var inputCommand = InputHelper.GetCommand(argsQueue.Dequeue().Trim().ToUpper());
                     var currentInput = argsQueue.Dequeue().Trim().ToUpper();
                     var outputCommand = string.Empty;
                     var result = string.Empty;
 
                     if (argsQueue.Count > 0)
                     {
-                        outputCommand = ih.GetCommand(argsQueue.Dequeue().Trim().ToUpper());
+                        outputCommand = InputHelper.GetCommand(argsQueue.Dequeue().Trim().ToUpper());
                     }
 
                     switch (inputCommand)
                     {
                         case "-direwolf":
                             {
-                                if (ih.IsDDM(currentInput, true, out string validDWDDM))
+                                if (InputHelper.IsDDM(currentInput, true, out string validDWDDM))
                                 {
                                     if (outputCommand.Length > 0)
                                     {
-                                        result = ih.OutputCommandProcessor(inputCommand, validDWDDM, outputCommand);
+                                        result = InputHelper.OutputCommandProcessor(inputCommand, validDWDDM, outputCommand);
                                     }
                                     else
                                     {
@@ -89,15 +88,15 @@ namespace CoordConverterUI
                             }
                         case "-grid":
                             {
-                                if (ih.IsGridsquare(currentInput, out string validGrid))
+                                if (InputHelper.IsGridsquare(currentInput, out string validGrid))
                                 {
                                     if (outputCommand.Length > 0)
                                     {
-                                        result = ih.OutputCommandProcessor(inputCommand, validGrid, outputCommand);
+                                        result = InputHelper.OutputCommandProcessor(inputCommand, validGrid, outputCommand);
                                     }
                                     else
                                     {
-                                        CoordinateConverter cc = new CoordinateConverter();
+                                        var cc = new CoordinateConverter();
                                         var ddm = cc.ConvertGridsquareToDDM(validGrid);
                                         result = ddm.ToString();
                                     }
@@ -106,11 +105,11 @@ namespace CoordConverterUI
                             }
                         case "-dms":
                             {
-                                if (ih.IsDMS(currentInput, out string validDMS))
+                                if (InputHelper.IsDMS(currentInput, out string validDMS))
                                 {
                                     if (outputCommand.Length > 0)
                                     {
-                                        result = ih.OutputCommandProcessor(inputCommand, validDMS, outputCommand);
+                                        result = InputHelper.OutputCommandProcessor(inputCommand, validDMS, outputCommand);
                                     }
                                     else
                                     {
@@ -121,11 +120,11 @@ namespace CoordConverterUI
                             }
                         case "-ddm":
                             {
-                                if (ih.IsDDM(currentInput, false, out string validDDM))
+                                if (InputHelper.IsDDM(currentInput, false, out string validDDM))
                                 {
                                     if (outputCommand.Length > 0)
                                     {
-                                        result = ih.OutputCommandProcessor(inputCommand, validDDM, outputCommand);
+                                        result = InputHelper.OutputCommandProcessor(inputCommand, validDDM, outputCommand);
                                     }
                                     else
                                     {
@@ -136,11 +135,11 @@ namespace CoordConverterUI
                             }
                         case "-dd":
                             {
-                                if (ih.IsDD(currentInput, out string validDD))
+                                if (InputHelper.IsDD(currentInput, out string validDD))
                                 {
                                     if (outputCommand.Length > 0)
                                     {
-                                        result = ih.OutputCommandProcessor(inputCommand, validDD, outputCommand);
+                                        result = InputHelper.OutputCommandProcessor(inputCommand, validDD, outputCommand);
                                     }
                                     else
                                     {
@@ -174,8 +173,8 @@ namespace CoordConverterUI
 
         private static void PrintUsageInstructions()
         {
-            UserGuide ug = new UserGuide();
-            foreach(string section in ug.UsageInstructions)
+            var ug = new UserGuide();
+            foreach (string section in ug.UsageInstructions)
             {
                 Console.WriteLine(section);
                 Console.WriteLine();

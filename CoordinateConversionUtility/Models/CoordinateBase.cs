@@ -29,7 +29,9 @@ namespace CoordinateConversionUtility.Models
                 }
             }
         }
-        internal decimal DegreesLongitude { get
+        internal decimal DegreesLongitude
+        {
+            get
             {
                 return _degreesLongitude;
             }
@@ -47,8 +49,8 @@ namespace CoordinateConversionUtility.Models
                 }
             }
         }
-        internal static char CommaSymbol => (char)44;   
-        internal static char MinusSymbol => (char)45;   
+        internal static char CommaSymbol => (char)44;
+        internal static char MinusSymbol => (char)45;
         internal static char DegreesSymbol => (char)176;
         internal static char MinutesSymbol => (char)39;
         internal static char SecondsSymbol => (char)34;

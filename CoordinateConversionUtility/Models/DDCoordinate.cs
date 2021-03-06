@@ -9,10 +9,10 @@ namespace CoordinateConversionUtility.Models
     public class DDCoordinate : CoordinateBase, IEquatable<DDCoordinate>
     {
         public override bool IsValid => base.IsValid;
-        public DDCoordinate() 
+        public DDCoordinate()
         {
             DegreesLattitude = 0.0m;
-            LonIsValid = false; 
+            LonIsValid = false;
             DegreesLongitude = 0.0m;
             LatIsValid = false;
         }

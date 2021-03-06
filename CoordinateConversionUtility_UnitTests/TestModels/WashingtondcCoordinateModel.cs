@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoordinateConversionUtility_UnitTests.TestModels
+﻿namespace CoordinateConversionUtility_UnitTests.TestModels
 {
     class WashingtondcCoordinateModel : RootCoordinateModel
     {
@@ -38,13 +32,13 @@ namespace CoordinateConversionUtility_UnitTests.TestModels
             return $"N 38{ DegreesSymbol }55{ MinutesSymbol }12.0{ SecondsSymbol}, " +
                    $"W 77{ DegreesSymbol }03{ MinutesSymbol }54.0{ SecondsSymbol }";
         }
-    /*
- 	ARRL DDM:	 		38*55.2'N, 77*3.9'W
-	ARRL Gridsquare:	FM18lw
-	GoogleMapped DD:	38.9200,-77.0650
-	GoogleMapped DMS:	38°55'12.0"N 77°03'54.0"W
-	Calculated DDM:		38*55.2'N, 77*03.90'W
-	Attainable DDM:		38*57.50'N, 77*05.00'W
-    */
+        /*
+        ARRL DDM:	 		38*55.2'N, 77*3.9'W
+        ARRL Gridsquare:	FM18lw
+        GoogleMapped DD:	38.9200,-77.0650
+        GoogleMapped DMS:	38°55'12.0"N 77°03'54.0"W
+        Calculated DDM:		38*55.2'N, 77*03.90'W
+        Attainable DDM:		38*57.50'N, 77*05.00'W
+        */
     }
 }
