@@ -8,13 +8,28 @@ namespace CoordinateConversionUtility.Models.Tests
     [TestClass()]
     public class DDMCoordinateTests : UnitTestsBase
     {
+
+        [TestMethod()]
+        public void ValidateMinutes()
+        {
+            bool expectedResultMins = true;
+            decimal expectedOutputMins = 45.55m;
+
+            string strMinutes = "45.55";
+
+            bool actualresultMins = DDMCoordinate.ValidateIsMinutes(strMinutes, out decimal actualMinsOutput);
+
+            Assert.AreEqual(expectedResultMins, actualresultMins);
+            Assert.AreEqual(expectedOutputMins, actualMinsOutput);
+        }
+        
         [TestMethod()]
         public void DefaultCTOR_Test()
         {
             var ddmCoord = new DDMCoordinate();
 
-            var expectedResult = true;
-            var actualResult = ddmCoord.GetType().FullName == "CoordinateConversionUtility.Models.DDMCoordinate";
+            bool expectedResult = true;
+            bool actualResult = ddmCoord.GetType().FullName == "CoordinateConversionUtility.Models.DDMCoordinate";
 
             Assert.IsTrue(expectedResult == actualResult);
         }
@@ -31,11 +46,11 @@ namespace CoordinateConversionUtility.Models.Tests
             string expectedResult = MontevideoCoordinateModel.strDDM();
             string actualResult = ddm.ToString();
 
-            var latDiff = Math.Abs(ddm.GetShortDegreesLat() - Math.Truncate(mvcm.DegreesLat));
-            var lonDiff = Math.Abs(ddm.GetShortDegreesLon() - Math.Truncate(mvcm.DegreesLon));
+            decimal latDiff = Math.Abs(ddm.GetShortDegreesLat() - Math.Truncate(mvcm.DegreesLat));
+            decimal lonDiff = Math.Abs(ddm.GetShortDegreesLon() - Math.Truncate(mvcm.DegreesLon));
 
-            var latMinsDiff = Math.Abs(ddm.GetMinsLat() - mvcm.DdmMinsLat);
-            var lonMinsDiff = Math.Abs(ddm.GetMinsLon() - mvcm.DdmMinsLon);
+            decimal latMinsDiff = Math.Abs(ddm.GetMinsLat() - mvcm.DdmMinsLat);
+            decimal lonMinsDiff = Math.Abs(ddm.GetMinsLon() - mvcm.DdmMinsLon);
 
             var dict = new Dictionary<string, decimal>
             {
@@ -67,11 +82,11 @@ namespace CoordinateConversionUtility.Models.Tests
             string expectedResult = MontevideoCoordinateModel.strDDM();
             string actualResult = ddm.ToString();
 
-            var latDiff = Math.Abs(ddm.GetShortDegreesLat() - Math.Truncate(mvcm.DegreesLat));
-            var lonDiff = Math.Abs(ddm.GetShortDegreesLon() - Math.Truncate(mvcm.DegreesLon));
+            decimal latDiff = Math.Abs(ddm.GetShortDegreesLat() - Math.Truncate(mvcm.DegreesLat));
+            decimal lonDiff = Math.Abs(ddm.GetShortDegreesLon() - Math.Truncate(mvcm.DegreesLon));
 
-            var latMinsDiff = Math.Abs(ddm.GetMinsLat() - mvcm.DdmMinsLat);
-            var lonMinsDiff = Math.Abs(ddm.GetMinsLon() - mvcm.DdmMinsLon);
+            decimal latMinsDiff = Math.Abs(ddm.GetMinsLat() - mvcm.DdmMinsLat);
+            decimal lonMinsDiff = Math.Abs(ddm.GetMinsLon() - mvcm.DdmMinsLon);
 
             var dict = new Dictionary<string, decimal>
             {
@@ -105,11 +120,11 @@ namespace CoordinateConversionUtility.Models.Tests
             string expectedResult = MontevideoCoordinateModel.strDDM();
             string actualResult = ddm.ToString();
 
-            var latDiff = Math.Abs(ddm.GetShortDegreesLat() - Math.Truncate(mvcm.DegreesLat));
-            var lonDiff = Math.Abs(ddm.GetShortDegreesLon() - Math.Truncate(mvcm.DegreesLon));
+            decimal latDiff = Math.Abs(ddm.GetShortDegreesLat() - Math.Truncate(mvcm.DegreesLat));
+            decimal lonDiff = Math.Abs(ddm.GetShortDegreesLon() - Math.Truncate(mvcm.DegreesLon));
 
-            var latMinsDiff = Math.Abs(ddm.GetMinsLat() - mvcm.DdmMinsLat);
-            var lonMinsDiff = Math.Abs(ddm.GetMinsLon() - mvcm.DdmMinsLon);
+            decimal latMinsDiff = Math.Abs(ddm.GetMinsLat() - mvcm.DdmMinsLat);
+            decimal lonMinsDiff = Math.Abs(ddm.GetMinsLon() - mvcm.DdmMinsLon);
 
             var dict = new Dictionary<string, decimal>
             {
@@ -132,11 +147,11 @@ namespace CoordinateConversionUtility.Models.Tests
         public void DdmStringToDDM_Test()
         {
             var ddm = new DDMCoordinate(MontevideoCoordinateModel.strDDM());
-            var expectedResult = MontevideoCoordinateModel.strDDM();
-            var expectedLength = expectedResult.Length;
+            string expectedResult = MontevideoCoordinateModel.strDDM();
+            int expectedLength = expectedResult.Length;
 
-            var actualResult = ddm.ToString();
-            var actualLength = actualResult.Length;
+            string actualResult = ddm.ToString();
+            int actualLength = actualResult.Length;
 
             var dict = new Dictionary<string, decimal>
             {
@@ -150,12 +165,12 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void IsValid_90_180_Passes_Test()
         {
-            var lattitude = 90.0m;
-            var longitude = 180.0m;
-            var expectedResult = true;
+            decimal lattitude = 90.0m;
+            decimal longitude = 180.0m;
+            bool expectedResult = true;
 
             var ddm = new DDMCoordinate(lattitude, longitude);
-            var actualResult = ddm.IsValid;
+            bool actualResult = ddm.IsValid;
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -163,12 +178,12 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void IsValid_InvalidLat_Test()
         {
-            var lattitude = 91.0m;
-            var longitude = 180.0m;
-            var expectedResult = false;
+            decimal lattitude = 91.0m;
+            decimal longitude = 180.0m;
+            bool expectedResult = false;
 
             var ddm = new DDMCoordinate(lattitude, longitude);
-            var actualResult = ddm.IsValid;
+            bool actualResult = ddm.IsValid;
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -176,12 +191,12 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void IsValid_InvalidLon_Test()
         {
-            var lattitude = 90.0m;
-            var longitude = -181.0m;
-            var expectedResult = false;
+            decimal lattitude = 90.0m;
+            decimal longitude = -181.0m;
+            bool expectedResult = false;
 
             var ddm = new DDMCoordinate(lattitude, longitude);
-            var actualResult = ddm.IsValid;
+            bool actualResult = ddm.IsValid;
 
             Assert.AreEqual(expectedResult, actualResult);
         }

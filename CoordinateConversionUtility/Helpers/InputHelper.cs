@@ -25,9 +25,9 @@ namespace CoordinateConversionUtility.Helpers
         private static string LimitInputSpacing(string latOrLonPatternMatch)
         {
             var sb = new StringBuilder();
-            var regexSplit = Regex.Split(latOrLonPatternMatch, @"\s+");
+            string[] regexSplit = Regex.Split(latOrLonPatternMatch, @"\s+");
 
-            foreach (var item in regexSplit)
+            foreach (string item in regexSplit)
             {
                 sb.Append(item.Trim());
                 sb.Append(" ");
@@ -377,7 +377,7 @@ namespace CoordinateConversionUtility.Helpers
                     latDegrees = Math.Abs(validLattitude) * nsPolarity;
                 }
 
-                if (DDMCoordinate.ValidateIsSecsOrMins(ddmLattitudeRaw.Split(' ')[1], out decimal validLatMins))
+                if (DDMCoordinate.ValidateIsMinutes(ddmLattitudeRaw.Split(' ')[1], out decimal validLatMins))
                 {
                     latMinutes = Math.Abs(validLatMins);
                 }
@@ -387,7 +387,7 @@ namespace CoordinateConversionUtility.Helpers
                     lonDegrees = Math.Abs(validLongitude) * ewPolarity;
                 }
 
-                if (DDMCoordinate.ValidateIsSecsOrMins(ddmLongitudeRaw.Split(' ')[1], out decimal validLonMins))
+                if (DDMCoordinate.ValidateIsMinutes(ddmLongitudeRaw.Split(' ')[1], out decimal validLonMins))
                 {
                     lonMinutes = Math.Abs(validLonMins);
                 }
@@ -473,12 +473,12 @@ namespace CoordinateConversionUtility.Helpers
                     latDegrees = Math.Abs(validLatDegrees) * nsPolarity;
                 }
 
-                if (DMSCoordinate.ValidateIsSecsOrMins(dmsLatMinsRaw, out decimal validLatMins))
+                if (DMSCoordinate.ValidateIsMinutes(dmsLatMinsRaw, out decimal validLatMins))
                 {
                     latMinutes = Math.Abs(validLatMins);
                 }
 
-                if (DMSCoordinate.ValidateIsSecsOrMins(dmsLatSecsRaw, out decimal validLatSecs))
+                if (DMSCoordinate.ValidateIsSeconds(dmsLatSecsRaw, out decimal validLatSecs))
                 {
                     latSeconds = Math.Abs(validLatSecs);
                 }
@@ -488,12 +488,12 @@ namespace CoordinateConversionUtility.Helpers
                     lonDegrees = Math.Abs(validLonDegrees) * ewPolarity;
                 }
 
-                if (DMSCoordinate.ValidateIsSecsOrMins(dmsLonMinsRaw, out decimal validLonMins))
+                if (DMSCoordinate.ValidateIsMinutes(dmsLonMinsRaw, out decimal validLonMins))
                 {
                     lonMinutes = Math.Abs(validLonMins);
                 }
 
-                if (DMSCoordinate.ValidateIsSecsOrMins(dmsLonSecsRaw, out decimal validLonSecs))
+                if (DMSCoordinate.ValidateIsSeconds(dmsLonSecsRaw, out decimal validLonSecs))
                 {
                     lonSeconds = Math.Abs(validLonSecs);
                 }

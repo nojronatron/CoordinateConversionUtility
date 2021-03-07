@@ -86,11 +86,11 @@ namespace CoordinateConversionUtility
             GridsquareResult.Append(GridSquareHelper.GetThirdGridsquareCharacter(remainderLon, LonDirection, out decimal minsRemainderLon));
             GridsquareResult.Append(GridSquareHelper.GetFourthGridsquareCharacter(remainderLat, LatDirection));
 
-            var ddmLonMinsWithRemainder = LonDirection * (minsRemainderLon + DDMlonMinutes);
+            decimal ddmLonMinsWithRemainder = LonDirection * (minsRemainderLon + DDMlonMinutes);
             decimal nearestEvenMultipleLon = ConversionHelper.GetNearestEvenMultiple(ddmLonMinsWithRemainder, 2);
             GridsquareResult.Append(GridsquareHelper.GetFifthGridsquareCharacter(LonDirection, nearestEvenMultipleLon));
 
-            var ddmLatMinsWithRemainder = LatDirection * DDMlatMinutes;
+            decimal ddmLatMinsWithRemainder = LatDirection * DDMlatMinutes;
             decimal nearestEvenMultipleLat = ConversionHelper.GetNearestEvenMultiple(ddmLatMinsWithRemainder, 1);
             GridsquareResult.Append(GridsquareHelper.GetSixthGridsquareCharacter(LatDirection, nearestEvenMultipleLat));
 

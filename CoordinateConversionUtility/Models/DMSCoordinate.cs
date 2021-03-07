@@ -14,7 +14,7 @@ namespace CoordinateConversionUtility.Models
             }
             private set
             {
-                if (ValidateSecondsLattitude(value))
+                if (ValidateSeconds(value))
                 {
                     _secondsLattitude = value;
                     LatSecsValid = true;
@@ -36,7 +36,7 @@ namespace CoordinateConversionUtility.Models
             }
             private set
             {
-                if (ValidateSecondLongitude(value))
+                if (ValidateSeconds(value))
                 {
                     _secondsLongitude = value;
                     LonSecsValid = true;
@@ -48,14 +48,7 @@ namespace CoordinateConversionUtility.Models
                 }
             }
         }
-        internal static bool ValidateSecondsLattitude(decimal secondsLattitude)
-        {
-            return DDMCoordinate.ValidateLatMinutes(secondsLattitude);
-        }
-        internal static bool ValidateSecondLongitude(decimal secondsLongitude)
-        {
-            return DDMCoordinate.ValidateLonMinutes(secondsLongitude);
-        }
+
         internal bool LatSecsValid { get; set; }
         internal bool LonSecsValid { get; set; }
         new public bool IsValid => (LatIsValid && LonIsValid && LatMinsValid && LonMinsValid && LatSecsValid && LonSecsValid);
@@ -206,6 +199,28 @@ namespace CoordinateConversionUtility.Models
             DegreesLattitude *= north;
             DegreesLongitude *= east;
         }
+
+        internal static bool ValidateSeconds(decimal secondsLatOrLon)
+        {
+            return DDMCoordinate.ValidateMinutes(secondsLatOrLon);
+        }
+
+        public static bool ValidateIsSeconds(string secondsLatOrLon, out decimal validatedSeconds)
+        {
+
+            if (decimal.TryParse(secondsLatOrLon, out decimal seconds))
+            {
+                if (DDMCoordinate.ValidateMinutes(seconds))
+                {
+                    validatedSeconds = seconds;
+                    return true;
+                }
+            }
+
+            validatedSeconds = 0.0m;
+            return false;
+        }
+
 
         public decimal GetShortMinutesLattitude()
         {

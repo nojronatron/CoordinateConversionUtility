@@ -201,7 +201,7 @@ namespace CoordinateConversionUtility
                 return -90m;
             }
 
-            var currentGridsquare = Gridsquare[1].ToString(currentCulture);
+            string currentGridsquare = Gridsquare[1].ToString(currentCulture);
 
             if (lookupTablesHelper.GetTable4G2CLookup.TryGetValue(currentGridsquare.ToUpper(currentCulture), out int latDegreesLookupResult))
             {
@@ -248,7 +248,7 @@ namespace CoordinateConversionUtility
                 lat_MinsAdjustment = -9;
             }
 
-            var fourthGridChar = Gridsquare[3].ToString(currentCulture);
+            string fourthGridChar = Gridsquare[3].ToString(currentCulture);
 
             if (decimal.TryParse(fourthGridChar, out decimal intFourthGridChar))
             {
@@ -372,7 +372,7 @@ namespace CoordinateConversionUtility
                 return 0.0m;
             }
 
-            var testResult = 0.0m;
+            decimal testResult = 0.0m;
 
             if (LonDirection > 0)
             {
@@ -382,7 +382,7 @@ namespace CoordinateConversionUtility
             if (LonDirection < 0)
             {
                 int lon_MinsAdjustment = -18;
-                var gridChar = int.Parse(Gridsquare[2].ToString(currentCulture), currentCulture);
+                int gridChar = int.Parse(Gridsquare[2].ToString(currentCulture), currentCulture);
                 testResult = lon_MinsAdjustment + (gridChar * 2);
             }
 
@@ -409,7 +409,7 @@ namespace CoordinateConversionUtility
                 return 0.0m;
             }
 
-            var testResult = 0.0m;
+            decimal testResult = 0.0m;
 
             if (lookupTablesHelper.GetTable3G2CLookup.TryGetValue(Gridsquare[4].ToString(currentCulture).ToUpper(currentCulture), out decimal lonMinsLookupResult))
             {

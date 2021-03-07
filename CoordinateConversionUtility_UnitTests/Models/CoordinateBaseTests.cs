@@ -6,68 +6,31 @@ namespace CoordinateConversionUtility.Models.Tests
     public class CoordinateBaseTests
     {
         [TestMethod()]
-        public void ValidateIsSecsOrMinsTest0()
+        public void ValidateLattitude()
         {
-            string testInput = "0";
-            decimal expectedOutResult = 0.0m;
             bool expectedResult = true;
+            decimal expectedOutput = -35m;
 
-            bool actualResult = CoordinateBase.ValidateIsSecsOrMins(testInput, out decimal actualOutResult);
+            string strLattitude = "-35";
+
+            bool actualResult = CoordinateBase.ValidateIsLatDegrees(strLattitude, out decimal actualOutput);
 
             Assert.AreEqual(expectedResult, actualResult);
-            Assert.AreEqual(expectedOutResult, actualOutResult);
+            Assert.AreEqual(expectedOutput, actualOutput);
         }
 
         [TestMethod()]
-        public void ValidateIsSecsOrMinsTest60()
+        public void ValidateLongitude()
         {
-            string testInput = "60";
-            decimal expectedOutResult = 60.0m;
-            bool expectedResult = true;
+            bool expectedresult = true;
+            decimal expectedOutput = -123m;
 
-            bool actualResult = CoordinateBase.ValidateIsSecsOrMins(testInput, out decimal actualOutResult);
+            string strLongitude = "-123";
 
-            Assert.AreEqual(expectedResult, actualResult);
-            Assert.AreEqual(expectedOutResult, actualOutResult);
-        }
+            bool actualResult = CoordinateBase.ValidateIsLonDegrees(strLongitude, out decimal actualOutput);
 
-        [TestMethod()]
-        public void ValidateIsSecsOrMinsTestNeg61()
-        {
-            string testInput = "-61";
-            decimal expectedOutResult = 0.0m;
-            bool expectedResult = false;
-
-            bool actualResult = CoordinateBase.ValidateIsSecsOrMins(testInput, out decimal actualOutResult);
-
-            Assert.AreEqual(expectedResult, actualResult);
-            Assert.AreEqual(expectedOutResult, actualOutResult);
-        }
-
-        [TestMethod()]
-        public void ValidateIsSecsOrMinsTestNeg59()
-        {
-            string testInput = "-50";
-            decimal expectedOutResult = -50.0m;
-            bool expectedResult = true;
-
-            bool actualResult = CoordinateBase.ValidateIsSecsOrMins(testInput, out decimal actualOutResult);
-
-            Assert.AreEqual(expectedResult, actualResult);
-            Assert.AreEqual(expectedOutResult, actualOutResult);
-        }
-
-        [TestMethod()]
-        public void ValidateIsSecsOrMinsTest10000()
-        {
-            string testInput = "10000";
-            decimal expectedOutResult = 0.0m;
-            bool expectedResult = false;
-
-            bool actualResult = CoordinateBase.ValidateIsSecsOrMins(testInput, out decimal actualOutResult);
-
-            Assert.AreEqual(expectedResult, actualResult);
-            Assert.AreEqual(expectedOutResult, actualOutResult);
+            Assert.AreEqual(expectedresult, actualResult);
+            Assert.AreEqual(expectedOutput, actualOutput);
         }
 
         [TestMethod()]

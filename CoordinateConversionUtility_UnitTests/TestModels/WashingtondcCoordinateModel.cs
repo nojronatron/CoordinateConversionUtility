@@ -1,6 +1,6 @@
 ﻿namespace CoordinateConversionUtility_UnitTests.TestModels
 {
-    class WashingtondcCoordinateModel : RootCoordinateModel
+    internal class WashingtondcCoordinateModel : RootCoordinateModel
     {
         public WashingtondcCoordinateModel()
         {

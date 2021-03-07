@@ -5,9 +5,9 @@ using System.Collections.Generic;
 
 namespace CoordConverterUI
 {
-    class CoordConverter
+    internal class CoordConverter
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args == null || args.Length == 0)
             {
@@ -58,10 +58,10 @@ namespace CoordConverterUI
 
                 while (argsQueue.Count > 1)
                 {
-                    var inputCommand = InputHelper.GetCommand(argsQueue.Dequeue().Trim().ToUpper());
-                    var currentInput = argsQueue.Dequeue().Trim().ToUpper();
-                    var outputCommand = string.Empty;
-                    var result = string.Empty;
+                    string inputCommand = InputHelper.GetCommand(argsQueue.Dequeue().Trim().ToUpper());
+                    string currentInput = argsQueue.Dequeue().Trim().ToUpper();
+                    string outputCommand = string.Empty;
+                    string result = string.Empty;
 
                     if (argsQueue.Count > 0)
                     {
@@ -97,7 +97,7 @@ namespace CoordConverterUI
                                     else
                                     {
                                         var cc = new CoordinateConverter();
-                                        var ddm = cc.ConvertGridsquareToDDM(validGrid);
+                                        CoordinateConversionUtility.Models.DDMCoordinate ddm = cc.ConvertGridsquareToDDM(validGrid);
                                         result = ddm.ToString();
                                     }
                                 }

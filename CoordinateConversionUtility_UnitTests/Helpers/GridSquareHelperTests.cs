@@ -17,11 +17,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         public void Test_ValidateGridsquareInput_Pass()
         {
             var gsh = new GridSquareHelper();
-            var gridsquare = "CN87ut";
-            var expectedResult = true;
-            var expectedValidatedGrid = "CN87UT";
+            string gridsquare = "CN87ut";
+            bool expectedResult = true;
+            string expectedValidatedGrid = "CN87UT";
 
-            var actualResult = gsh.ValidateGridsquareInput(gridsquare, out string actualValidatedGrid);
+            bool actualResult = gsh.ValidateGridsquareInput(gridsquare, out string actualValidatedGrid);
 
             Assert.AreEqual(expectedResult, actualResult);
             Assert.AreEqual(expectedValidatedGrid, actualValidatedGrid);
@@ -31,11 +31,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         public void Test_ValidateGridsquareInput_Spaces_Pass()
         {
             var gsh = new GridSquareHelper();
-            var gridsquare = "  CN87ut  ";
-            var expectedResult = true;
-            var expectedValidatedGrid = "CN87UT";
+            string gridsquare = "  CN87ut  ";
+            bool expectedResult = true;
+            string expectedValidatedGrid = "CN87UT";
 
-            var actualResult = gsh.ValidateGridsquareInput(gridsquare, out string actualValidatedGrid);
+            bool actualResult = gsh.ValidateGridsquareInput(gridsquare, out string actualValidatedGrid);
 
             Assert.AreEqual(expectedResult, actualResult);
             Assert.AreEqual(expectedValidatedGrid, actualValidatedGrid);

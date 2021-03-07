@@ -13,8 +13,8 @@ namespace CoordinateConversionUtility.Models.Tests
         {
             var ddCoord = new DDCoordinate();
 
-            var expectedResult = true;
-            var actualResult = ddCoord.GetType().FullName == "CoordinateConversionUtility.Models.DDCoordinate";
+            bool expectedResult = true;
+            bool actualResult = ddCoord.GetType().FullName == "CoordinateConversionUtility.Models.DDCoordinate";
 
             Assert.IsTrue(expectedResult == actualResult);
         }
@@ -31,10 +31,10 @@ namespace CoordinateConversionUtility.Models.Tests
             string expectedResult = MunichCoordinatesModel.strDDM();
             string actualResult = dd.ToString();
 
-            var latDiff = Math.Abs(dd.GetLattitudeDD() - mvcm.DegreesLat);
-            var lonDiff = Math.Abs(dd.GetLongitudeDD() - mvcm.DegreesLon);
+            decimal latDiff = Math.Abs(dd.GetLattitudeDD() - mvcm.DegreesLat);
+            decimal lonDiff = Math.Abs(dd.GetLongitudeDD() - mvcm.DegreesLon);
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            var dict = new Dictionary<string, decimal>();
             dict.Add("latDiff", latDiff);
             dict.Add("lonDiff", lonDiff);
             DisplayOutput(expectedResult, actualResult, dict);
@@ -58,10 +58,10 @@ namespace CoordinateConversionUtility.Models.Tests
             string expectedResult = MunichCoordinatesModel.strDD();
             string actualResult = dd.ToString();
 
-            var latDiff = Math.Abs(dd.GetLattitudeDD() - mcm.DegreesLat);
-            var lonDiff = Math.Abs(dd.GetLongitudeDD() - mcm.DegreesLon);
+            decimal latDiff = Math.Abs(dd.GetLattitudeDD() - mcm.DegreesLat);
+            decimal lonDiff = Math.Abs(dd.GetLongitudeDD() - mcm.DegreesLon);
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            var dict = new Dictionary<string, decimal>();
             dict.Add("latDiff", latDiff);
             dict.Add("lonDiff", lonDiff);
             DisplayOutput(expectedResult, actualResult, dict);
@@ -86,10 +86,10 @@ namespace CoordinateConversionUtility.Models.Tests
             string expectedResult = MunichCoordinatesModel.strDD();
             string actualResult = dd.ToString();
 
-            var latDiff = Math.Abs(dd.GetLattitudeDD() - mcm.DegreesLat);
-            var lonDiff = Math.Abs(dd.GetLongitudeDD() - mcm.DegreesLon);
+            decimal latDiff = Math.Abs(dd.GetLattitudeDD() - mcm.DegreesLat);
+            decimal lonDiff = Math.Abs(dd.GetLongitudeDD() - mcm.DegreesLon);
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            var dict = new Dictionary<string, decimal>();
             dict.Add("latDiff", latDiff);
             dict.Add("lonDiff", lonDiff);
             DisplayOutput(expectedResult, actualResult, dict);
@@ -102,13 +102,13 @@ namespace CoordinateConversionUtility.Models.Tests
         public void DdStringToDD_Test()
         {
             var mcm = new DDCoordinate(MunichCoordinatesModel.strDD());
-            var expectedResult = MunichCoordinatesModel.strDD();
-            var expectedLength = expectedResult.Length;
+            string expectedResult = MunichCoordinatesModel.strDD();
+            int expectedLength = expectedResult.Length;
 
-            var actualResult = mcm.ToString();
-            var actualLength = actualResult.Length;
+            string actualResult = mcm.ToString();
+            int actualLength = actualResult.Length;
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            var dict = new Dictionary<string, decimal>();
             dict.Add("stringToDD Expected:", expectedLength);
             dict.Add("stringToDD Actual:", actualLength);
             DisplayOutput(expectedResult, actualResult, dict);
@@ -122,8 +122,8 @@ namespace CoordinateConversionUtility.Models.Tests
             var mcm = new MunichCoordinatesModel();
             var dd = new DDCoordinate(mcm.DegreesLat, mcm.DegreesLon);
 
-            var expectedResult = mcm.ShortDegreesLongitude();
-            var actualResult = dd.GetShortDegreesLon();
+            decimal expectedResult = mcm.ShortDegreesLongitude();
+            decimal actualResult = dd.GetShortDegreesLon();
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -134,8 +134,8 @@ namespace CoordinateConversionUtility.Models.Tests
             var mcm = new MunichCoordinatesModel();
             var dd = new DDCoordinate(mcm.DegreesLat, mcm.DegreesLon);
 
-            var expectedResult = mcm.ShortDegreesLattitude();
-            var actualResult = dd.GetShortDegreesLat();
+            decimal expectedResult = mcm.ShortDegreesLattitude();
+            decimal actualResult = dd.GetShortDegreesLat();
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -146,8 +146,8 @@ namespace CoordinateConversionUtility.Models.Tests
             var mcm = new MunichCoordinatesModel();
             var dd = new DDCoordinate(mcm.DegreesLat, mcm.DegreesLon);
 
-            var expectedResult = mcm.DegreesLat - Math.Truncate(mcm.DegreesLat);
-            var actualResult = dd.GetFractionalLattitude();
+            decimal expectedResult = mcm.DegreesLat - Math.Truncate(mcm.DegreesLat);
+            decimal actualResult = dd.GetFractionalLattitude();
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -158,8 +158,8 @@ namespace CoordinateConversionUtility.Models.Tests
             var mcm = new MunichCoordinatesModel();
             var dd = new DDCoordinate(mcm.DegreesLat, mcm.DegreesLon);
 
-            var expectedResult = mcm.DegreesLon - Math.Truncate(mcm.DegreesLon);
-            var actualResult = dd.GetFractionalLongitude();
+            decimal expectedResult = mcm.DegreesLon - Math.Truncate(mcm.DegreesLon);
+            decimal actualResult = dd.GetFractionalLongitude();
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -167,12 +167,12 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void IsValid_90_180_Passes_Test()
         {
-            var lattitude = 90.0m;
-            var longitude = 180.0m;
-            var expectedResult = true;
+            decimal lattitude = 90.0m;
+            decimal longitude = 180.0m;
+            bool expectedResult = true;
 
             var dd = new DDCoordinate(lattitude, longitude);
-            var actualResult = dd.IsValid;
+            bool actualResult = dd.IsValid;
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -180,12 +180,12 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void IsValid_InvalidLat_Test()
         {
-            var lattitude = 91.0m;
-            var longitude = 180.0m;
-            var expectedResult = false;
+            decimal lattitude = 91.0m;
+            decimal longitude = 180.0m;
+            bool expectedResult = false;
 
             var dd = new DDCoordinate(lattitude, longitude);
-            var actualResult = dd.IsValid;
+            bool actualResult = dd.IsValid;
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -193,12 +193,12 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void IsValid_InvalidLon_Test()
         {
-            var lattitude = 90.0m;
-            var longitude = -181.0m;
-            var expectedResult = false;
+            decimal lattitude = 90.0m;
+            decimal longitude = -181.0m;
+            bool expectedResult = false;
 
             var dd = new DDCoordinate(lattitude, longitude);
-            var actualResult = dd.IsValid;
+            bool actualResult = dd.IsValid;
 
             Assert.AreEqual(expectedResult, actualResult);
         }

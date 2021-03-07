@@ -70,28 +70,6 @@ namespace CoordinateConversionUtility.Models
         public virtual bool IsValid => LatIsValid && LonIsValid;
 
         /// <summary>
-        /// Take a string and convert it to a decimal then return the result from asking DMSCoordinate if it is valid or not.
-        /// </summary>
-        /// <param name="number"></param>
-        /// <param name="validMinutes"></param>
-        /// <returns></returns>
-        public static bool ValidateIsSecsOrMins(string number, out decimal validMinutes)
-        {
-            validMinutes = 0.0m;
-
-            if (decimal.TryParse(number, out decimal minutes))
-            {
-                if (DMSCoordinate.ValidateSecondsLattitude(minutes))
-                {
-                    validMinutes = minutes;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
         /// Take a string and convert it to a decimal then return the result from asking CoordinateBase if it is valid or not.
         /// </summary>
         /// <param name="number"></param>

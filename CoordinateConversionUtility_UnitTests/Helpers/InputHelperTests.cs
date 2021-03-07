@@ -9,10 +9,10 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_GetCommand_Grid_Succeeds()
         {
-            var expectedResult = "-grid";
-            var ihCommand = "-grid";
+            string expectedResult = "-grid";
+            string ihCommand = "-grid";
 
-            var actualresult = InputHelper.GetCommand(ihCommand);
+            string actualresult = InputHelper.GetCommand(ihCommand);
 
             Assert.AreEqual(expectedResult, actualresult);
         }
@@ -20,10 +20,10 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_GetCommand_dd_Succeeds()
         {
-            var expectedResult = "-dd";
-            var ihCommand = "-dd";
+            string expectedResult = "-dd";
+            string ihCommand = "-dd";
 
-            var actualresult = InputHelper.GetCommand(ihCommand);
+            string actualresult = InputHelper.GetCommand(ihCommand);
 
             Assert.AreEqual(expectedResult, actualresult);
         }
@@ -31,10 +31,10 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_GetCommand_ddm_Succeeds()
         {
-            var expectedResult = "-ddm";
-            var ihCommand = "-ddm";
+            string expectedResult = "-ddm";
+            string ihCommand = "-ddm";
 
-            var actualresult = InputHelper.GetCommand(ihCommand);
+            string actualresult = InputHelper.GetCommand(ihCommand);
 
             Assert.AreEqual(expectedResult, actualresult);
         }
@@ -42,10 +42,10 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_GetCommand_dms_Succeeds()
         {
-            var expectedResult = "-dms";
-            var ihCommand = "-dms";
+            string expectedResult = "-dms";
+            string ihCommand = "-dms";
 
-            var actualresult = InputHelper.GetCommand(ihCommand);
+            string actualresult = InputHelper.GetCommand(ihCommand);
 
             Assert.AreEqual(expectedResult, actualresult);
         }
@@ -53,10 +53,10 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_GetCommand_direwolf_Succeeds()
         {
-            var expectedResult = "-direwolf";
-            var ihCommand = "-direwolf";
+            string expectedResult = "-direwolf";
+            string ihCommand = "-direwolf";
 
-            var actualresult = InputHelper.GetCommand(ihCommand);
+            string actualresult = InputHelper.GetCommand(ihCommand);
 
             Assert.AreEqual(expectedResult, actualresult);
         }
@@ -64,10 +64,10 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_GetCommand_dash_h_Succeeds()
         {
-            var expectedResult = "-h";
-            var ihCommand = "-h";
+            string expectedResult = "-h";
+            string ihCommand = "-h";
 
-            var actualresult = InputHelper.GetCommand(ihCommand);
+            string actualresult = InputHelper.GetCommand(ihCommand);
 
             Assert.AreEqual(expectedResult, actualresult);
         }
@@ -75,10 +75,10 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_GetCommand_dashdash_help_Succeeds()
         {
-            var expectedResult = "-h";
-            var ihCommand = "--help";
+            string expectedResult = "-h";
+            string ihCommand = "--help";
 
-            var actualresult = InputHelper.GetCommand(ihCommand);
+            string actualresult = InputHelper.GetCommand(ihCommand);
 
             Assert.AreEqual(expectedResult, actualresult);
         }
@@ -86,11 +86,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_IsGridsquare_ValidIn_True()
         {
-            var expectedResult = true;
-            var expectedValidatedGrid = "CN87UT";
-            var inputGridsquare = "CN87ut";
+            bool expectedResult = true;
+            string expectedValidatedGrid = "CN87UT";
+            string inputGridsquare = "CN87ut";
 
-            var actualResult = InputHelper.IsGridsquare(inputGridsquare, out string actualValidatedGridsquare);
+            bool actualResult = InputHelper.IsGridsquare(inputGridsquare, out string actualValidatedGridsquare);
 
             Assert.AreEqual(expectedResult, actualResult);
             Assert.AreEqual(expectedValidatedGrid, actualValidatedGridsquare);
@@ -99,10 +99,10 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_IsDD_Pass()
         {
-            var expectedResult = true;
-            var expectedValidatedDD = MontevideoCoordinateModel.strDD();
+            bool expectedResult = true;
+            string expectedValidatedDD = MontevideoCoordinateModel.strDD();
 
-            var actualResult = InputHelper.ParseAsDDCoordinate(expectedValidatedDD, out string actualValidatedDD);
+            bool actualResult = InputHelper.ParseAsDDCoordinate(expectedValidatedDD, out string actualValidatedDD);
 
             Assert.AreEqual(expectedResult, actualResult);
             Assert.AreEqual(expectedValidatedDD, actualValidatedDD);
@@ -111,11 +111,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_IsDD_Fail()
         {
-            var testDDinput = "- 34 . 91000, - 56 . 21169";
-            var expectedResult = true;
-            var expectedValidatedDD = MontevideoCoordinateModel.strDD();
+            string testDDinput = "- 34 . 91000, - 56 . 21169";
+            bool expectedResult = true;
+            string expectedValidatedDD = MontevideoCoordinateModel.strDD();
 
-            var actualResult = InputHelper.ParseAsDDCoordinate(testDDinput, out string actualValidatedDD);
+            bool actualResult = InputHelper.ParseAsDDCoordinate(testDDinput, out string actualValidatedDD);
 
             Assert.AreNotEqual(actualResult, expectedResult);
             Assert.AreNotEqual(actualValidatedDD, expectedValidatedDD);
@@ -124,11 +124,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_IsDDM_DDM()
         {
-            var testDDMinput = "34 54.60S, 56 12.70W";
-            var expectedResult = true;
-            var expectedValidatedDDM = MontevideoCoordinateModel.strDDM();
+            string testDDMinput = "34 54.60S, 56 12.70W";
+            bool expectedResult = true;
+            string expectedValidatedDDM = MontevideoCoordinateModel.strDDM();
 
-            var actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
+            bool actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
 
             Assert.AreEqual(actualResult, expectedResult);
             Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
@@ -137,11 +137,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_IsDDM_DDMdefaultNorth()
         {
-            var testDDMinput = "48 8.81, 11 36.49E";
-            var expectedResult = false;
-            var expectedValidatedDDM = string.Empty;
+            string testDDMinput = "48 8.81, 11 36.49E";
+            bool expectedResult = false;
+            string expectedValidatedDDM = string.Empty;
 
-            var actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
+            bool actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
 
             Assert.AreEqual(actualResult, expectedResult);
             Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
@@ -151,11 +151,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_IsDDM_DDMdefaultEast()
         {
-            var testDDMinput = "48 8.81N, 11 36.94";
-            var expectedResult = false;
-            var expectedValidatedDDM = string.Empty;
+            string testDDMinput = "48 8.81N, 11 36.94";
+            bool expectedResult = false;
+            string expectedValidatedDDM = string.Empty;
 
-            var actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
+            bool actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
 
             Assert.AreEqual(actualResult, expectedResult);
             Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
@@ -165,11 +165,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_IsDDM_Direwolf()
         {
-            var testDirewolfInput = "S34 54.6000, W56  12.7014";
-            var expectedResult = true;
-            var expectedValidatedDDM = MontevideoCoordinateModel.strDDM();
+            string testDirewolfInput = "S34 54.6000, W56  12.7014";
+            bool expectedResult = true;
+            string expectedValidatedDDM = MontevideoCoordinateModel.strDDM();
 
-            var actualResult = InputHelper.ParseAsDDMCoordinate(testDirewolfInput, true, out string actualValidatedDDM);
+            bool actualResult = InputHelper.ParseAsDDMCoordinate(testDirewolfInput, true, out string actualValidatedDDM);
 
             Assert.AreEqual(actualResult, expectedResult);
             Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
@@ -178,11 +178,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_IsDMS()
         {
-            var testDMSinput = "S  34 54 36.0, W 56 12 42.08";
-            var expectedResult = true;
-            var expectedValidatedDMS = MontevideoCoordinateModel.strDMS();
+            string testDMSinput = "S  34 54 36.0, W 56 12 42.08";
+            bool expectedResult = true;
+            string expectedValidatedDMS = MontevideoCoordinateModel.strDMS();
 
-            var actualResult = InputHelper.ParseAsDMSCoordinate(testDMSinput, out string actualValidatedDMS);
+            bool actualResult = InputHelper.ParseAsDMSCoordinate(testDMSinput, out string actualValidatedDMS);
 
             Assert.AreEqual(actualResult, expectedResult);
             Assert.AreEqual(actualValidatedDMS, expectedValidatedDMS);

@@ -14,7 +14,7 @@ namespace CoordinateConversionUtility.Models
             }
             set
             {
-                if (ValidateLatMinutes(value))
+                if (ValidateMinutes(value))
                 {
                     _minutesLattitude = value;
                     LatMinsValid = true;
@@ -36,7 +36,7 @@ namespace CoordinateConversionUtility.Models
             }
             set
             {
-                if (ValidateLonMinutes(value))
+                if (ValidateMinutes(value))
                 {
                     _minutesLongitude = value;
                     LonMinsValid = true;
@@ -48,14 +48,7 @@ namespace CoordinateConversionUtility.Models
                 }
             }
         }
-        internal static bool ValidateLatMinutes(decimal minutesLattitude)
-        {
-            return (minutesLattitude >= -60 && minutesLattitude <= 60);
-        }
-        internal static bool ValidateLonMinutes(decimal minutesLongitude)
-        {
-            return (minutesLongitude >= -60 && minutesLongitude <= 60);
-        }
+
         internal virtual bool LatMinsValid { get; set; }
         internal virtual bool LonMinsValid { get; set; }
         new public bool IsValid => (LatIsValid && LonIsValid && LatMinsValid && LonMinsValid);
@@ -142,6 +135,26 @@ namespace CoordinateConversionUtility.Models
             }
         }
 
+        internal static bool ValidateMinutes(decimal minutesLatOrLon)
+        {
+            return (minutesLatOrLon >= -60 && minutesLatOrLon <= 60);
+        }
+
+        public static bool ValidateIsMinutes(string minutesLatOrLon, out decimal validatedMinutes)
+        {
+            if (decimal.TryParse(minutesLatOrLon, out decimal minutes))
+            {
+                if (DDMCoordinate.ValidateMinutes(minutes))
+                {
+                    validatedMinutes = minutes;
+                    return true;
+                }
+            }
+
+            validatedMinutes = 0.0m;
+            return false;
+        }
+
         public decimal GetMinsLat()
         {
             return MinutesLattitude;
@@ -195,5 +208,6 @@ namespace CoordinateConversionUtility.Models
         {
             return !(left == right);
         }
+
     }
 }

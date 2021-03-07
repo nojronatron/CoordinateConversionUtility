@@ -34,7 +34,7 @@ namespace CoordinateConversionUtility.Helpers
             if (!string.IsNullOrEmpty(gridsquare) && !string.IsNullOrWhiteSpace(gridsquare))
             {
                 string tempGridsquare = gridsquare.ToUpper(currentCulture).Trim();
-                Regex rx = new Regex(@"[A-Z]{2}[0-9]{2}[A-Z]{2}");
+                var rx = new Regex(@"[A-Z]{2}[0-9]{2}[A-Z]{2}");
                 MatchCollection matches = rx.Matches(tempGridsquare);
 
                 if (rx.IsMatch(tempGridsquare))
@@ -181,7 +181,7 @@ namespace CoordinateConversionUtility.Helpers
             {
                 RemainderLat = DDMlatDegrees % 10;
                 decimal latDegreesLookupValue = DDMlatDegrees - RemainderLat;
-                var validLookupArg = Math.Abs(latDegreesLookupValue) * LatDirection;
+                decimal validLookupArg = Math.Abs(latDegreesLookupValue) * LatDirection;
 
                 if (LatDirection > 0)
                 {
@@ -230,7 +230,7 @@ namespace CoordinateConversionUtility.Helpers
                     lonDegreesLookupValue = DDMlonDegrees;
                 }
 
-                var validLookupArg = Math.Abs(lonDegreesLookupValue) * LonDirection;
+                decimal validLookupArg = Math.Abs(lonDegreesLookupValue) * LonDirection;
 
                 if (LonDirection < 0)
                 {

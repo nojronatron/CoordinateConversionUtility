@@ -9,27 +9,107 @@ namespace CoordinateConversionUtility.Models.Tests
     public class DMSCoordinateTests : UnitTestsBase
     {
         [TestMethod()]
+        public void ValidateIsSecsOrMinsTest0()
+        {
+            string testInput = "0";
+            decimal expectedOutResult = 0.0m;
+            bool expectedResult = true;
+
+            bool actualResult = DMSCoordinate.ValidateIsMinutes(testInput, out decimal actualOutResult);
+
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedOutResult, actualOutResult);
+        }
+
+        [TestMethod()]
+        public void ValidateIsSecsOrMinsTest60()
+        {
+            string testInput = "60";
+            decimal expectedOutResult = 60.0m;
+            bool expectedResult = true;
+
+            bool actualResult = DMSCoordinate.ValidateIsSeconds(testInput, out decimal actualOutResult);
+
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedOutResult, actualOutResult);
+        }
+
+        [TestMethod()]
+        public void ValidateIsSecsOrMinsTestNeg61()
+        {
+            string testInput = "-61";
+            decimal expectedOutResult = 0.0m;
+            bool expectedResult = false;
+
+            bool actualResult = DMSCoordinate.ValidateIsMinutes(testInput, out decimal actualOutResult);
+
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedOutResult, actualOutResult);
+        }
+
+        [TestMethod()]
+        public void ValidateIsSecsOrMinsTestNeg59()
+        {
+            string testInput = "-50";
+            decimal expectedOutResult = -50.0m;
+            bool expectedResult = true;
+
+            bool actualResult = DMSCoordinate.ValidateIsSeconds(testInput, out decimal actualOutResult);
+
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedOutResult, actualOutResult);
+        }
+
+        [TestMethod()]
+        public void ValidateIsSecsOrMinsTest10000()
+        {
+            string testInput = "10000";
+            decimal expectedOutResult = 0.0m;
+            bool expectedResult = false;
+
+            bool actualResult = DMSCoordinate.ValidateIsMinutes(testInput, out decimal actualOutResult);
+
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedOutResult, actualOutResult);
+        }
+
+
+        [TestMethod()]
+        public void ValidateSeconds()
+        {
+            bool expectedResultSecs = true;
+            decimal expectedOutputSecs = 34.21m;
+
+            string strSeconds = "34.21";
+
+            bool actualResultSecs = DMSCoordinate.ValidateIsSeconds(strSeconds, out decimal actualOutputSecs);
+
+            Assert.AreEqual(expectedResultSecs, actualResultSecs);
+            Assert.AreEqual(expectedOutputSecs, actualOutputSecs);
+        }
+
+        [TestMethod()]
         public void CTOR_DDtoDMS_Test()
         {
             var lcm = new LynnwoodCoordinatesModel();
             decimal ddLat = lcm.DegreesLat;
             decimal ddLon = lcm.DegreesLon;
 
-            DMSCoordinate dms = new DMSCoordinate(ddLat, ddLon);
+            var dms = new DMSCoordinate(ddLat, ddLon);
 
             string expectedResult = LynnwoodCoordinatesModel.StrDMS();
             string actualResult = dms.ToString();
 
-            var latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(lcm.DegreesLat));
-            var lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(lcm.DegreesLon));
+            decimal latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(lcm.DegreesLat));
+            decimal lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(lcm.DegreesLon));
 
-            var latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(lcm.DdmMinsLat));
-            var lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(lcm.DdmMinsLon));
+            decimal latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(lcm.DdmMinsLat));
+            decimal lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(lcm.DdmMinsLon));
 
-            var latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - lcm.DmsSecondsLat);
-            var lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - lcm.DmsSecondsLon);
+            decimal latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - lcm.DmsSecondsLat);
+            decimal lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - lcm.DmsSecondsLon);
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            var dict = new Dictionary<string, decimal>();
             dict.Add("latDiff", latDiff);
             dict.Add("lonDiff", lonDiff);
             dict.Add("latMinsDiff", latMinsDiff);
@@ -51,23 +131,23 @@ namespace CoordinateConversionUtility.Models.Tests
         public void CTOR_DDMtoDMS_Test()
         {
             var lcm = new LynnwoodCoordinatesModel();
-            DMSCoordinate dms = new DMSCoordinate(lcm.ShortDegreesLattitude(), lcm.DdmMinsLat, lcm.ShortDegreesLongitude(), lcm.DdmMinsLon);
+            var dms = new DMSCoordinate(lcm.ShortDegreesLattitude(), lcm.DdmMinsLat, lcm.ShortDegreesLongitude(), lcm.DdmMinsLon);
 
             string expectedResult = LynnwoodCoordinatesModel.StrDMS();
             string actualResult = dms.ToString();
 
             if (expectedResult != actualResult)
             {
-                var latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(lcm.DegreesLat));
-                var lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(lcm.DegreesLon));
+                decimal latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(lcm.DegreesLat));
+                decimal lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(lcm.DegreesLon));
 
-                var latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(lcm.DdmMinsLat));
-                var lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(lcm.DdmMinsLon));
+                decimal latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(lcm.DdmMinsLat));
+                decimal lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(lcm.DdmMinsLon));
 
-                var latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - lcm.DmsSecondsLat);
-                var lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - lcm.DmsSecondsLon);
+                decimal latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - lcm.DmsSecondsLat);
+                decimal lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - lcm.DmsSecondsLon);
 
-                Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+                var dict = new Dictionary<string, decimal>();
                 dict.Add("latDiff", latDiff);
                 dict.Add("lonDiff", lonDiff);
                 dict.Add("latMinsDiff", latMinsDiff);
@@ -95,23 +175,23 @@ namespace CoordinateConversionUtility.Models.Tests
         public void CTOR_DmsToDMS_Test()
         {
             var lcm = new LynnwoodCoordinatesModel();
-            DMSCoordinate dms = new DMSCoordinate(
+            var dms = new DMSCoordinate(
                 lcm.DegreesLat, Math.Truncate(lcm.DdmMinsLat), lcm.DmsSecondsLat,
                 lcm.DegreesLon, Math.Truncate(lcm.DdmMinsLon), lcm.DmsSecondsLon);
 
-            var expectedResult = LynnwoodCoordinatesModel.StrDMS();
-            var actualResult = dms.ToString();
+            string expectedResult = LynnwoodCoordinatesModel.StrDMS();
+            string actualResult = dms.ToString();
 
-            var latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(lcm.DegreesLat));
-            var lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(lcm.DegreesLon));
+            decimal latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(lcm.DegreesLat));
+            decimal lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(lcm.DegreesLon));
 
-            var latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(lcm.DdmMinsLat));
-            var lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(lcm.DdmMinsLon));
+            decimal latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(lcm.DdmMinsLat));
+            decimal lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(lcm.DdmMinsLon));
 
-            var latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - lcm.DmsSecondsLat);
-            var lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - lcm.DmsSecondsLon);
+            decimal latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - lcm.DmsSecondsLat);
+            decimal lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - lcm.DmsSecondsLon);
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            var dict = new Dictionary<string, decimal>();
             dict.Add("latDiff", latDiff);
             dict.Add("lonDiff", lonDiff);
             dict.Add("latMinsDiff", latMinsDiff);
@@ -135,7 +215,7 @@ namespace CoordinateConversionUtility.Models.Tests
             var lcm = new LynnwoodCoordinatesModel();
             string expectedResult = LynnwoodCoordinatesModel.StrDMS();
 
-            DMSCoordinate dms = new DMSCoordinate(expectedResult);
+            var dms = new DMSCoordinate(expectedResult);
             string actualResult = dms.ToString();
 
             DisplayOutput(expectedResult, actualResult, new Dictionary<string, decimal>());
@@ -150,13 +230,13 @@ namespace CoordinateConversionUtility.Models.Tests
         public void GetShortMinutesLattitudeTest()
         {
             var lcm = new LynnwoodCoordinatesModel();
-            DMSCoordinate dms = new DMSCoordinate(lcm.DegreesLat, lcm.DegreesLon);
+            var dms = new DMSCoordinate(lcm.DegreesLat, lcm.DegreesLon);
 
             decimal shortMinutesLat = dms.GetShortMinutesLattitude();
 
             decimal minutesLatDiff = Math.Abs(Math.Truncate(lcm.DdmMinsLat) - shortMinutesLat);
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            var dict = new Dictionary<string, decimal>();
             dict.Add("minutesLatDiff", minutesLatDiff);
 
             DisplayOutput("49", shortMinutesLat.ToString(), dict);
@@ -168,12 +248,12 @@ namespace CoordinateConversionUtility.Models.Tests
         public void GetShortMinutesLongitudeTest()
         {
             var lcm = new LynnwoodCoordinatesModel();
-            DMSCoordinate dms = new DMSCoordinate(lcm.DegreesLat, lcm.DegreesLon);
+            var dms = new DMSCoordinate(lcm.DegreesLat, lcm.DegreesLon);
 
             decimal shortMinutesLon = dms.GetShortMinutesLongitude();
             decimal minutesLonDiff = Math.Abs(Math.Truncate(lcm.DdmMinsLon) - shortMinutesLon);
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            var dict = new Dictionary<string, decimal>();
             dict.Add("minutesLonDiff", minutesLonDiff);
 
             DisplayOutput("17", shortMinutesLon.ToString(), dict);
@@ -185,13 +265,13 @@ namespace CoordinateConversionUtility.Models.Tests
         public void GetSecondsLattitude()
         {
             var lcm = new LynnwoodCoordinatesModel();
-            DMSCoordinate dms = new DMSCoordinate(lcm.DegreesLat, lcm.DegreesLon);
+            var dms = new DMSCoordinate(lcm.DegreesLat, lcm.DegreesLon);
 
-            var expectedSecLats = dms.GetSecondsLattitude();
+            decimal expectedSecLats = dms.GetSecondsLattitude();
             decimal secondsLat = dms.GetSecondsLattitude();
             decimal secondsLatDiff = Math.Abs(Math.Truncate(lcm.DmsSecondsLat) - secondsLat);
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            var dict = new Dictionary<string, decimal>();
             dict.Add("secondsLatDiff", 0m);
             DisplayOutput(expectedSecLats.ToString(), secondsLat.ToString(), dict);
 
@@ -202,13 +282,13 @@ namespace CoordinateConversionUtility.Models.Tests
         public void GetSecondsLongitude()
         {
             var lcm = new LynnwoodCoordinatesModel();
-            DMSCoordinate dms = new DMSCoordinate(lcm.DegreesLat, lcm.DegreesLon);
+            var dms = new DMSCoordinate(lcm.DegreesLat, lcm.DegreesLon);
 
-            var expectedSecLons = dms.GetSecondsLongitude();
+            decimal expectedSecLons = dms.GetSecondsLongitude();
             decimal secondsLon = dms.GetSecondsLongitude();
             decimal secondsLonDiff = Math.Abs(Math.Truncate(lcm.DmsSecondsLon) - secondsLon);
 
-            Dictionary<string, decimal> dict = new Dictionary<string, decimal>();
+            var dict = new Dictionary<string, decimal>();
             dict.Add("secondsLonDiff", 0m);
             DisplayOutput(expectedSecLons.ToString(), secondsLon.ToString(), dict);
 
@@ -218,12 +298,12 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void IsValid_90_180_Passes_Test()
         {
-            var lattitude = 90.0m;
-            var longitude = 180.0m;
-            var expectedResult = true;
+            decimal lattitude = 90.0m;
+            decimal longitude = 180.0m;
+            bool expectedResult = true;
 
             var dms = new DMSCoordinate(lattitude, longitude);
-            var actualResult = dms.IsValid;
+            bool actualResult = dms.IsValid;
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -231,12 +311,12 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void IsValid_InvalidLat_Test()
         {
-            var lattitude = 91.0m;
-            var longitude = 180.0m;
-            var expectedResult = false;
+            decimal lattitude = 91.0m;
+            decimal longitude = 180.0m;
+            bool expectedResult = false;
 
             var dms = new DMSCoordinate(lattitude, longitude);
-            var actualResult = dms.IsValid;
+            bool actualResult = dms.IsValid;
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -244,12 +324,12 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void IsValid_InvalidLon_Test()
         {
-            var lattitude = 90.0m;
-            var longitude = -181.0m;
-            var expectedResult = false;
+            decimal lattitude = 90.0m;
+            decimal longitude = -181.0m;
+            bool expectedResult = false;
 
             var dms = new DMSCoordinate(lattitude, longitude);
-            var actualResult = dms.IsValid;
+            bool actualResult = dms.IsValid;
 
             Assert.AreEqual(expectedResult, actualResult);
         }
