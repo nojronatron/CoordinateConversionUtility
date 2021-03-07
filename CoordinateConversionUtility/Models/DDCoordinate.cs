@@ -25,6 +25,16 @@ namespace CoordinateConversionUtility.Models
 
         public DDCoordinate(decimal ddmLatDegrees, decimal ddmLatMins, decimal ddmLonDegrees, decimal ddmLonMins)
         {
+            if (ddmLatDegrees < 0)
+            {
+                ddmLatMins *= -1;
+            }
+
+            if (ddmLonDegrees < 0)
+            {
+                ddmLonMins *= -1;
+            }
+
             DegreesLattitude = Math.Truncate(ddmLatDegrees) + (ddmLatMins / 60);
             DegreesLongitude = Math.Truncate(ddmLonDegrees) + (ddmLonMins / 60);
         }
@@ -32,6 +42,21 @@ namespace CoordinateConversionUtility.Models
         public DDCoordinate(decimal dmsLatDegrees, decimal dmsLatMinutes, decimal dmsLatSeconds,
             decimal dmsLonDegrees, decimal dmsLonMinutes, decimal dmsLonSeconds)
         {
+            dmsLatMinutes = Math.Truncate(dmsLatMinutes);
+            dmsLonMinutes = Math.Truncate(dmsLonMinutes);
+
+            if (dmsLatDegrees < 0)
+            {
+                dmsLatMinutes *= -1;
+                dmsLatSeconds *= -1;
+            }
+
+            if (dmsLonDegrees < 0)
+            {
+                dmsLonMinutes *= -1;
+                dmsLonSeconds *= -1;
+            }
+
             DegreesLattitude = dmsLatDegrees + (dmsLatMinutes / 60) + (dmsLatSeconds / 3600);
             DegreesLongitude = dmsLonDegrees + (dmsLonMinutes / 60) + (dmsLonSeconds / 3600);
         }

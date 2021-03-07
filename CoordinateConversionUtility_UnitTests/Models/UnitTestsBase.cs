@@ -11,11 +11,11 @@ namespace CoordinateConversionUtility.Models.Tests
         internal static char SecondsSymbol => (char)34;      //  double quote
         internal static char SpaceCharacter => (char)32;    //  spacebar
         internal char[] trimChars = { CommaSymbol, DegreesSymbol, MinutesSymbol, SecondsSymbol, SpaceCharacter };
-        internal static decimal DegreeAccuracyThreshold = 0.001m;
+        internal static decimal DegreeAccuracyThreshold = 0.0012m;
         internal static decimal LatMinsAccuracyThreshold = 1.25m;
         internal static decimal LonMinsAccuracyThreshold = 2.50m;
-        internal static decimal LatSecsAccuracyThreshold = 1.0m;
-        internal static decimal LonSecsAccuracyThreshold = 1.0m;
+        internal static decimal LatSecsAccuracyThreshold = 59.0m;
+        internal static decimal LonSecsAccuracyThreshold = 59.0m;
         protected static void DisplayOutput(string expectedResult, string actualResult, Dictionary<string, decimal> diffs)
         {
             Console.WriteLine($"Expected: { expectedResult }");

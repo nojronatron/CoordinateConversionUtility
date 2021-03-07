@@ -93,11 +93,11 @@ namespace CoordinateConversionUtility.Models
             decimal dmsDegreesLat, decimal dmsMinsLat, decimal dmsSecondsLat,
             decimal dmsDegreesLon, decimal dmsMinsLon, decimal dmsSecondsLon)
         {
-            DegreesLattitude = dmsDegreesLat;
-            DegreesLongitude = dmsDegreesLon;
-            MinutesLattitude = dmsMinsLat;
-            MinutesLongitude = dmsMinsLon;
+            DegreesLattitude = Math.Truncate(dmsDegreesLat);
+            MinutesLattitude = Math.Truncate(dmsMinsLat);
             SecondsLattitude = dmsSecondsLat;
+            DegreesLongitude = Math.Truncate(dmsDegreesLon);
+            MinutesLongitude = Math.Truncate(dmsMinsLon);
             SecondsLongitude = dmsSecondsLon;
         }
 
