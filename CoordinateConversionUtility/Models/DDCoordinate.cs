@@ -53,9 +53,9 @@ namespace CoordinateConversionUtility.Models
             ddLat = ddLat.Trim();
             int degreeIDX = ddLat.IndexOf(DegreesSymbol);
 
-            string temp = ddLat.Substring(0, degreeIDX).Trim(trimChars).Trim();
+            string tempParseParameter = ddLat.Substring(0, degreeIDX).Trim(trimChars).Trim();
 
-            if (decimal.TryParse(temp, out decimal decLatDegrees))
+            if (decimal.TryParse(tempParseParameter, out decimal decLatDegrees))
             {
                 DegreesLattitude = decLatDegrees;
             }
@@ -66,10 +66,10 @@ namespace CoordinateConversionUtility.Models
             }
 
             degreeIDX = ddLon.IndexOf(DegreesSymbol);
-            temp = ddLon.Substring(0, degreeIDX);
-            temp = temp.Trim(trimChars);
+            tempParseParameter = ddLon.Substring(0, degreeIDX);
+            tempParseParameter = tempParseParameter.Trim(trimChars);
 
-            if (decimal.TryParse(temp, out decimal decLonDegrees))
+            if (decimal.TryParse(tempParseParameter, out decimal decLonDegrees))
             {
                 DegreesLongitude = decLonDegrees;
             }

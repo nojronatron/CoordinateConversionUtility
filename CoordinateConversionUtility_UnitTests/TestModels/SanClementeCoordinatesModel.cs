@@ -1,6 +1,6 @@
 ﻿namespace CoordinateConversionUtility_UnitTests.TestModels
 {
-    class SanClementeCoordinatesModel : RootCoordinateModel
+    internal class SanClementeCoordinatesModel : RootCoordinateModel
     {
         internal static string NS => "N";
         internal static string EW => "W";

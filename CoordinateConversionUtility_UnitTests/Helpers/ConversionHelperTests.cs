@@ -8,75 +8,15 @@ namespace CoordinateConversionUtility.Helpers.Tests
     public class ConversionHelperTests : UnitTestsBase
     {
         [TestMethod()]
-        public void ValidateLattitude()
-        {
-            var expectedResult = true;
-            var expectedOutput = -35m;
-
-            var strLattitude = "-35";
-
-            decimal actualOutput = 0.0m;
-            bool actualResult = ConversionHelper.ValidateIsLattitude(strLattitude, out actualOutput);
-
-            Assert.AreEqual(expectedResult, actualResult);
-            Assert.AreEqual(expectedOutput, actualOutput);
-        }
-
-        [TestMethod()]
-        public void ValidateLongitude()
-        {
-            var expectedresult = true;
-            var expectedOutput = -123m;
-
-            var strLongitude = "-123";
-
-            decimal actualOutput = 0.0m;
-            bool actualResult = ConversionHelper.ValidateIsLongitude(strLongitude, out actualOutput);
-
-            Assert.AreEqual(expectedresult, actualResult);
-            Assert.AreEqual(expectedOutput, actualOutput);
-        }
-
-        [TestMethod()]
-        public void ValidateMinutes()
-        {
-            var expectedResultMins = true;
-            var expectedOutputMins = 45.55m;
-
-            var strMinutes = "45.55";
-
-            decimal actualMinsOutput = 0.0m;
-            bool actualresultMins = ConversionHelper.ValidateIsSecsOrMins(strMinutes, out actualMinsOutput);
-
-            Assert.AreEqual(expectedResultMins, actualresultMins);
-            Assert.AreEqual(expectedOutputMins, actualMinsOutput);
-        }
-
-        [TestMethod()]
-        public void ValidateSeconds()
-        {
-            var expectedResultSecs = true;
-            var expectedOutputSecs = 34.21m;
-
-            var strSeconds = "34.21";
-
-            decimal actualOutputSecs = 0.0m;
-            bool actualResultSecs = ConversionHelper.ValidateIsSecsOrMins(strSeconds, out actualOutputSecs);
-
-            Assert.AreEqual(expectedResultSecs, actualResultSecs);
-            Assert.AreEqual(expectedOutputSecs, actualOutputSecs);
-        }
-
-        [TestMethod()]
         public void ExtractPolarityTest()
         {
-            var expectedNorthResult = 1;
-            var expectedSouthResult = -1;
-            var expectedZeroResult = 0;
+            int expectedNorthResult = 1;
+            int expectedSouthResult = -1;
+            int expectedZeroResult = 0;
 
-            var actualNorthResult = ConversionHelper.ExtractPolarity(10.0987m);
-            var actualSouthResult = ConversionHelper.ExtractPolarity(-1.1234m);
-            var actualZeroResult = ConversionHelper.ExtractPolarity(-0m);
+            short actualNorthResult = ConversionHelper.ExtractPolarity(10.0987m);
+            short actualSouthResult = ConversionHelper.ExtractPolarity(-1.1234m);
+            short actualZeroResult = ConversionHelper.ExtractPolarity(-0m);
 
             Assert.AreEqual(expectedNorthResult, actualNorthResult);
             Assert.AreEqual(expectedSouthResult, actualSouthResult);
@@ -86,13 +26,13 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void ExtractPolarityNSTest()
         {
-            var expectedPositiveResult = 1;
-            var expectedNegativeResult = -1;
-            var expectedZeroResult = 0;
+            int expectedPositiveResult = 1;
+            int expectedNegativeResult = -1;
+            int expectedZeroResult = 0;
 
-            var actualPositiveResult = ConversionHelper.ExtractPolarityNS(SanClementeCoordinatesModel.strDDM());
-            var actualNegativeResult = ConversionHelper.ExtractPolarityNS(WellingtonCoordinateModel.strDDM());
-            var actualZeroResult = ConversionHelper.ExtractPolarityNS(string.Empty);
+            short actualPositiveResult = ConversionHelper.ExtractPolarityNS(SanClementeCoordinatesModel.strDDM());
+            short actualNegativeResult = ConversionHelper.ExtractPolarityNS(WellingtonCoordinateModel.strDDM());
+            short actualZeroResult = ConversionHelper.ExtractPolarityNS(string.Empty);
 
             Assert.AreEqual(expectedPositiveResult, actualPositiveResult);
             Assert.AreEqual(expectedNegativeResult, actualNegativeResult);
@@ -102,13 +42,13 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void ExtractPolarityEWTest()
         {
-            var expectedPositiveResult = 1;
-            var expectedNegativeResult = -1;
-            var expectedZeroResult = 0;
+            int expectedPositiveResult = 1;
+            int expectedNegativeResult = -1;
+            int expectedZeroResult = 0;
 
-            var actualPositiveResult = ConversionHelper.ExtractPolarityEW(MunichCoordinatesModel.strDDM());
-            var actualNegativeResult = ConversionHelper.ExtractPolarityEW(SanClementeCoordinatesModel.strDDM());
-            var actualZeroResult = ConversionHelper.ExtractPolarityEW(string.Empty);
+            short actualPositiveResult = ConversionHelper.ExtractPolarityEW(MunichCoordinatesModel.strDDM());
+            short actualNegativeResult = ConversionHelper.ExtractPolarityEW(SanClementeCoordinatesModel.strDDM());
+            short actualZeroResult = ConversionHelper.ExtractPolarityEW(string.Empty);
 
             Assert.AreEqual(expectedPositiveResult, actualPositiveResult);
             Assert.AreEqual(expectedNegativeResult, actualNegativeResult);
@@ -118,18 +58,18 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void GetNSEW_Test()
         {
-            var expectedLattitudeResult = "N";
-            var expectedLongitudeResult = "W";
-            var expectedCombinedResult = "NW";
+            string expectedLattitudeResult = "N";
+            string expectedLongitudeResult = "W";
+            string expectedCombinedResult = "NW";
 
-            var lcm = LynnwoodCoordinatesModel.StrDDM();
-            var splitLatAndLon = lcm.ToString().Split(CommaSymbol);
-            var lcmLattitude = splitLatAndLon[0];
-            var lcmLongitude = splitLatAndLon[1];
+            string lcm = LynnwoodCoordinatesModel.StrDDM();
+            string[] splitLatAndLon = lcm.ToString().Split(CommaSymbol);
+            string lcmLattitude = splitLatAndLon[0];
+            string lcmLongitude = splitLatAndLon[1];
 
-            var actualLattitudeResult = ConversionHelper.GetNSEW(lcmLattitude);
-            var actualLongitudeResult = ConversionHelper.GetNSEW(lcmLongitude);
-            var actualCombinedResult = ConversionHelper.GetNSEW(lcm);
+            string actualLattitudeResult = ConversionHelper.GetNSEW(lcmLattitude);
+            string actualLongitudeResult = ConversionHelper.GetNSEW(lcmLongitude);
+            string actualCombinedResult = ConversionHelper.GetNSEW(lcm);
 
             Assert.AreEqual(expectedLattitudeResult, actualLattitudeResult);
             Assert.AreEqual(expectedLongitudeResult, actualLongitudeResult);
@@ -139,15 +79,15 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void GetNSEW2_Test1()
         {
-            var expectedNorthResult = "N";
-            var expectedEastResult = "E";
-            var expectedNonResult = "N";
+            string expectedNorthResult = "N";
+            string expectedEastResult = "E";
+            string expectedNonResult = "N";
 
             var munich = new MunichCoordinatesModel();
 
-            var actualNorthResult = ConversionHelper.GetNSEW(munich.DegreesLat, 1);
-            var actualEastResult = ConversionHelper.GetNSEW(munich.DegreesLon, 2);
-            var actualLattitudeNonResult = ConversionHelper.GetNSEW(0, 1);
+            string actualNorthResult = ConversionHelper.GetNSEW(munich.DegreesLat, 1);
+            string actualEastResult = ConversionHelper.GetNSEW(munich.DegreesLon, 2);
+            string actualLattitudeNonResult = ConversionHelper.GetNSEW(0, 1);
 
             Assert.AreEqual(expectedNorthResult, actualNorthResult);
             Assert.AreEqual(expectedEastResult, actualEastResult);
@@ -157,15 +97,15 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void GetNSEW2_Test2()
         {
-            var expectedSouthResult = "S";
-            var expectedWestResult = "W";
-            var expectedNonResult = "E";
+            string expectedSouthResult = "S";
+            string expectedWestResult = "W";
+            string expectedNonResult = "E";
 
             var montevideo = new MontevideoCoordinateModel();
 
-            var actualSouthResult = ConversionHelper.GetNSEW(montevideo.DegreesLat, 1);
-            var actualWestResult = ConversionHelper.GetNSEW(montevideo.DegreesLon, 2);
-            var actualLongitudeNonResult = ConversionHelper.GetNSEW(0, 2);
+            string actualSouthResult = ConversionHelper.GetNSEW(montevideo.DegreesLat, 1);
+            string actualWestResult = ConversionHelper.GetNSEW(montevideo.DegreesLon, 2);
+            string actualLongitudeNonResult = ConversionHelper.GetNSEW(0, 2);
 
             Assert.AreEqual(expectedSouthResult, actualSouthResult);
             Assert.AreEqual(expectedWestResult, actualWestResult);
@@ -178,8 +118,8 @@ namespace CoordinateConversionUtility.Helpers.Tests
             decimal lattitude = 48.1467m;
             decimal longitude = 11.6083m;
 
-            var expectedResult = true;
-            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+            bool expectedResult = true;
+            bool actualResult = ConversionHelper.IsValidLatDegreesAndLonDegrees(lattitude, longitude);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -190,8 +130,8 @@ namespace CoordinateConversionUtility.Helpers.Tests
             decimal lattitude = 93.1467m;
             decimal longitude = 11.6083m;
 
-            var expectedResult = false;
-            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+            bool expectedResult = false;
+            bool actualResult = ConversionHelper.IsValidLatDegreesAndLonDegrees(lattitude, longitude);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -202,8 +142,8 @@ namespace CoordinateConversionUtility.Helpers.Tests
             decimal lattitude = 48.1467m;
             decimal longitude = 191.6083m;
 
-            var expectedResult = false;
-            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+            bool expectedResult = false;
+            bool actualResult = ConversionHelper.IsValidLatDegreesAndLonDegrees(lattitude, longitude);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -215,8 +155,8 @@ namespace CoordinateConversionUtility.Helpers.Tests
             decimal lattitude = -93.1467m;
             decimal longitude = 11.6083m;
 
-            var expectedResult = false;
-            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+            bool expectedResult = false;
+            bool actualResult = ConversionHelper.IsValidLatDegreesAndLonDegrees(lattitude, longitude);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -227,8 +167,8 @@ namespace CoordinateConversionUtility.Helpers.Tests
             decimal lattitude = 48.1467m;
             decimal longitude = -180.6083m;
 
-            var expectedResult = false;
-            var actualResult = ConversionHelper.IsValid(lattitude, longitude);
+            bool expectedResult = false;
+            bool actualResult = ConversionHelper.IsValidLatDegreesAndLonDegrees(lattitude, longitude);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -241,9 +181,9 @@ namespace CoordinateConversionUtility.Helpers.Tests
             decimal zeroLat = 0.0m;
 
             bool expectedResult = true;
-            var positiveLatActualResult = ConversionHelper.LatDecimalIsValid(positiveLat);
-            var negativeLatACtualResult = ConversionHelper.LatDecimalIsValid(negativeLat);
-            var zeroLatActualResult = ConversionHelper.LatDecimalIsValid(zeroLat);
+            bool positiveLatActualResult = ConversionHelper.LatDecimalIsValid(positiveLat);
+            bool negativeLatACtualResult = ConversionHelper.LatDecimalIsValid(negativeLat);
+            bool zeroLatActualResult = ConversionHelper.LatDecimalIsValid(zeroLat);
 
             Assert.AreEqual(expectedResult, positiveLatActualResult);
             Assert.AreEqual(expectedResult, negativeLatACtualResult);
@@ -258,9 +198,9 @@ namespace CoordinateConversionUtility.Helpers.Tests
             decimal zeroLon = 0.0m;
 
             bool expectedResult = true;
-            var positiveLonActualResult = ConversionHelper.LonDecimalIsValid(positiveLon);
-            var negativeLonActualResult = ConversionHelper.LonDecimalIsValid(negativeLon);
-            var zeroLonActualResult = ConversionHelper.LonDecimalIsValid(zeroLon);
+            bool positiveLonActualResult = ConversionHelper.LonDecimalIsValid(positiveLon);
+            bool negativeLonActualResult = ConversionHelper.LonDecimalIsValid(negativeLon);
+            bool zeroLonActualResult = ConversionHelper.LonDecimalIsValid(zeroLon);
 
             Assert.AreEqual(expectedResult, positiveLonActualResult);
             Assert.AreEqual(expectedResult, negativeLonActualResult);
@@ -279,12 +219,12 @@ namespace CoordinateConversionUtility.Helpers.Tests
 
             bool expectedResult = false;
 
-            var test1Actual = ConversionHelper.LatDecimalIsValid(test1);
-            var test2Actual = ConversionHelper.LatDecimalIsValid(test2);
-            var test3Actual = ConversionHelper.LatDecimalIsValid(test3);
-            var test4Actual = ConversionHelper.LatDecimalIsValid(test4);
-            var test5Actual = ConversionHelper.LatDecimalIsValid(test5);
-            var test6Actual = ConversionHelper.LatDecimalIsValid(test6);
+            bool test1Actual = ConversionHelper.LatDecimalIsValid(test1);
+            bool test2Actual = ConversionHelper.LatDecimalIsValid(test2);
+            bool test3Actual = ConversionHelper.LatDecimalIsValid(test3);
+            bool test4Actual = ConversionHelper.LatDecimalIsValid(test4);
+            bool test5Actual = ConversionHelper.LatDecimalIsValid(test5);
+            bool test6Actual = ConversionHelper.LatDecimalIsValid(test6);
 
             Assert.AreEqual(expectedResult, test1Actual);
             Assert.AreEqual(expectedResult, test2Actual);
@@ -306,12 +246,12 @@ namespace CoordinateConversionUtility.Helpers.Tests
 
             bool expectedResult = false;
 
-            var test1Actual = ConversionHelper.LonDecimalIsValid(test1);
-            var test2Actual = ConversionHelper.LonDecimalIsValid(test2);
-            var test3Actual = ConversionHelper.LonDecimalIsValid(test3);
-            var test4Actual = ConversionHelper.LonDecimalIsValid(test4);
-            var test5Actual = ConversionHelper.LonDecimalIsValid(test5);
-            var test6Actual = ConversionHelper.LonDecimalIsValid(test6);
+            bool test1Actual = ConversionHelper.LonDecimalIsValid(test1);
+            bool test2Actual = ConversionHelper.LonDecimalIsValid(test2);
+            bool test3Actual = ConversionHelper.LonDecimalIsValid(test3);
+            bool test4Actual = ConversionHelper.LonDecimalIsValid(test4);
+            bool test5Actual = ConversionHelper.LonDecimalIsValid(test5);
+            bool test6Actual = ConversionHelper.LonDecimalIsValid(test6);
 
             Assert.AreEqual(expectedResult, test1Actual);
             Assert.AreEqual(expectedResult, test2Actual);
@@ -332,7 +272,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
 
             if (LTH.GenerateTableLookups())
             {
-                var grid = "CN87ut";
+                string grid = "CN87ut";
                 actualResult = ConversionHelper.GetLatDegrees(LTH, grid, out actualLatDirection);
             }
             else
@@ -356,7 +296,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
 
             if (LTH.GenerateTableLookups())
             {
-                var grid = "CN87ut";
+                string grid = "CN87ut";
                 actualResult = ConversionHelper.GetLonDegrees(LTH, grid, out actualLatDirection);
             }
             else
@@ -372,13 +312,13 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void AddLatDegrees_North_Pass()
         {
-            var startingLat = 40.0m;
-            var latDir = 1;
-            var grid = "CN87ut";
+            decimal startingLat = 40.0m;
+            int latDir = 1;
+            string grid = "CN87ut";
 
-            var expectedResult = 47m;
+            decimal expectedResult = 47m;
 
-            var actualResult = ConversionHelper.AddLatDegreesRemainder(startingLat, latDir, grid);
+            decimal actualResult = ConversionHelper.AddLatDegreesRemainder(startingLat, latDir, grid);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -386,13 +326,13 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void AddLonDegrees_West_Pass()
         {
-            var startingLat = -120.0m;
-            var latDir = -1;
-            var grid = "CN87ut";
+            decimal startingLat = -120.0m;
+            int latDir = -1;
+            string grid = "CN87ut";
 
-            var expectedResult = -122.0m;
+            decimal expectedResult = -122.0m;
 
-            var actualResult = ConversionHelper.AddLonDegreesRemainder(startingLat, latDir, grid);
+            decimal actualResult = ConversionHelper.AddLonDegreesRemainder(startingLat, latDir, grid);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -401,15 +341,15 @@ namespace CoordinateConversionUtility.Helpers.Tests
         public void GetLatMinutes_North_Pass()
         {
             var LTH = new LookupTablesHelper();
-            var startingLat = 47.0m;
-            var latDir = 1;
-            var grid = "CN87ut";
+            decimal startingLat = 47.0m;
+            int latDir = 1;
+            string grid = "CN87ut";
 
             decimal actualAdjLatDegrees;
             decimal actualLatMinutesResult;
 
-            var expectedAdjLatDegrees = 47.0m;
-            var expectedResult = 48.75m;
+            decimal expectedAdjLatDegrees = 47.0m;
+            decimal expectedResult = 48.75m;
 
             if (LTH.GenerateTableLookups())
             {
@@ -429,15 +369,15 @@ namespace CoordinateConversionUtility.Helpers.Tests
         public void GetLonMinutes_West_Pass()
         {
             var LTH = new LookupTablesHelper();
-            var startingLon = -122.0m;
-            var lonDir = -1;
-            var grid = "CN87ut";
+            decimal startingLon = -122.0m;
+            int lonDir = -1;
+            string grid = "CN87ut";
 
             decimal actualAdjLonDegrees;
             decimal actualResult;
 
-            var expectedAdjLatDegrees = -122.0m;
-            var expectedLonMinutes = 17.5m;
+            decimal expectedAdjLatDegrees = -122.0m;
+            decimal expectedLonMinutes = 17.5m;
 
             if (LTH.GenerateTableLookups())
             {
@@ -456,11 +396,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void GetNearestEvenMultiple_Lat_Pass()
         {
-            var minutesInput = 49.52m;
+            decimal minutesInput = 49.52m;
 
-            var expectedResult = 50.0m;
+            decimal expectedResult = 50.0m;
 
-            var actualResult = ConversionHelper.GetNearestEvenMultiple(minutesInput, 1);
+            decimal actualResult = ConversionHelper.GetNearestEvenMultiple(minutesInput, 1);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -468,11 +408,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void GetNearestEvenMultiple_NegativeLat_Pass()
         {
-            var minutesInput = -54.60m;
+            decimal minutesInput = -54.60m;
 
-            var expectedResult = -52.5m;
+            decimal expectedResult = -52.5m;
 
-            var actualResult = ConversionHelper.GetNearestEvenMultiple(minutesInput, 1);
+            decimal actualResult = ConversionHelper.GetNearestEvenMultiple(minutesInput, 1);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -480,11 +420,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void GetNearestEvenMultiple_Lat_ZeroIsZero()
         {
-            var minutesInput = 0.0m;
+            decimal minutesInput = 0.0m;
 
-            var expectedResult = 0.0m;
+            decimal expectedResult = 0.0m;
 
-            var actualResult = ConversionHelper.GetNearestEvenMultiple(minutesInput, 1);
+            decimal actualResult = ConversionHelper.GetNearestEvenMultiple(minutesInput, 1);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -492,11 +432,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void GetNearestEvenMultiple_Lon_Pass()
         {
-            var minutesInput = 36.50m;
+            decimal minutesInput = 36.50m;
 
-            var expectedResult = 40.0m;
+            decimal expectedResult = 40.0m;
 
-            var actualResult = ConversionHelper.GetNearestEvenMultiple(minutesInput, 2);
+            decimal actualResult = ConversionHelper.GetNearestEvenMultiple(minutesInput, 2);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -504,11 +444,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void GetNearestEvenMultiple_NegativeLon_Pass()
         {
-            var minutesInput = -17.60m;
+            decimal minutesInput = -17.60m;
 
-            var expectedResult = -15.0m;
+            decimal expectedResult = -15.0m;
 
-            var actualResult = ConversionHelper.GetNearestEvenMultiple(minutesInput, 2);
+            decimal actualResult = ConversionHelper.GetNearestEvenMultiple(minutesInput, 2);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
@@ -516,11 +456,11 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void GetNearestEvenMultiple_ZeroIsZero()
         {
-            var minutesInput = 0.0m;
+            decimal minutesInput = 0.0m;
 
-            var expectedResult = 0.0m;
+            decimal expectedResult = 0.0m;
 
-            var actualResult = ConversionHelper.GetNearestEvenMultiple(minutesInput, 2);
+            decimal actualResult = ConversionHelper.GetNearestEvenMultiple(minutesInput, 2);
 
             Assert.AreEqual(expectedResult, actualResult);
         }

@@ -1,4 +1,5 @@
 ﻿using CoordinateConversionUtility.Helpers;
+using CoordinateConversionUtility.Models;
 using System;
 using System.Globalization;
 using System.Text;
@@ -168,120 +169,19 @@ namespace CoordinateConversionUtility
             }
         }
 
-        public static bool IsValid(decimal lattitude, decimal longitude)
+        public static bool IsValidLatDegreesAndLonDegrees(decimal lattitude, decimal longitude)
         {
-
-            if (!LatDecimalIsValid(lattitude))
-            {
-                return false;
-            }
-
-            if (!LonDecimalIsValid(longitude))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        public static bool IsValid(string gridsquare, out string validGridsquare)
-        {
-            var gsh = new GridSquareHelper();
-
-            if (gsh.ValidateGridsquareInput(gridsquare, out string vGridsquare))
-            {
-                validGridsquare = vGridsquare;
-                return true;
-            };
-
-            validGridsquare = string.Empty;
-            return false;
+            return CoordinateBase.ValidateLatDegrees(lattitude) && CoordinateBase.ValidateLonDegrees(longitude);
         }
 
         public static bool LatDecimalIsValid(decimal lattitudeDecimal)
         {
-            if (-90 <= lattitudeDecimal && lattitudeDecimal <= 90)
-            {
-                return true;
-            }
-
-            return false;
+            return CoordinateBase.ValidateLatDegrees(lattitudeDecimal);
         }
 
         public static bool LonDecimalIsValid(decimal longitudeDecimal)
         {
-            if (-180 <= longitudeDecimal && longitudeDecimal <= 180)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Take a string and convert it to a decimal and return true if decimal is between -90 and +90, else return false and out decimal 0.
-        /// </summary>
-        /// <param name="number"></param>
-        /// <param name="validLattitude"></param>
-        /// <returns></returns>
-        public static bool ValidateIsLattitude(string number, out decimal validLattitude)
-        {
-            validLattitude = 0.0m;
-
-            if (decimal.TryParse(number, out decimal lattitude))
-            {
-                if (ConversionHelper.LatDecimalIsValid(lattitude))
-                {
-                    validLattitude = lattitude;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Take a string and convert it to a decimal and return true if decimal is between -180 and +180, else return false and out decimal 0.
-        /// </summary>
-        /// <param name="number"></param>
-        /// <param name="validLongitude"></param>
-        /// <returns></returns>
-        public static bool ValidateIsLongitude(string number, out decimal validLongitude)
-        {
-            validLongitude = 0.0m;
-
-            if (decimal.TryParse(number, out decimal longitude))
-            {
-                if (ConversionHelper.LonDecimalIsValid(longitude))
-                {
-                    validLongitude = longitude;
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Take a string and convert it to a decimal and return true if decimal is between -60 and +60, else return false and out decimal 0.
-        /// </summary>
-        /// <param name="number"></param>
-        /// <param name="validMinutes"></param>
-        /// <returns></returns>
-        public static bool ValidateIsSecsOrMins(string number, out decimal validMinutes)
-        {
-            validMinutes = 0.0m;
-
-            if (decimal.TryParse(number, out decimal minutes))
-            {
-                if (minutes > -60 && minutes < 60)
-                {
-                    validMinutes = minutes;
-                    return true;
-                }
-            }
-
-            return false;
+            return CoordinateBase.ValidateLonDegrees(longitudeDecimal);
         }
 
         /// <summary>
@@ -301,7 +201,7 @@ namespace CoordinateConversionUtility
                 return -90m;
             }
 
-            var currentGridsquare = Gridsquare[1].ToString(currentCulture);
+            string currentGridsquare = Gridsquare[1].ToString(currentCulture);
 
             if (lookupTablesHelper.GetTable4G2CLookup.TryGetValue(currentGridsquare.ToUpper(currentCulture), out int latDegreesLookupResult))
             {
@@ -348,7 +248,7 @@ namespace CoordinateConversionUtility
                 lat_MinsAdjustment = -9;
             }
 
-            var fourthGridChar = Gridsquare[3].ToString(currentCulture);
+            string fourthGridChar = Gridsquare[3].ToString(currentCulture);
 
             if (decimal.TryParse(fourthGridChar, out decimal intFourthGridChar))
             {
@@ -472,7 +372,7 @@ namespace CoordinateConversionUtility
                 return 0.0m;
             }
 
-            var testResult = 0.0m;
+            decimal testResult = 0.0m;
 
             if (LonDirection > 0)
             {
@@ -482,7 +382,7 @@ namespace CoordinateConversionUtility
             if (LonDirection < 0)
             {
                 int lon_MinsAdjustment = -18;
-                var gridChar = int.Parse(Gridsquare[2].ToString(currentCulture), currentCulture);
+                int gridChar = int.Parse(Gridsquare[2].ToString(currentCulture), currentCulture);
                 testResult = lon_MinsAdjustment + (gridChar * 2);
             }
 
@@ -509,7 +409,7 @@ namespace CoordinateConversionUtility
                 return 0.0m;
             }
 
-            var testResult = 0.0m;
+            decimal testResult = 0.0m;
 
             if (lookupTablesHelper.GetTable3G2CLookup.TryGetValue(Gridsquare[4].ToString(currentCulture).ToUpper(currentCulture), out decimal lonMinsLookupResult))
             {

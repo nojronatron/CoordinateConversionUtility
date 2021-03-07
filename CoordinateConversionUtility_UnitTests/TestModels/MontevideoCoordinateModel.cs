@@ -1,6 +1,6 @@
 ﻿namespace CoordinateConversionUtility_UnitTests.TestModels
 {
-    class MontevideoCoordinateModel : RootCoordinateModel
+    internal class MontevideoCoordinateModel : RootCoordinateModel
     {
         private static string NS => "S";
         private static string EW => "W";

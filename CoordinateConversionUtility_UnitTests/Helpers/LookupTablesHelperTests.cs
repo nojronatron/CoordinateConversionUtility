@@ -8,7 +8,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_LookupTablesHelper()
         {
-            var expectedResult = "CoordinateConversionUtility.Helpers.LookupTablesHelper";
+            string expectedResult = "CoordinateConversionUtility.Helpers.LookupTablesHelper";
 
             var actualResult = new LookupTablesHelper();
 
@@ -18,10 +18,10 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [TestMethod()]
         public void Test_GenerateTableLookups()
         {
-            var expectedResult = true;
+            bool expectedResult = true;
 
-            LookupTablesHelper lth = new LookupTablesHelper();
-            var actualResult = lth.GenerateTableLookups();
+            var lth = new LookupTablesHelper();
+            bool actualResult = lth.GenerateTableLookups();
 
             Assert.IsTrue(expectedResult == actualResult);
         }
