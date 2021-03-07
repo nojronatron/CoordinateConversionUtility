@@ -128,6 +128,7 @@ namespace CoordinateConversionUtility.Models
             int secondsIDX = dmsLat.IndexOf(SecondsSymbol);
 
             string tempParseParameter = dmsLat.Substring(1, degreeIDX).Trim(trimChars).Trim();
+
             if (decimal.TryParse(tempParseParameter, out decimal decLatDegrees))
             {
                 DegreesLattitude = decLatDegrees;
@@ -138,6 +139,7 @@ namespace CoordinateConversionUtility.Models
             }
 
             tempParseParameter = dmsLat.Substring(degreeIDX, (minutesIDX - degreeIDX)).Trim(trimChars);
+
             if (decimal.TryParse(tempParseParameter, out decimal decLatMinutes))
             {
                 MinutesLattitude = decLatMinutes;
@@ -148,6 +150,7 @@ namespace CoordinateConversionUtility.Models
             }
 
             tempParseParameter = dmsLat.Substring(minutesIDX, (secondsIDX - minutesIDX)).Trim(trimChars);
+
             if (decimal.TryParse(tempParseParameter, out decimal decLatSeconds))
             {
                 SecondsLattitude = decLatSeconds;
@@ -175,6 +178,7 @@ namespace CoordinateConversionUtility.Models
             }
 
             tempParseParameter = dmsLon.Substring(degreeIDX, (minutesIDX - degreeIDX)).Trim(trimChars);
+
             if (decimal.TryParse(tempParseParameter, out decimal decLonMinutes))
             {
                 MinutesLongitude = decLonMinutes;
@@ -185,6 +189,7 @@ namespace CoordinateConversionUtility.Models
             }
 
             tempParseParameter = dmsLon.Substring(minutesIDX, (secondsIDX - minutesIDX)).Trim(trimChars);
+
             if (decimal.TryParse(tempParseParameter, out decimal decLonSeconds))
             {
                 SecondsLongitude = decLonSeconds;
@@ -207,9 +212,9 @@ namespace CoordinateConversionUtility.Models
 
         public static bool ValidateIsSeconds(string secondsLatOrLon, out decimal validatedSeconds)
         {
-
             if (decimal.TryParse(secondsLatOrLon, out decimal seconds))
             {
+
                 if (DDMCoordinate.ValidateMinutes(seconds))
                 {
                     validatedSeconds = seconds;
