@@ -9,6 +9,7 @@ namespace CoordinateConversionUtility.Models
         internal decimal _degreesLongitude;
         internal bool LatIsValid { get; set; }
         internal bool LonIsValid { get; set; }
+
         internal decimal DegreesLattitude
         {
             get
@@ -29,6 +30,7 @@ namespace CoordinateConversionUtility.Models
                 }
             }
         }
+
         internal decimal DegreesLongitude
         {
             get
@@ -49,14 +51,17 @@ namespace CoordinateConversionUtility.Models
                 }
             }
         }
+        
         internal static bool ValidateLatDegrees(decimal degreesLattitude)
         {
             return (-90m <= degreesLattitude && degreesLattitude <= 90m);
         }
+        
         internal static bool ValidateLonDegrees(decimal degreesLongitude)
         {
             return (-180m <= degreesLongitude && degreesLongitude <= 180m);
         }
+
         internal static char CommaSymbol => (char)44;
         internal static char MinusSymbol => (char)45;
         internal static char DegreesSymbol => (char)176;
@@ -64,6 +69,7 @@ namespace CoordinateConversionUtility.Models
         internal static char SecondsSymbol => (char)34;
         internal static char SpaceCharacter => (char)32;
         internal char[] trimChars = { CommaSymbol, DegreesSymbol, MinutesSymbol, SecondsSymbol, SpaceCharacter };
+
         /// <summary>
         /// Constructors set this bit true if successful, false if failures or ambiguity occurs during initialization.
         /// </summary>

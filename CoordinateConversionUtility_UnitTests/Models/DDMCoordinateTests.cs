@@ -8,6 +8,28 @@ namespace CoordinateConversionUtility.Models.Tests
     [TestClass()]
     public class DDMCoordinateTests : UnitTestsBase
     {
+        [TestMethod()]
+        public void DefaultCtorCreatesInvalidDMSCoordinate_Test()
+        {
+            var ddm = new DDMCoordinate();
+            var expectedResult = false;
+            var expectedLatDegrees = 0m;
+            var expectedLatMins = 0m;
+            var expectedLonDegrees = 0m;
+            var expectedLonMins = 0m;
+
+            var actualResult = ddm.IsValid;
+            var actualLatDegrees = ddm.GetShortDegreesLat();
+            var actualLatMins = ddm.GetMinsLat();
+            var actualLonDegrees = ddm.GetShortDegreesLon();
+            var actualLonMins = ddm.GetMinsLon();
+
+            Assert.AreEqual(expectedLatDegrees, actualLatDegrees);
+            Assert.AreEqual(expectedLatMins, actualLatMins);
+            Assert.AreEqual(expectedLonDegrees, actualLonDegrees);
+            Assert.AreEqual(expectedLonMins, actualLonMins);
+            Assert.AreEqual(expectedResult, actualResult);
+        }
 
         [TestMethod()]
         public void ValidateMinutes()
@@ -43,7 +65,7 @@ namespace CoordinateConversionUtility.Models.Tests
 
             var ddm = new DDMCoordinate(ddLat, ddLon);
 
-            string expectedResult = MontevideoCoordinateModel.strDDM();
+            string expectedResult = MontevideoCoordinateModel.StrDDM();
             string actualResult = ddm.ToString();
 
             decimal latDiff = Math.Abs(ddm.GetShortDegreesLat() - Math.Truncate(mvcm.DegreesLat));
@@ -79,7 +101,7 @@ namespace CoordinateConversionUtility.Models.Tests
 
             var ddm = new DDMCoordinate(latDegrees, latMins, lonDegrees, lonMins);
 
-            string expectedResult = MontevideoCoordinateModel.strDDM();
+            string expectedResult = MontevideoCoordinateModel.StrDDM();
             string actualResult = ddm.ToString();
 
             decimal latDiff = Math.Abs(ddm.GetShortDegreesLat() - Math.Truncate(mvcm.DegreesLat));
@@ -117,7 +139,7 @@ namespace CoordinateConversionUtility.Models.Tests
 
             var ddm = new DDMCoordinate(latDegrees, latMinutes, latSeconds, lonDegrees, lonMinutes, lonSeconds);
 
-            string expectedResult = MontevideoCoordinateModel.strDDM();
+            string expectedResult = MontevideoCoordinateModel.StrDDM();
             string actualResult = ddm.ToString();
 
             decimal latDiff = Math.Abs(ddm.GetShortDegreesLat() - Math.Truncate(mvcm.DegreesLat));
@@ -173,9 +195,9 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DisplayOutput(expectedResult, actualResult, dict);
 
+            Assert.AreEqual(expectedLength, actualLength);
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
-
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
@@ -210,9 +232,9 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DisplayOutput(expectedResult, actualResult, dict);
 
+            Assert.AreEqual(expectedLength, actualLength);
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
-
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
@@ -247,9 +269,9 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DisplayOutput(expectedResult, actualResult, dict);
 
+            Assert.AreEqual(expectedLength, actualLength);
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
-
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
@@ -262,7 +284,7 @@ namespace CoordinateConversionUtility.Models.Tests
                 mvcm.ShortDegreesLattitude(), mvcm.DdmMinsLat,
                 mvcm.ShortDegreesLongitude(), mvcm.DdmMinsLon
                 );
-            string expectedResult = MontevideoCoordinateModel.strDDM();
+            string expectedResult = MontevideoCoordinateModel.StrDDM();
             int expectedLength = expectedResult.Length;
 
             string actualResult = ddm.ToString();
@@ -284,9 +306,9 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DisplayOutput(expectedResult, actualResult, dict);
 
+            Assert.AreEqual(expectedLength, actualLength);
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
-
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
@@ -360,9 +382,9 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DisplayOutput(expectedResult, actualResult, dict);
 
+            Assert.AreEqual(expectedLength, actualLength);
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
-
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
@@ -374,7 +396,7 @@ namespace CoordinateConversionUtility.Models.Tests
             var ddm = new DDMCoordinate(
                 sccm.DegreesLat, sccm.DegreesLon
                 );
-            string expectedResult = SanClementeCoordinatesModel.strDDM();
+            string expectedResult = SanClementeCoordinatesModel.StrDDM();
             int expectedLength = expectedResult.Length;
 
             string actualResult = ddm.ToString();
@@ -396,9 +418,9 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DisplayOutput(expectedResult, actualResult, dict);
 
+            Assert.AreEqual(expectedLength, actualLength);
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
-
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
@@ -432,9 +454,9 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DisplayOutput(expectedResult, actualResult, dict);
 
+            Assert.AreEqual(expectedLength, actualLength);
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
-
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
@@ -446,7 +468,7 @@ namespace CoordinateConversionUtility.Models.Tests
             var ddm = new DDMCoordinate(
                 mvcm.DegreesLat, mvcm.DegreesLon
                 );
-            string expectedResult = MontevideoCoordinateModel.strDDM();
+            string expectedResult = MontevideoCoordinateModel.StrDDM();
             int expectedLength = expectedResult.Length;
 
             string actualResult = ddm.ToString();
@@ -468,9 +490,9 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DisplayOutput(expectedResult, actualResult, dict);
 
+            Assert.AreEqual(expectedLength, actualLength);
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
-
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
@@ -505,9 +527,9 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DisplayOutput(expectedResult, actualResult, dict);
 
+            Assert.AreEqual(expectedLength, actualLength);
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
-
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
@@ -542,9 +564,9 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DisplayOutput(expectedResult, actualResult, dict);
 
+            Assert.AreEqual(expectedLength, actualLength);
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
-
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
@@ -579,9 +601,9 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DisplayOutput(expectedResult, actualResult, dict);
 
+            Assert.AreEqual(expectedLength, actualLength);
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
-
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
@@ -594,7 +616,7 @@ namespace CoordinateConversionUtility.Models.Tests
                 mvcm.ShortDegreesLattitude(), mvcm.DdmMinsLat, mvcm.DmsSecondsLat,
                 mvcm.ShortDegreesLongitude(), mvcm.DdmMinsLon, mvcm.DmsSecondsLon
                 );
-            string expectedResult = MontevideoCoordinateModel.strDDM();
+            string expectedResult = MontevideoCoordinateModel.StrDDM();
             int expectedLength = expectedResult.Length;
 
             string actualResult = ddm.ToString();
@@ -616,9 +638,9 @@ namespace CoordinateConversionUtility.Models.Tests
 
             DisplayOutput(expectedResult, actualResult, dict);
 
+            Assert.AreEqual(expectedLength, actualLength);
             Assert.IsTrue(latDiff >= 0 && latDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(latMinsDiff >= 0 && latMinsDiff <= LatMinsAccuracyThreshold);
-
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }

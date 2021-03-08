@@ -9,6 +9,35 @@ namespace CoordinateConversionUtility.Models.Tests
     public class DMSCoordinateTests : UnitTestsBase
     {
         [TestMethod()]
+        public void DefaultCtorCreatesInvalidDMSCoordinate_Test()
+        {
+            var dms = new DMSCoordinate();
+            var expectedResult = false;
+            var expectedLatDegrees = 0m;
+            var expectedLatMins = 0m;
+            var expectedLatSecs = 0m;
+            var expectedLonDegrees = 0m;
+            var expectedLonMins = 0m;
+            var expectedLonSecs = 0m;
+
+            var actualResult = dms.IsValid;
+            var actualLatDegrees = dms.GetShortDegreesLat();
+            var actualLatMins = dms.GetMinsLat();
+            var actualLatSecs = dms.GetSecondsLattitude();
+            var actualLonDegrees = dms.GetShortDegreesLon();
+            var actualLonMins = dms.GetMinsLon();
+            var actualLonSecs = dms.GetSecondsLongitude();
+
+            Assert.AreEqual(expectedLatDegrees, actualLatDegrees);
+            Assert.AreEqual(expectedLatMins, actualLatMins);
+            Assert.AreEqual(expectedLatSecs, actualLatSecs);
+            Assert.AreEqual(expectedLonDegrees, actualLonDegrees);
+            Assert.AreEqual(expectedLonMins, actualLonMins);
+            Assert.AreEqual(expectedLonSecs, actualLonSecs);
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
+        [TestMethod()]
         public void ValidateIsSecsOrMinsTest0()
         {
             string testInput = "0";
@@ -89,7 +118,7 @@ namespace CoordinateConversionUtility.Models.Tests
         }
 
         [TestMethod()]
-        public void CTOR_DDtoDMS_Test()
+        public void CTOR_DDtoDMS_NW_Test()
         {
             var sccm = new SanClementeCoordinatesModel();
             decimal ddLat = sccm.DegreesLat;
@@ -109,13 +138,15 @@ namespace CoordinateConversionUtility.Models.Tests
             decimal latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - sccm.DmsSecondsLat);
             decimal lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - sccm.DmsSecondsLon);
 
-            var dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            dict.Add("latMinsDiff", latMinsDiff);
-            dict.Add("lonMinsDiff", lonMinsDiff);
-            dict.Add("latSecsDiff", latSecsDiff);
-            dict.Add("lonSecsDiff", lonSecsDiff);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "latDiff", latDiff },
+                { "lonDiff", lonDiff },
+                { "latMinsDiff", latMinsDiff },
+                { "lonMinsDiff", lonMinsDiff },
+                { "latSecsDiff", latSecsDiff },
+                { "lonSecsDiff", lonSecsDiff }
+            };
             DisplayOutput(expectedResult, actualResult, dict);
 
             Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
@@ -128,33 +159,35 @@ namespace CoordinateConversionUtility.Models.Tests
         }
 
         [TestMethod()]
-        public void CTOR_DDtoDMS_Test()
+        public void CTOR_DDtoDMS_NE_Test()
         {
-            var sccm = new SanClementeCoordinatesModel();
-            decimal ddLat = sccm.DegreesLat;
-            decimal ddLon = sccm.DegreesLon;
+            var mcm = new MunichCoordinatesModel();
+            decimal ddLat = mcm.DegreesLat;
+            decimal ddLon = mcm.DegreesLon;
 
             var dms = new DMSCoordinate(ddLat, ddLon);
 
             string expectedResult = LynnwoodCoordinatesModel.StrDMS();
             string actualResult = dms.ToString();
 
-            decimal latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(sccm.DegreesLat));
-            decimal lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(sccm.DegreesLon));
+            decimal latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(mcm.DegreesLat));
+            decimal lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(mcm.DegreesLon));
 
-            decimal latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(sccm.DdmMinsLat));
-            decimal lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(sccm.DdmMinsLon));
+            decimal latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(mcm.DdmMinsLat));
+            decimal lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(mcm.DdmMinsLon));
 
-            decimal latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - sccm.DmsSecondsLat);
-            decimal lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - sccm.DmsSecondsLon);
+            decimal latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - mcm.DmsSecondsLat);
+            decimal lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - mcm.DmsSecondsLon);
 
-            var dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            dict.Add("latMinsDiff", latMinsDiff);
-            dict.Add("lonMinsDiff", lonMinsDiff);
-            dict.Add("latSecsDiff", latSecsDiff);
-            dict.Add("lonSecsDiff", lonSecsDiff);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "latDiff", latDiff },
+                { "lonDiff", lonDiff },
+                { "latMinsDiff", latMinsDiff },
+                { "lonMinsDiff", lonMinsDiff },
+                { "latSecsDiff", latSecsDiff },
+                { "lonSecsDiff", lonSecsDiff }
+            };
             DisplayOutput(expectedResult, actualResult, dict);
 
             Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
@@ -167,33 +200,35 @@ namespace CoordinateConversionUtility.Models.Tests
         }
 
         [TestMethod()]
-        public void CTOR_DDtoDMS_Test()
+        public void CTOR_DDtoDMS_SE_Test()
         {
-            var sccm = new SanClementeCoordinatesModel();
-            decimal ddLat = sccm.DegreesLat;
-            decimal ddLon = sccm.DegreesLon;
+            var wcm = new WellingtonCoordinateModel();
+            decimal ddLat = wcm.DegreesLat;
+            decimal ddLon = wcm.DegreesLon;
 
             var dms = new DMSCoordinate(ddLat, ddLon);
 
             string expectedResult = LynnwoodCoordinatesModel.StrDMS();
             string actualResult = dms.ToString();
 
-            decimal latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(sccm.DegreesLat));
-            decimal lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(sccm.DegreesLon));
+            decimal latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(wcm.DegreesLat));
+            decimal lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(wcm.DegreesLon));
 
-            decimal latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(sccm.DdmMinsLat));
-            decimal lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(sccm.DdmMinsLon));
+            decimal latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(wcm.DdmMinsLat));
+            decimal lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(wcm.DdmMinsLon));
 
-            decimal latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - sccm.DmsSecondsLat);
-            decimal lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - sccm.DmsSecondsLon);
+            decimal latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - wcm.DmsSecondsLat);
+            decimal lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - wcm.DmsSecondsLon);
 
-            var dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            dict.Add("latMinsDiff", latMinsDiff);
-            dict.Add("lonMinsDiff", lonMinsDiff);
-            dict.Add("latSecsDiff", latSecsDiff);
-            dict.Add("lonSecsDiff", lonSecsDiff);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "latDiff", latDiff },
+                { "lonDiff", lonDiff },
+                { "latMinsDiff", latMinsDiff },
+                { "lonMinsDiff", lonMinsDiff },
+                { "latSecsDiff", latSecsDiff },
+                { "lonSecsDiff", lonSecsDiff }
+            };
             DisplayOutput(expectedResult, actualResult, dict);
 
             Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
@@ -206,33 +241,35 @@ namespace CoordinateConversionUtility.Models.Tests
         }
 
         [TestMethod()]
-        public void CTOR_DDtoDMS_Test()
+        public void CTOR_DDtoDMS_SW_Test()
         {
-            var sccm = new SanClementeCoordinatesModel();
-            decimal ddLat = sccm.DegreesLat;
-            decimal ddLon = sccm.DegreesLon;
+            var mvcm = new MontevideoCoordinateModel();
+            decimal ddLat = mvcm.DegreesLat;
+            decimal ddLon = mvcm.DegreesLon;
 
             var dms = new DMSCoordinate(ddLat, ddLon);
 
             string expectedResult = LynnwoodCoordinatesModel.StrDMS();
             string actualResult = dms.ToString();
 
-            decimal latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(sccm.DegreesLat));
-            decimal lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(sccm.DegreesLon));
+            decimal latDiff = Math.Abs(dms.GetShortDegreesLat() - Math.Truncate(mvcm.DegreesLat));
+            decimal lonDiff = Math.Abs(dms.GetShortDegreesLon() - Math.Truncate(mvcm.DegreesLon));
 
-            decimal latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(sccm.DdmMinsLat));
-            decimal lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(sccm.DdmMinsLon));
+            decimal latMinsDiff = Math.Abs(dms.GetShortMinutesLattitude() - Math.Truncate(mvcm.DdmMinsLat));
+            decimal lonMinsDiff = Math.Abs(dms.GetShortMinutesLongitude() - Math.Truncate(mvcm.DdmMinsLon));
 
-            decimal latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - sccm.DmsSecondsLat);
-            decimal lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - sccm.DmsSecondsLon);
+            decimal latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - mvcm.DmsSecondsLat);
+            decimal lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - mvcm.DmsSecondsLon);
 
-            var dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            dict.Add("latMinsDiff", latMinsDiff);
-            dict.Add("lonMinsDiff", lonMinsDiff);
-            dict.Add("latSecsDiff", latSecsDiff);
-            dict.Add("lonSecsDiff", lonSecsDiff);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "latDiff", latDiff },
+                { "lonDiff", lonDiff },
+                { "latMinsDiff", latMinsDiff },
+                { "lonMinsDiff", lonMinsDiff },
+                { "latSecsDiff", latSecsDiff },
+                { "lonSecsDiff", lonSecsDiff }
+            };
             DisplayOutput(expectedResult, actualResult, dict);
 
             Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
@@ -243,19 +280,6 @@ namespace CoordinateConversionUtility.Models.Tests
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= 0.1m);
             Assert.IsTrue(lonSecsDiff >= 0 && lonSecsDiff <= 1.0m);
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         [TestMethod()]
         public void CTOR_DDMtoDMS_Test()
@@ -277,13 +301,15 @@ namespace CoordinateConversionUtility.Models.Tests
                 decimal latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - lcm.DmsSecondsLat);
                 decimal lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - lcm.DmsSecondsLon);
 
-                var dict = new Dictionary<string, decimal>();
-                dict.Add("latDiff", latDiff);
-                dict.Add("lonDiff", lonDiff);
-                dict.Add("latMinsDiff", latMinsDiff);
-                dict.Add("lonMinsDiff", lonMinsDiff);
-                dict.Add("latSecsDiff", latSecsDiff);
-                dict.Add("lonSecsDiff", lonSecsDiff);
+                var dict = new Dictionary<string, decimal>
+                {
+                    { "latDiff", latDiff },
+                    { "lonDiff", lonDiff },
+                    { "latMinsDiff", latMinsDiff },
+                    { "lonMinsDiff", lonMinsDiff },
+                    { "latSecsDiff", latSecsDiff },
+                    { "lonSecsDiff", lonSecsDiff }
+                };
                 DisplayOutput(expectedResult, actualResult, dict);
 
                 Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
@@ -321,13 +347,15 @@ namespace CoordinateConversionUtility.Models.Tests
             decimal latSecsDiff = Math.Abs(dms.GetSecondsLattitude() - lcm.DmsSecondsLat);
             decimal lonSecsDiff = Math.Abs(dms.GetSecondsLongitude() - lcm.DmsSecondsLon);
 
-            var dict = new Dictionary<string, decimal>();
-            dict.Add("latDiff", latDiff);
-            dict.Add("lonDiff", lonDiff);
-            dict.Add("latMinsDiff", latMinsDiff);
-            dict.Add("lonMinsDiff", lonMinsDiff);
-            dict.Add("latSecsDiff", latSecsDiff);
-            dict.Add("lonSecsDiff", lonSecsDiff);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "latDiff", latDiff },
+                { "lonDiff", lonDiff },
+                { "latMinsDiff", latMinsDiff },
+                { "lonMinsDiff", lonMinsDiff },
+                { "latSecsDiff", latSecsDiff },
+                { "lonSecsDiff", lonSecsDiff }
+            };
             DisplayOutput(expectedResult, actualResult, dict);
 
             Assert.IsTrue(latDiff >= 0 && latDiff <= 0.0001m);
@@ -342,8 +370,7 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void CTOR_DmsStringToDMS_Test()
         {
-            var lcm = new LynnwoodCoordinatesModel();
-            string expectedResult = LynnwoodCoordinatesModel.StrDMS();
+            string expectedResult = SanClementeCoordinatesModel.StrDMS();
 
             var dms = new DMSCoordinate(expectedResult);
             string actualResult = dms.ToString();
@@ -359,15 +386,17 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void GetShortMinutesLattitudeTest()
         {
-            var lcm = new LynnwoodCoordinatesModel();
-            var dms = new DMSCoordinate(lcm.DegreesLat, lcm.DegreesLon);
+            var mcm = new MunichCoordinatesModel();
+            var dms = new DMSCoordinate(mcm.DegreesLat, mcm.DegreesLon);
 
             decimal shortMinutesLat = dms.GetShortMinutesLattitude();
 
-            decimal minutesLatDiff = Math.Abs(Math.Truncate(lcm.DdmMinsLat) - shortMinutesLat);
+            decimal minutesLatDiff = Math.Abs(Math.Truncate(mcm.DdmMinsLat) - shortMinutesLat);
 
-            var dict = new Dictionary<string, decimal>();
-            dict.Add("minutesLatDiff", minutesLatDiff);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "minutesLatDiff", minutesLatDiff }
+            };
 
             DisplayOutput("49", shortMinutesLat.ToString(), dict);
 
@@ -377,14 +406,16 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void GetShortMinutesLongitudeTest()
         {
-            var lcm = new LynnwoodCoordinatesModel();
-            var dms = new DMSCoordinate(lcm.DegreesLat, lcm.DegreesLon);
+            var wcm = new WellingtonCoordinateModel();
+            var dms = new DMSCoordinate(wcm.DegreesLat, wcm.DegreesLon);
 
             decimal shortMinutesLon = dms.GetShortMinutesLongitude();
-            decimal minutesLonDiff = Math.Abs(Math.Truncate(lcm.DdmMinsLon) - shortMinutesLon);
+            decimal minutesLonDiff = Math.Abs(Math.Truncate(wcm.DdmMinsLon) - shortMinutesLon);
 
-            var dict = new Dictionary<string, decimal>();
-            dict.Add("minutesLonDiff", minutesLonDiff);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "minutesLonDiff", minutesLonDiff }
+            };
 
             DisplayOutput("17", shortMinutesLon.ToString(), dict);
 
@@ -394,15 +425,17 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void GetSecondsLattitude()
         {
-            var lcm = new LynnwoodCoordinatesModel();
-            var dms = new DMSCoordinate(lcm.DegreesLat, lcm.DegreesLon);
+            var mvcm = new MontevideoCoordinateModel();
+            var dms = new DMSCoordinate(mvcm.DegreesLat, mvcm.DegreesLon);
 
             decimal expectedSecLats = dms.GetSecondsLattitude();
             decimal secondsLat = dms.GetSecondsLattitude();
-            decimal secondsLatDiff = Math.Abs(Math.Truncate(lcm.DmsSecondsLat) - secondsLat);
+            decimal secondsLatDiff = Math.Abs(Math.Truncate(mvcm.DmsSecondsLat) - secondsLat);
 
-            var dict = new Dictionary<string, decimal>();
-            dict.Add("secondsLatDiff", 0m);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "secondsLatDiff", 0m }
+            };
             DisplayOutput(expectedSecLats.ToString(), secondsLat.ToString(), dict);
 
             Assert.IsTrue(secondsLatDiff <= 1m);
@@ -411,15 +444,17 @@ namespace CoordinateConversionUtility.Models.Tests
         [TestMethod()]
         public void GetSecondsLongitude()
         {
-            var lcm = new LynnwoodCoordinatesModel();
-            var dms = new DMSCoordinate(lcm.DegreesLat, lcm.DegreesLon);
+            var sccm = new SanClementeCoordinatesModel();
+            var dms = new DMSCoordinate(sccm.DegreesLat, sccm.DegreesLon);
 
             decimal expectedSecLons = dms.GetSecondsLongitude();
             decimal secondsLon = dms.GetSecondsLongitude();
-            decimal secondsLonDiff = Math.Abs(Math.Truncate(lcm.DmsSecondsLon) - secondsLon);
+            decimal secondsLonDiff = Math.Abs(Math.Truncate(sccm.DmsSecondsLon) - secondsLon);
 
-            var dict = new Dictionary<string, decimal>();
-            dict.Add("secondsLonDiff", 0m);
+            var dict = new Dictionary<string, decimal>
+            {
+                { "secondsLonDiff", 0m }
+            };
             DisplayOutput(expectedSecLons.ToString(), secondsLon.ToString(), dict);
 
             Assert.IsTrue(secondsLonDiff <= 1m);

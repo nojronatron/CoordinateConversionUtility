@@ -13,37 +13,37 @@
             DmsSecondsLat = 14.9m;
             DmsSecondsLon = 29.8m;
         }
-        public static string strGridsquare()
+        public static string StrGridsquare()
         {
             return $"DM13ek";
         }
-        public static string strDD()
+        public static string StrDD()
         {
-            return $"{ 33.4375m:f5}{ DegreesSymbol }, { -117.6250m:f5}{ DegreesSymbol }";
+            return $"{ 33.43749m:f5}{ DegreesSymbol }, { -117.62495m:f5}{ DegreesSymbol }";
         }
-        public static string strDDM()
+        public static string StrDDM()
         {
             return $"33{ DegreesSymbol }26.25{ MinutesSymbol }{ NS }, " +
-                   $"117{ DegreesSymbol }37.50{ MinutesSymbol }{ EW }";
+                   $"117{ DegreesSymbol }37.49{ MinutesSymbol }{ EW }";
         }
 
         /// <summary>
         /// Coordinates that point to middle of gridsquare RE78ir
         /// </summary>
         /// <returns></returns>
-        public static string strArrlDDM()
+        public static string StrArrlDDM()
         {
-
             return $"33{ DegreesSymbol }26.25{ MinutesSymbol }{ NS }, " +
                    $"117{ DegreesSymbol }37.50{ MinutesSymbol }{ EW }";
         }
-        public static string strDMS()
+        public static string StrDMS()
         {
-            return $"{ NS } 41{ DegreesSymbol }15{ MinutesSymbol }00{ SecondsSymbol}, " +
-                   $"{ EW } 174{ DegreesSymbol }45{ MinutesSymbol }00{ SecondsSymbol }";
+            return $"{ NS } 33{ DegreesSymbol }26{ MinutesSymbol }15.0{ SecondsSymbol}, " +
+                   $"{ EW } 117{ DegreesSymbol }37{ MinutesSymbol }29.8{ SecondsSymbol }";
         }
         /*
-	    ARRL DDM:		    33*26.25'N, 117*37.5'W
+        Validated: 7-Mar-2021
+	    ARRL DDM:		    33*26.25'N, 117*37.50'W
 	    ARRL Gridsquare:    DM13ek
 	    GoogleMapped DD:    33.43749, -117.62495
 	    GoogleMapped DMS:	N 33*26'15.0", W 117*37'29.8"

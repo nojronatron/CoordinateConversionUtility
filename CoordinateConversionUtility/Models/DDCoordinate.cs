@@ -11,10 +11,8 @@ namespace CoordinateConversionUtility.Models
         public override bool IsValid => base.IsValid;
         public DDCoordinate()
         {
-            DegreesLattitude = 0.0m;
-            LonIsValid = false;
-            DegreesLongitude = 0.0m;
             LatIsValid = false;
+            LonIsValid = false;
         }
 
         public DDCoordinate(decimal lattitude, decimal longitude)

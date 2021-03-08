@@ -55,8 +55,6 @@ namespace CoordinateConversionUtility.Models
 
         public DDMCoordinate()
         {
-            LatIsValid = false;
-            LonIsValid = false;
             LatMinsValid = false;
             LonMinsValid = false;
         }

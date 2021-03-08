@@ -30,7 +30,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             int expectedNegativeResult = -1;
             int expectedZeroResult = 0;
 
-            short actualPositiveResult = ConversionHelper.ExtractPolarityNS(SanClementeCoordinatesModel.strDDM());
+            short actualPositiveResult = ConversionHelper.ExtractPolarityNS(SanClementeCoordinatesModel.StrDDM());
             short actualNegativeResult = ConversionHelper.ExtractPolarityNS(WellingtonCoordinateModel.strDDM());
             short actualZeroResult = ConversionHelper.ExtractPolarityNS(string.Empty);
 
@@ -47,7 +47,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             int expectedZeroResult = 0;
 
             short actualPositiveResult = ConversionHelper.ExtractPolarityEW(MunichCoordinatesModel.strDDM());
-            short actualNegativeResult = ConversionHelper.ExtractPolarityEW(SanClementeCoordinatesModel.strDDM());
+            short actualNegativeResult = ConversionHelper.ExtractPolarityEW(SanClementeCoordinatesModel.StrDDM());
             short actualZeroResult = ConversionHelper.ExtractPolarityEW(string.Empty);
 
             Assert.AreEqual(expectedPositiveResult, actualPositiveResult);

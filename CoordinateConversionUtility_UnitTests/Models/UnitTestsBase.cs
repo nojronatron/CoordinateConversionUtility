@@ -23,7 +23,7 @@ namespace CoordinateConversionUtility.Models.Tests
 
             foreach (KeyValuePair<string, decimal> diff in diffs)
             {
-                Console.WriteLine($"{diff.Key}: {diff.Value.ToString()}");
+                Console.WriteLine($"{ diff.Key }: { diff.Value }");
             }
         }
 
