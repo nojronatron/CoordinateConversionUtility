@@ -26,7 +26,7 @@ namespace CoordinateConversionUtility.Tests
         {
             var sccm = new SanClementeCoordinatesModel();
             var cc = new CoordinateConverter();
-            string gridsquare = SanClementeCoordinatesModel.strGridsquare();
+            string gridsquare = SanClementeCoordinatesModel.StrGridsquare();
 
             var expectedResult = new DDMCoordinate(sccm.DegreesLat, sccm.DdmMinsLat, sccm.DegreesLon, sccm.DdmMinsLon);
             DDMCoordinate actualResult = cc.ConvertGridsquareToDDM(gridsquare);
@@ -121,7 +121,7 @@ namespace CoordinateConversionUtility.Tests
         {
             var mvcm = new MontevideoCoordinateModel();
             var cc = new CoordinateConverter();
-            string gridsquare = MontevideoCoordinateModel.strGridsquare();
+            string gridsquare = MontevideoCoordinateModel.StrGridsquare();
 
             var expectedResult = new DDMCoordinate(mvcm.ShortDegreesLattitude(), mvcm.DdmMinsLat, mvcm.ShortDegreesLongitude(), mvcm.DdmMinsLon);
             DDMCoordinate actualResult = cc.ConvertGridsquareToDDM(gridsquare);
@@ -159,7 +159,7 @@ namespace CoordinateConversionUtility.Tests
             var ddm = new DDMCoordinate(degreesLat, minutesLat, degreesLon, minutesLon);
             var cc = new CoordinateConverter();
 
-            string expectedResult = SanClementeCoordinatesModel.strGridsquare();
+            string expectedResult = SanClementeCoordinatesModel.StrGridsquare();
             string actualResult = cc.ConvertDDMtoGridsquare(ddm);
 
             Assert.AreEqual(expectedResult, actualResult);
@@ -210,7 +210,7 @@ namespace CoordinateConversionUtility.Tests
             var ddm = new DDMCoordinate(degreesLat, minutesLat, degreesLon, minutesLon);
             var cc = new CoordinateConverter();
 
-            string expectedResult = MontevideoCoordinateModel.strGridsquare();
+            string expectedResult = MontevideoCoordinateModel.StrGridsquare();
             string actualResult = cc.ConvertDDMtoGridsquare(ddm);
 
             Assert.AreEqual(expectedResult, actualResult);

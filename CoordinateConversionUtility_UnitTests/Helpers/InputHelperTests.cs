@@ -100,7 +100,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
         public void Test_IsDD_Pass()
         {
             bool expectedResult = true;
-            string expectedValidatedDD = MontevideoCoordinateModel.strDD();
+            string expectedValidatedDD = MontevideoCoordinateModel.StrDD();
 
             bool actualResult = InputHelper.ParseAsDDCoordinate(expectedValidatedDD, out string actualValidatedDD);
 
@@ -113,7 +113,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
         {
             string testDDinput = "- 34 . 91000, - 56 . 21169";
             bool expectedResult = true;
-            string expectedValidatedDD = MontevideoCoordinateModel.strDD();
+            string expectedValidatedDD = MontevideoCoordinateModel.StrDD();
 
             bool actualResult = InputHelper.ParseAsDDCoordinate(testDDinput, out string actualValidatedDD);
 
@@ -126,7 +126,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
         {
             string testDDMinput = "34 54.60S, 56 12.70W";
             bool expectedResult = true;
-            string expectedValidatedDDM = MontevideoCoordinateModel.strDDM();
+            string expectedValidatedDDM = MontevideoCoordinateModel.StrDDM();
 
             bool actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
 
@@ -167,7 +167,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
         {
             string testDirewolfInput = "S34 54.6000, W56  12.7014";
             bool expectedResult = true;
-            string expectedValidatedDDM = MontevideoCoordinateModel.strDDM();
+            string expectedValidatedDDM = MontevideoCoordinateModel.StrDDM();
 
             bool actualResult = InputHelper.ParseAsDDMCoordinate(testDirewolfInput, true, out string actualValidatedDDM);
 
@@ -180,7 +180,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
         {
             string testDMSinput = "S  34 54 36.0, W 56 12 42.08";
             bool expectedResult = true;
-            string expectedValidatedDMS = MontevideoCoordinateModel.strDMS();
+            string expectedValidatedDMS = MontevideoCoordinateModel.StrDMS();
 
             bool actualResult = InputHelper.ParseAsDMSCoordinate(testDMSinput, out string actualValidatedDMS);
 

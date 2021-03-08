@@ -9,7 +9,7 @@ namespace CoordConverterUI
             @"Coordinate Converter Utility by Jon Rumsey",
 
             @"*** WARNING! DO NOT USE FOR NAVIGATIONAL PURPOSES! ***
-    Accuracy is limited. Gridsquares to within 1.0 Degree Lat or Lon. Coords are within 5 mins and 0.0001 degree, Lat or Lon.",
+    Accuracy is limited. Gridsquares to within 1.0 Degree Lat or Lon. Coords are within ~5 mins or 0.0012 degree, Lat or Lon.",
 
             @"Coordinate Converter Utility has a few conversion capabilties:
     1. Accepts a valid 6-character gridsquare and returns the approximate center point, in DDM.

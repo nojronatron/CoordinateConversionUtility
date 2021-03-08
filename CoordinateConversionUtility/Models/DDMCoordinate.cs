@@ -55,8 +55,6 @@ namespace CoordinateConversionUtility.Models
 
         public DDMCoordinate()
         {
-            LatIsValid = false;
-            LonIsValid = false;
             LatMinsValid = false;
             LonMinsValid = false;
         }
@@ -70,8 +68,8 @@ namespace CoordinateConversionUtility.Models
 
         public DDMCoordinate(decimal latDegrees, decimal latMinutes, decimal lonDegrees, decimal lonMinutes)
         {
-            DegreesLattitude = latDegrees;
-            DegreesLongitude = lonDegrees;
+            DegreesLattitude = Math.Truncate(latDegrees);
+            DegreesLongitude = Math.Truncate(lonDegrees);
             MinutesLattitude = latMinutes;
             MinutesLongitude = lonMinutes;
         }
@@ -79,10 +77,10 @@ namespace CoordinateConversionUtility.Models
         public DDMCoordinate(decimal dmsLatDegrees, decimal dmsLatMinutes, decimal dmsLatSeconds,
             decimal dmsLonDegrees, decimal dmsLonMinutes, decimal dmsLonSeconds)
         {
-            DegreesLattitude = dmsLatDegrees;
-            DegreesLongitude = dmsLonDegrees;
-            MinutesLattitude = dmsLatMinutes + (dmsLatSeconds / 60);
-            MinutesLongitude = dmsLonMinutes + (dmsLonSeconds / 60);
+            DegreesLattitude = Math.Truncate(dmsLatDegrees);
+            DegreesLongitude = Math.Truncate(dmsLonDegrees);
+            MinutesLattitude = Math.Truncate(dmsLatMinutes) + (dmsLatSeconds / 60);
+            MinutesLongitude = Math.Truncate(dmsLonMinutes) + (dmsLonSeconds / 60);
         }
 
         public DDMCoordinate(string ddmLatAndLon)

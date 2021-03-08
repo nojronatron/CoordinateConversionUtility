@@ -55,16 +55,6 @@ namespace CoordinateConversionUtility.Models
 
         public DMSCoordinate()
         {
-            DegreesLattitude = 0.0m;
-            DegreesLongitude = 0.0m;
-            MinutesLattitude = 0.0m;
-            MinutesLongitude = 0.0m;
-            SecondsLattitude = 0.0m;
-            SecondsLongitude = 0.0m;
-            LatIsValid = false;
-            LonIsValid = false;
-            LatMinsValid = false;
-            LonMinsValid = false;
             LatSecsValid = false;
             LonSecsValid = false;
         }
@@ -93,116 +83,103 @@ namespace CoordinateConversionUtility.Models
             decimal dmsDegreesLat, decimal dmsMinsLat, decimal dmsSecondsLat,
             decimal dmsDegreesLon, decimal dmsMinsLon, decimal dmsSecondsLon)
         {
-            DegreesLattitude = dmsDegreesLat;
-            DegreesLongitude = dmsDegreesLon;
-            MinutesLattitude = dmsMinsLat;
-            MinutesLongitude = dmsMinsLon;
+            DegreesLattitude = Math.Truncate(dmsDegreesLat);
+            MinutesLattitude = Math.Truncate(dmsMinsLat);
             SecondsLattitude = dmsSecondsLat;
+            DegreesLongitude = Math.Truncate(dmsDegreesLon);
+            MinutesLongitude = Math.Truncate(dmsMinsLon);
             SecondsLongitude = dmsSecondsLon;
         }
 
         public DMSCoordinate(string dmsLatAndLon)
         {
-            if (string.IsNullOrEmpty(dmsLatAndLon) || string.IsNullOrWhiteSpace(dmsLatAndLon))   //  check for null
+            if (!string.IsNullOrEmpty(dmsLatAndLon) && !string.IsNullOrWhiteSpace(dmsLatAndLon))
             {
-                DegreesLattitude = 0.0m;
-                DegreesLongitude = 0.0m;
-                MinutesLattitude = 0.0m;
-                MinutesLongitude = 0.0m;
-                SecondsLattitude = 0.0m;
-                SecondsLongitude = 0.0m;
-                LatIsValid = false;
-                LonIsValid = false;
-                LatMinsValid = false;
-                LonMinsValid = false;
-                LatSecsValid = false;
-                LonSecsValid = false;
+                string[] splitLatAndLon = dmsLatAndLon.Split(CommaSymbol);
+                string dmsLat = splitLatAndLon[0];
+                string dmsLon = splitLatAndLon[1];
+
+                int degreeIDX = dmsLat.IndexOf(DegreesSymbol);
+                int minutesIDX = dmsLat.IndexOf(MinutesSymbol);
+                int secondsIDX = dmsLat.IndexOf(SecondsSymbol);
+
+                string tempParseParameter = dmsLat.Substring(1, degreeIDX).Trim(trimChars).Trim();
+
+                if (decimal.TryParse(tempParseParameter, out decimal decLatDegrees))
+                {
+                    DegreesLattitude = decLatDegrees;
+                }
+                else
+                {
+                    LatIsValid = false;
+                }
+
+                tempParseParameter = dmsLat.Substring(degreeIDX, (minutesIDX - degreeIDX)).Trim(trimChars);
+
+                if (decimal.TryParse(tempParseParameter, out decimal decLatMinutes))
+                {
+                    MinutesLattitude = decLatMinutes;
+                }
+                else
+                {
+                    LatMinsValid = false;
+                }
+
+                tempParseParameter = dmsLat.Substring(minutesIDX, (secondsIDX - minutesIDX)).Trim(trimChars);
+
+                if (decimal.TryParse(tempParseParameter, out decimal decLatSeconds))
+                {
+                    SecondsLattitude = decLatSeconds;
+                }
+                else
+                {
+                    LatSecsValid = false;
+                }
+
+                dmsLon = dmsLon.Trim();
+                degreeIDX = dmsLon.IndexOf(DegreesSymbol);
+                minutesIDX = dmsLon.IndexOf(MinutesSymbol);
+                secondsIDX = dmsLon.IndexOf(SecondsSymbol);
+
+                tempParseParameter = dmsLon.Substring(1, degreeIDX);
+                tempParseParameter = tempParseParameter.Trim(trimChars);
+
+                if (decimal.TryParse(tempParseParameter, out decimal decLonDegrees))
+                {
+                    DegreesLongitude = decLonDegrees;
+                }
+                else
+                {
+                    LonIsValid = false;
+                }
+
+                tempParseParameter = dmsLon.Substring(degreeIDX, (minutesIDX - degreeIDX)).Trim(trimChars);
+
+                if (decimal.TryParse(tempParseParameter, out decimal decLonMinutes))
+                {
+                    MinutesLongitude = decLonMinutes;
+                }
+                else
+                {
+                    LonMinsValid = false;
+                }
+
+                tempParseParameter = dmsLon.Substring(minutesIDX, (secondsIDX - minutesIDX)).Trim(trimChars);
+
+                if (decimal.TryParse(tempParseParameter, out decimal decLonSeconds))
+                {
+                    SecondsLongitude = decLonSeconds;
+                }
+                else
+                {
+                    LonSecsValid = false;
+                }
+
+                int north = ConversionHelper.ExtractPolarityNS(dmsLatAndLon);
+                int east = ConversionHelper.ExtractPolarityEW(dmsLatAndLon);
+                DegreesLattitude *= north;
+                DegreesLongitude *= east;
             }
-
-            string[] splitLatAndLon = dmsLatAndLon.Split(CommaSymbol);
-            string dmsLat = splitLatAndLon[0];
-            string dmsLon = splitLatAndLon[1];
-
-            int degreeIDX = dmsLat.IndexOf(DegreesSymbol);
-            int minutesIDX = dmsLat.IndexOf(MinutesSymbol);
-            int secondsIDX = dmsLat.IndexOf(SecondsSymbol);
-
-            string tempParseParameter = dmsLat.Substring(1, degreeIDX).Trim(trimChars).Trim();
-
-            if (decimal.TryParse(tempParseParameter, out decimal decLatDegrees))
-            {
-                DegreesLattitude = decLatDegrees;
-            }
-            else
-            {
-                LatIsValid = false;
-            }
-
-            tempParseParameter = dmsLat.Substring(degreeIDX, (minutesIDX - degreeIDX)).Trim(trimChars);
-
-            if (decimal.TryParse(tempParseParameter, out decimal decLatMinutes))
-            {
-                MinutesLattitude = decLatMinutes;
-            }
-            else
-            {
-                LatMinsValid = false;
-            }
-
-            tempParseParameter = dmsLat.Substring(minutesIDX, (secondsIDX - minutesIDX)).Trim(trimChars);
-
-            if (decimal.TryParse(tempParseParameter, out decimal decLatSeconds))
-            {
-                SecondsLattitude = decLatSeconds;
-            }
-            else
-            {
-                LatSecsValid = false;
-            }
-
-            dmsLon = dmsLon.Trim();
-            degreeIDX = dmsLon.IndexOf(DegreesSymbol);
-            minutesIDX = dmsLon.IndexOf(MinutesSymbol);
-            secondsIDX = dmsLon.IndexOf(SecondsSymbol);
-
-            tempParseParameter = dmsLon.Substring(1, degreeIDX);
-            tempParseParameter = tempParseParameter.Trim(trimChars);
-
-            if (decimal.TryParse(tempParseParameter, out decimal decLonDegrees))
-            {
-                DegreesLongitude = decLonDegrees;
-            }
-            else
-            {
-                LatIsValid = false;
-            }
-
-            tempParseParameter = dmsLon.Substring(degreeIDX, (minutesIDX - degreeIDX)).Trim(trimChars);
-
-            if (decimal.TryParse(tempParseParameter, out decimal decLonMinutes))
-            {
-                MinutesLongitude = decLonMinutes;
-            }
-            else
-            {
-                LonMinsValid = false;
-            }
-
-            tempParseParameter = dmsLon.Substring(minutesIDX, (secondsIDX - minutesIDX)).Trim(trimChars);
-
-            if (decimal.TryParse(tempParseParameter, out decimal decLonSeconds))
-            {
-                SecondsLongitude = decLonSeconds;
-            }
-            else
-            {
-                LonSecsValid = false;
-            }
-
-            int north = ConversionHelper.ExtractPolarityNS(dmsLatAndLon);
-            int east = ConversionHelper.ExtractPolarityEW(dmsLatAndLon);
-            DegreesLattitude *= north;
-            DegreesLongitude *= east;
         }
 
         internal static bool ValidateSeconds(decimal secondsLatOrLon)

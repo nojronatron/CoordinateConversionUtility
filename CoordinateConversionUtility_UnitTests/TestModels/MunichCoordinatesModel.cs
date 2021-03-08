@@ -10,8 +10,8 @@
             DegreesLon = 11.60833m;
             DdmMinsLat = 8.81m;
             DdmMinsLon = 36.49m;
-            DmsSecondsLat = 48.60m;
-            DmsSecondsLon = 29.40m;
+            DmsSecondsLat = 48.80m;
+            DmsSecondsLon = 30.0m;
         }
 
         public static string strGridSquare()

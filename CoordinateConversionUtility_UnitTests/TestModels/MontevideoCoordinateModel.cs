@@ -13,28 +13,28 @@
             DmsSecondsLat = 36.00m;
             DmsSecondsLon = 42.08m;
         }
-        public static string strGridsquare()
+        public static string StrGridsquare()
         {
             return $"GF15vc";
         }
-        public static string strDD()
+        public static string StrDD()
         {
             return $"{ -34.9100m:f5}{ DegreesSymbol }, { -56.2117m:f5}{ DegreesSymbol }";
         }
 
-        public static string strDDM()
+        public static string StrDDM()
         {
             return $"34{ DegreesSymbol }54.60{ MinutesSymbol }{ NS }, " +
                    $"56{ DegreesSymbol }12.70{ MinutesSymbol }{ EW }";
         }
 
-        public static string strDDM_ARRL()
+        public static string StrDdmArrl()
         {
             return $"34{ DegreesSymbol }53.75{ MinutesSymbol }{ NS }, " +
                    $"56{ DegreesSymbol }12.50{ MinutesSymbol }{ EW }";
         }
 
-        public static string strDMS()
+        public static string StrDMS()
         {
             return $"S 34{ DegreesSymbol }54{ MinutesSymbol }36.0{ SecondsSymbol}, " +
                    $"W 56{ DegreesSymbol }12{ MinutesSymbol }42.1{ SecondsSymbol }";
