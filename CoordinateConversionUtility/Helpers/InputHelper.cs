@@ -51,7 +51,7 @@ namespace CoordinateConversionUtility.Helpers
             }
 
             string result = string.Empty;
-            var cc = new CoordinateConverter();
+            var cc = new GridDdmExpert();
 
             switch (outputCommand)
             {
@@ -89,7 +89,7 @@ namespace CoordinateConversionUtility.Helpers
 
                         if (inputCommand == "-grid")
                         {
-                            cc = new CoordinateConverter();
+                            cc = new GridDdmExpert();
                             DDMCoordinate ddm = cc.ConvertGridsquareToDDM(inputArg);
                             dms = new DMSCoordinate(ddm.GetShortDegreesLat(), ddm.GetMinsLat(), ddm.GetShortDegreesLon(), ddm.GetMinsLon());
                         }
@@ -117,7 +117,7 @@ namespace CoordinateConversionUtility.Helpers
 
                         if (inputCommand == "-grid")
                         {
-                            cc = new CoordinateConverter();
+                            cc = new GridDdmExpert();
                             ddm = cc.ConvertGridsquareToDDM(inputArg);
                         }
                         if (inputCommand == "-dms")
@@ -151,7 +151,7 @@ namespace CoordinateConversionUtility.Helpers
                         }
                         if (inputCommand == "-grid")
                         {
-                            cc = new CoordinateConverter();
+                            cc = new GridDdmExpert();
                             DDMCoordinate ddm = cc.ConvertGridsquareToDDM(inputArg);
                             dd = new DDCoordinate(ddm.GetShortDegreesLat(), ddm.GetMinsLat(), ddm.GetShortDegreesLon(), ddm.GetMinsLon());
                         }

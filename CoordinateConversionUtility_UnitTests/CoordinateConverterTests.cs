@@ -13,9 +13,9 @@ namespace CoordinateConversionUtility.Tests
         [TestMethod()]
         public void CoordinateConverterCTORTest()
         {
-            var cc = new CoordinateConverter();
+            var cc = new GridDdmExpert();
 
-            string expectedType = "CoordinateConversionUtility.CoordinateConverter";
+            string expectedType = "CoordinateConversionUtility.GridDdmExpert";
             string actualType = cc.GetType().FullName;
 
             Assert.AreEqual(expectedType, actualType);
@@ -25,7 +25,7 @@ namespace CoordinateConversionUtility.Tests
         public void ConvertGridsquareToDDMTestNW()
         {
             var sccm = new SanClementeCoordinatesModel();
-            var cc = new CoordinateConverter();
+            var cc = new GridDdmExpert();
             string gridsquare = SanClementeCoordinatesModel.StrGridsquare();
 
             var expectedResult = new DDMCoordinate(sccm.DegreesLat, sccm.DdmMinsLat, sccm.DegreesLon, sccm.DdmMinsLon);
@@ -57,7 +57,7 @@ namespace CoordinateConversionUtility.Tests
         public void ConvertGridsquareToDDMTestNE()
         {
             var mcm = new MunichCoordinatesModel();
-            var cc = new CoordinateConverter();
+            var cc = new GridDdmExpert();
             string gridsquare = MunichCoordinatesModel.strGridSquare();
 
             var expectedResult = new DDMCoordinate(mcm.DegreesLat, mcm.DdmMinsLat, mcm.DegreesLon, mcm.DdmMinsLon);
@@ -88,7 +88,7 @@ namespace CoordinateConversionUtility.Tests
         [TestMethod()]
         public void ConvertGridsquareToDDMTestSW()
         {
-            var cc = new CoordinateConverter();
+            var cc = new GridDdmExpert();
             string gridsquare = WellingtonCoordinateModel.strGridsquare();
 
             var expectedResult = new DDMCoordinate(WellingtonCoordinateModel.strAttainableDDM());
@@ -120,7 +120,7 @@ namespace CoordinateConversionUtility.Tests
         public void ConvertGridsquareToDDMTestSE()
         {
             var mvcm = new MontevideoCoordinateModel();
-            var cc = new CoordinateConverter();
+            var cc = new GridDdmExpert();
             string gridsquare = MontevideoCoordinateModel.StrGridsquare();
 
             var expectedResult = new DDMCoordinate(mvcm.ShortDegreesLattitude(), mvcm.DdmMinsLat, mvcm.ShortDegreesLongitude(), mvcm.DdmMinsLon);
@@ -157,7 +157,7 @@ namespace CoordinateConversionUtility.Tests
             decimal minutesLat = sccm.DdmMinsLat;
             decimal minutesLon = sccm.DdmMinsLon;
             var ddm = new DDMCoordinate(degreesLat, minutesLat, degreesLon, minutesLon);
-            var cc = new CoordinateConverter();
+            var cc = new GridDdmExpert();
 
             string expectedResult = SanClementeCoordinatesModel.StrGridsquare();
             string actualResult = cc.ConvertDDMtoGridsquare(ddm);
@@ -174,7 +174,7 @@ namespace CoordinateConversionUtility.Tests
             decimal minutesLat = mcm.DdmMinsLat;
             decimal minutesLon = mcm.DdmMinsLon;
             var ddm = new DDMCoordinate(degreesLat, minutesLat, degreesLon, minutesLon);
-            var cc = new CoordinateConverter();
+            var cc = new GridDdmExpert();
 
             string expectedResult = MunichCoordinatesModel.strGridSquare();
             string actualResult = cc.ConvertDDMtoGridsquare(ddm);
@@ -191,7 +191,7 @@ namespace CoordinateConversionUtility.Tests
             decimal minutesLat = wcm.DdmMinsLat;
             decimal minutesLon = wcm.DdmMinsLon;
             var ddm = new DDMCoordinate(degreesLat, minutesLat, degreesLon, minutesLon);
-            var cc = new CoordinateConverter();
+            var cc = new GridDdmExpert();
 
             string expectedResult = WellingtonCoordinateModel.strGridsquare();
             string actualResult = cc.ConvertDDMtoGridsquare(ddm);
@@ -208,7 +208,7 @@ namespace CoordinateConversionUtility.Tests
             decimal minutesLat = mcm.DdmMinsLat;
             decimal minutesLon = mcm.DdmMinsLon;
             var ddm = new DDMCoordinate(degreesLat, minutesLat, degreesLon, minutesLon);
-            var cc = new CoordinateConverter();
+            var cc = new GridDdmExpert();
 
             string expectedResult = MontevideoCoordinateModel.StrGridsquare();
             string actualResult = cc.ConvertDDMtoGridsquare(ddm);

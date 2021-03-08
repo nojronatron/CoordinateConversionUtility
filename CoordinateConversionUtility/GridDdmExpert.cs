@@ -8,12 +8,12 @@ namespace CoordinateConversionUtility
     /// Provides a means to convert back and forth between a gridsquare and DDM style coordinate.
     /// Calling App or Service must decide how to present results to user.
     /// </summary>
-    public class CoordinateConverter
+    public class GridDdmExpert
     {
         private GridSquareHelper GridsquareHelper { get; set; }
         private LookupTablesHelper LookuptablesHelper { get; set; }
 
-        public CoordinateConverter()
+        public GridDdmExpert()
         {
             GridsquareHelper = new GridSquareHelper();
             LookuptablesHelper = new LookupTablesHelper();

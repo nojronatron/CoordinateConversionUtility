@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CoordinateConversionUtility.Helpers;
+using System;
 using System.Collections.Generic;
 
 namespace CoordinateConversionUtility.Models

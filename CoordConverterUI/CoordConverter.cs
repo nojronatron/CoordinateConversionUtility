@@ -3,7 +3,7 @@ using CoordinateConversionUtility.Helpers;
 using System;
 using System.Collections.Generic;
 
-namespace CoordConverterUI
+namespace CoordinateConverterCmd
 {
     internal class CoordConverter
     {
@@ -27,7 +27,7 @@ namespace CoordConverterUI
                 {
                     if (InputHelper.IsGridsquare(currentArg, out string argGridsquare))
                     {
-                        var ccu = new CoordinateConverter();
+                        var ccu = new GridDdmExpert();
                         Console.WriteLine(ccu.ConvertGridsquareToDDM(argGridsquare).ToString());
                     }
                     else
@@ -96,7 +96,7 @@ namespace CoordConverterUI
                                     }
                                     else
                                     {
-                                        var cc = new CoordinateConverter();
+                                        var cc = new GridDdmExpert();
                                         CoordinateConversionUtility.Models.DDMCoordinate ddm = cc.ConvertGridsquareToDDM(validGrid);
                                         result = ddm.ToString();
                                     }
