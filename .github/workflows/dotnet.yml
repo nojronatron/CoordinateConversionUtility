@@ -16,10 +16,8 @@ jobs:
       name: Checkout Code
       
     - name: Setup MSBuild Path
-      uses: actions/setup-msbuild@v1
+      uses: microsoft/setup-msbuild@v1.0.0
            
-    - name: Build
-      run: msbuild .\CoordainteConversionUtility.sln -t:Rebuild -p:Configuration=Debug
-      
     - name: Test
-      run: mstest /testcontainer:.\\CoordinateConversionUtility_UnitTests\bin\Debug\CoordinateConversionUtility_UnitTests.dll
+      run: dotnet test $env:Test_Project_Path
+      
