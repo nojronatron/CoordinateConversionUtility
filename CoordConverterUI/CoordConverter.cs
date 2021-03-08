@@ -41,7 +41,7 @@ namespace CoordinateConverterCmd
                 {
                     if (InputHelper.ParseAsDDMCoordinate(currentArg, false, out string validDDM))
                     {
-                        Console.WriteLine($"Resulting DDM: { validDDM }.");
+                        Console.WriteLine(validDDM);
                     }
                 }
                 else
@@ -166,14 +166,12 @@ namespace CoordinateConverterCmd
                 Console.WriteLine("Invalid input.");
                 PrintUsageInstructions();
             }
-
-            Console.WriteLine("Press <Enter> to exit. . .");
-            Console.ReadLine();
         }
 
         private static void PrintUsageInstructions()
         {
             var ug = new UserGuide();
+
             foreach (string section in ug.UsageInstructions)
             {
                 Console.WriteLine(section);
