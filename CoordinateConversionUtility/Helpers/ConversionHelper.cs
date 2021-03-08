@@ -1,10 +1,9 @@
-﻿using CoordinateConversionUtility.Helpers;
-using CoordinateConversionUtility.Models;
+﻿using CoordinateConversionUtility.Models;
 using System;
 using System.Globalization;
 using System.Text;
 
-namespace CoordinateConversionUtility
+namespace CoordinateConversionUtility.Helpers
 {
     /// <summary>
     /// Static Helper class.

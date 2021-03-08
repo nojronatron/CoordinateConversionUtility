@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CoordConverterUI
+namespace CoordinateConverterCmd
 {
     internal class UserGuide
     {
