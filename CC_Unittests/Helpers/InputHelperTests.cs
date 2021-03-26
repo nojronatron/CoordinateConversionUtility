@@ -1,7 +1,8 @@
-﻿using CoordinateConversionUtility_UnitTests.TestModels;
+﻿using CC_Unittests.TestModels;
+using CoordinateConversionLibrary.Helpers;
 using NUnit.Framework;
 
-namespace CoordinateConversionUtility.Helpers.Tests
+namespace CC_Unittests.Helpers
 {
     [TestFixture()]
     public class InputHelperTests

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CoordinateConversionUtility.Models.Tests
+namespace CC_Unittests.Models
 {
     public class UnitTestsBase
     {

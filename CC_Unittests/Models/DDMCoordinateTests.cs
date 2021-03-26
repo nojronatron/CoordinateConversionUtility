@@ -1,9 +1,10 @@
-﻿using CoordinateConversionUtility_UnitTests.TestModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using CC_Unittests.TestModels;
+using CoordinateConversionLibrary.Models;
 using NUnit.Framework;
 
-namespace CoordinateConversionUtility.Models.Tests
+namespace CC_Unittests.Models
 {
     [TestFixture()]
     public class DDMCoordinateTests : UnitTestsBase
@@ -51,7 +52,7 @@ namespace CoordinateConversionUtility.Models.Tests
             var ddmCoord = new DDMCoordinate();
 
             bool expectedResult = true;
-            bool actualResult = ddmCoord.GetType().FullName == "CoordinateConversionUtility.Models.DDMCoordinate";
+            bool actualResult = ddmCoord.GetType().FullName == "CoordinateConversionLibrary.Models.DDMCoordinate";
 
             Assert.IsTrue(expectedResult == actualResult);
         }
@@ -173,7 +174,7 @@ namespace CoordinateConversionUtility.Models.Tests
                 wdccm.ShortDegreesLattitude(), wdccm.DdmMinsLat,
                 wdccm.ShortDegreesLongitude(), wdccm.DdmMinsLon
                 );
-            string expectedResult = WashingtondcCoordinateModel.strDDM();
+            string expectedResult = WashingtondcCoordinateModel.StrDDM();
             int expectedLength = expectedResult.Length;
 
             string actualResult = ddm.ToString();
@@ -210,7 +211,7 @@ namespace CoordinateConversionUtility.Models.Tests
                 mcm.ShortDegreesLattitude(), mcm.DdmMinsLat,
                 mcm.ShortDegreesLongitude(), mcm.DdmMinsLon
                 );
-            string expectedResult = MunichCoordinatesModel.strDDM();
+            string expectedResult = MunichCoordinatesModel.StrDDM();
             int expectedLength = expectedResult.Length;
 
             string actualResult = ddm.ToString();
@@ -247,7 +248,7 @@ namespace CoordinateConversionUtility.Models.Tests
                 wcm.ShortDegreesLattitude(), wcm.DdmMinsLat,
                 wcm.ShortDegreesLongitude(), wcm.DdmMinsLon
                 );
-            string expectedResult = WellingtonCoordinateModel.strDDM();
+            string expectedResult = WellingtonCoordinateModel.StrDDM();
             int expectedLength = expectedResult.Length;
 
             string actualResult = ddm.ToString();
@@ -360,7 +361,7 @@ namespace CoordinateConversionUtility.Models.Tests
             var ddm = new DDMCoordinate(
                 mcm.DegreesLat, mcm.DegreesLon
                 );
-            string expectedResult = MunichCoordinatesModel.strDDM();
+            string expectedResult = MunichCoordinatesModel.StrDDM();
             int expectedLength = expectedResult.Length;
 
             string actualResult = ddm.ToString();
@@ -432,7 +433,7 @@ namespace CoordinateConversionUtility.Models.Tests
             var ddm = new DDMCoordinate(
                 wcm.DegreesLat, wcm.DegreesLon
                 );
-            string expectedResult = WellingtonCoordinateModel.strDDM();
+            string expectedResult = WellingtonCoordinateModel.StrDDM();
             int expectedLength = expectedResult.Length;
 
             string actualResult = ddm.ToString();
@@ -505,7 +506,7 @@ namespace CoordinateConversionUtility.Models.Tests
                 wdccm.ShortDegreesLattitude(), wdccm.DdmMinsLat, wdccm.DmsSecondsLat,
                 wdccm.ShortDegreesLongitude(), wdccm.DdmMinsLon, wdccm.DmsSecondsLon
                 );
-            string expectedResult = WashingtondcCoordinateModel.strDDM();
+            string expectedResult = WashingtondcCoordinateModel.StrDDM();
             int expectedLength = expectedResult.Length;
 
             string actualResult = ddm.ToString();
@@ -542,7 +543,7 @@ namespace CoordinateConversionUtility.Models.Tests
                 mcm.ShortDegreesLattitude(), mcm.DdmMinsLat, mcm.DmsSecondsLat,
                 mcm.ShortDegreesLongitude(), mcm.DdmMinsLon, mcm.DmsSecondsLon
                 );
-            string expectedResult = MunichCoordinatesModel.strDDM();
+            string expectedResult = MunichCoordinatesModel.StrDDM();
             int expectedLength = expectedResult.Length;
 
             string actualResult = ddm.ToString();
@@ -579,7 +580,7 @@ namespace CoordinateConversionUtility.Models.Tests
                 wcm.ShortDegreesLattitude(), wcm.DdmMinsLat, wcm.DmsSecondsLat,
                 wcm.ShortDegreesLongitude(), wcm.DdmMinsLon, wcm.DmsSecondsLon
                 );
-            string expectedResult = WellingtonCoordinateModel.strDDM();
+            string expectedResult = WellingtonCoordinateModel.StrDDM();
             int expectedLength = expectedResult.Length;
 
             string actualResult = ddm.ToString();

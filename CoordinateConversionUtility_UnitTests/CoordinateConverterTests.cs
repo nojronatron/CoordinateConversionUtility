@@ -1,7 +1,4 @@
-﻿using CoordinateConversionUtility.Models;
-using CoordinateConversionUtility.Models.Tests;
-using CoordinateConversionUtility_UnitTests.TestModels;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 

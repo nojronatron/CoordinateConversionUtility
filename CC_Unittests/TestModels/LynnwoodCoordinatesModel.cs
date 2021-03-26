@@ -1,4 +1,4 @@
-﻿namespace CoordinateConversionUtility_UnitTests.TestModels
+﻿namespace CC_Unittests.TestModels
 {
     public class LynnwoodCoordinatesModel : RootCoordinateModel
     {

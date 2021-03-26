@@ -1,4 +1,4 @@
-﻿namespace CoordinateConversionUtility_UnitTests.TestModels
+﻿namespace CC_Unittests.TestModels
 {
     public class WellingtonCoordinateModel : RootCoordinateModel
     {
@@ -13,11 +13,11 @@
             DmsSecondsLat = 59.90m;
             DmsSecondsLon = 42.00m;
         }
-        public static string strGridsquare()
+        public static string StrGridsquare()
         {
             return $"RE78ir";
         }
-        public static string strDD()
+        public static string StrDD()
         {
             return $"{ -41.28330m:f5}{ DegreesSymbol }, { 174.74500m:f5}{ DegreesSymbol }";
         }
@@ -26,7 +26,7 @@
         /// Test program output against this calculated DDM.
         /// </summary>
         /// <returns></returns>
-        public static string strDDM()
+        public static string StrDDM()
         {
             //  Confirmed correct: 41°17.50'S, 174°45.00'E
             return $"41{ DegreesSymbol }16.99{ MinutesSymbol }S, " +
@@ -38,19 +38,19 @@
         /// DDM Coordinates at the middle of the current gridsquare.
         /// </summary>
         /// <returns></returns>
-        public static string strArrlDDM()
+        public static string StrArrlDDM()
         {
             return $"41{ DegreesSymbol }17.0{ MinutesSymbol }S, " +
                    $"174{ DegreesSymbol }44.7{ MinutesSymbol }E";
         }
 
-        public static string strAttainableDDM()
+        public static string StrAttainableDDM()
         {
             return $"41{ DegreesSymbol }17.50{ MinutesSymbol }S, " +
                    $"174{ DegreesSymbol }45.00{ MinutesSymbol }E";
         }
 
-        public static string strDMS()
+        public static string StrDMS()
         {
             return $"S 41{ DegreesSymbol }16{ MinutesSymbol }59.9{ SecondsSymbol}, " +
                    $"W 174{ DegreesSymbol }44{ MinutesSymbol }42.0{ SecondsSymbol }";

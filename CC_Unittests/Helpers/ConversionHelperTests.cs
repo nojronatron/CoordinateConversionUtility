@@ -1,8 +1,9 @@
-﻿using CoordinateConversionUtility.Models.Tests;
-using CoordinateConversionUtility_UnitTests.TestModels;
+﻿using CC_Unittests.Models;
+using CC_Unittests.TestModels;
+using CoordinateConversionLibrary.Helpers;
 using NUnit.Framework;
 
-namespace CoordinateConversionUtility.Helpers.Tests
+namespace CC_Unittests.Helpers
 {
     [TestFixture()]
     public class ConversionHelperTests : UnitTestsBase
@@ -31,7 +32,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             int expectedZeroResult = 0;
 
             short actualPositiveResult = ConversionHelper.ExtractPolarityNS(SanClementeCoordinatesModel.StrDDM());
-            short actualNegativeResult = ConversionHelper.ExtractPolarityNS(WellingtonCoordinateModel.strDDM());
+            short actualNegativeResult = ConversionHelper.ExtractPolarityNS(WellingtonCoordinateModel.StrDDM());
             short actualZeroResult = ConversionHelper.ExtractPolarityNS(string.Empty);
 
             Assert.AreEqual(expectedPositiveResult, actualPositiveResult);
@@ -46,7 +47,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
             int expectedNegativeResult = -1;
             int expectedZeroResult = 0;
 
-            short actualPositiveResult = ConversionHelper.ExtractPolarityEW(MunichCoordinatesModel.strDDM());
+            short actualPositiveResult = ConversionHelper.ExtractPolarityEW(MunichCoordinatesModel.StrDDM());
             short actualNegativeResult = ConversionHelper.ExtractPolarityEW(SanClementeCoordinatesModel.StrDDM());
             short actualZeroResult = ConversionHelper.ExtractPolarityEW(string.Empty);
 

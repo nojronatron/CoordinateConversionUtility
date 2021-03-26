@@ -1,4 +1,4 @@
-﻿namespace CoordinateConversionUtility_UnitTests.TestModels
+﻿namespace CC_Unittests.TestModels
 {
     internal class WashingtondcCoordinateModel : RootCoordinateModel
     {
@@ -11,27 +11,27 @@
             DmsSecondsLat = 12.0m;
             DmsSecondsLon = 54.0m;
         }
-        public static string strGridsquare()
+        public static string StrGridsquare()
         {
             return $"FM18lw";
         }
-        public static string strDD()
+        public static string StrDD()
         {
             return $"{ 38.9200m:f5}{ DegreesSymbol }, { -77.0650m:f5}{ DegreesSymbol }";
         }
-        public static string strArrlDDM()
+        public static string StrArrlDDM()
         {
             //  center of gridsquare DDM
             return $"38{ DegreesSymbol }57.50{ MinutesSymbol }N, " +
                    $"77{ DegreesSymbol }05.00{ MinutesSymbol }W";
         }
-        public static string strDDM()
+        public static string StrDDM()
         {
             //  DD, DDM, DMS convertable DDM
             return $"38{ DegreesSymbol }55.20{ MinutesSymbol }N, " +
                    $"77{ DegreesSymbol }03.90{ MinutesSymbol }W";
         }
-        public static string strDMS()
+        public static string StrDMS()
         {
             return $"N 38{ DegreesSymbol }55{ MinutesSymbol }12.0{ SecondsSymbol}, " +
                    $"W 77{ DegreesSymbol }03{ MinutesSymbol }54.0{ SecondsSymbol }";

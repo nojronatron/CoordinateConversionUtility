@@ -8,7 +8,7 @@ namespace CoordinateConversionLibrary.Helpers
     /// </summary>
     public class LookupTablesHelper
     {
-        private readonly List<string> alphabet = new List<string>(24)
+        private readonly List<string> alphabet = new(24)
         {
             "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
             "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"

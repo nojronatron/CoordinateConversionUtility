@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+
+[assembly: InternalsVisibleTo("CC_Unittests")]
 
 namespace CoordinateConversionLibrary.Helpers
 {

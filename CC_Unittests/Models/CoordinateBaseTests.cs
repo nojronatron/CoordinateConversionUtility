@@ -1,6 +1,7 @@
-﻿using NUnit.Framework;
+﻿using CoordinateConversionLibrary.Models;
+using NUnit.Framework;
 
-namespace CoordinateConversionUtility.Models.Tests
+namespace CC_Unittests.Models
 {
     [TestFixture()]
     public class CoordinateBaseTests

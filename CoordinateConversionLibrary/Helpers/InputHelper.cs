@@ -1,11 +1,8 @@
 ﻿using CoordinateConversionLibrary.Models;
 using System;
 using System.Globalization;
-using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
-
-[assembly: InternalsVisibleTo("CoordinateConversionUtility_UnitTests")]
 
 namespace CoordinateConversionLibrary.Helpers
 {
@@ -23,7 +20,7 @@ namespace CoordinateConversionLibrary.Helpers
         private static string DdmPattern => @"([0-9]{1,3}\s*?[0-9]{1,2}\.[0-9]{1,2}[nsew])";
         private static string DmsPattern => @"([nsew]\s*?[0-9]{1,3})\s*?([0-9]{1,2})\s*?([0-9]{1,2}\.[0-9]{1,2})";
 
-        private static TimeSpan Timespan => new TimeSpan(0, 0, 1);
+        private static TimeSpan Timespan => new(0, 0, 1);
 
         private static string LimitInputSpacing(string latOrLonPatternMatch)
         {

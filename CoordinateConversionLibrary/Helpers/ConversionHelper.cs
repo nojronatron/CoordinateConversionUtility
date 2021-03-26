@@ -1,7 +1,10 @@
 ﻿using CoordinateConversionLibrary.Models;
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text;
+
+[assembly: InternalsVisibleTo("CoordinateConversionUtility_UnitTests")]
 
 namespace CoordinateConversionLibrary.Helpers
 {
@@ -114,20 +117,20 @@ namespace CoordinateConversionLibrary.Helpers
 
             if (strDdmLatOrLon.IndexOf('N') > -1)
             {
-                nsew.Append("N");
+                nsew.Append('N');
             }
             else if (strDdmLatOrLon.IndexOf('S') > -1)
             {
-                nsew.Append("S");
+                nsew.Append('S');
             }
 
             if (strDdmLatOrLon.IndexOf('E') > -1)
             {
-                nsew.Append("E");
+                nsew.Append('E');
             }
             else if (strDdmLatOrLon.IndexOf('W') > -1)
             {
-                nsew.Append("W");
+                nsew.Append('W');
             }
 
             return nsew.ToString();

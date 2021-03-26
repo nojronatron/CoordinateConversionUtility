@@ -1,6 +1,7 @@
-﻿using NUnit.Framework;
+﻿using CoordinateConversionLibrary.Helpers;
+using NUnit.Framework;
 
-namespace CoordinateConversionUtility.Helpers.Tests
+namespace CC_Unittests.Helpers
 {
     [TestFixture()]
     public class LookupTablesHelperTests
@@ -8,7 +9,7 @@ namespace CoordinateConversionUtility.Helpers.Tests
         [Test()]
         public void Test_LookupTablesHelper()
         {
-            string expectedResult = "CoordinateConversionUtility.Helpers.LookupTablesHelper";
+            string expectedResult = "CoordinateConversionLibrary.Helpers.LookupTablesHelper";
 
             var actualResult = new LookupTablesHelper();
 

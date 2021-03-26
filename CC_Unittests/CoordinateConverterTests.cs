@@ -1,11 +1,12 @@
-﻿using CoordinateConversionUtility.Models;
-using CoordinateConversionUtility.Models.Tests;
-using CoordinateConversionUtility_UnitTests.TestModels;
+﻿using CC_Unittests.Models;
+using CC_Unittests.TestModels;
+using CoordinateConversionLibrary;
+using CoordinateConversionLibrary.Models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace CoordinateConversionUtility.Tests
+namespace CC_Unittests
 {
     [TestFixture()]
     public class CoordinateConverterTests : UnitTestsBase
@@ -15,7 +16,7 @@ namespace CoordinateConversionUtility.Tests
         {
             var cc = new GridDdmExpert();
 
-            string expectedType = "CoordinateConversionUtility.GridDdmExpert";
+            string expectedType = "CoordinateConversionLibrary.GridDdmExpert";
             string actualType = cc.GetType().FullName;
 
             Assert.AreEqual(expectedType, actualType);
@@ -58,7 +59,7 @@ namespace CoordinateConversionUtility.Tests
         {
             var mcm = new MunichCoordinatesModel();
             var cc = new GridDdmExpert();
-            string gridsquare = MunichCoordinatesModel.strGridSquare();
+            string gridsquare = MunichCoordinatesModel.StrGridSquare();
 
             var expectedResult = new DDMCoordinate(mcm.DegreesLat, mcm.DdmMinsLat, mcm.DegreesLon, mcm.DdmMinsLon);
             DDMCoordinate actualResult = cc.ConvertGridsquareToDDM(gridsquare);
@@ -89,9 +90,9 @@ namespace CoordinateConversionUtility.Tests
         public void ConvertGridsquareToDDMTestSW()
         {
             var cc = new GridDdmExpert();
-            string gridsquare = WellingtonCoordinateModel.strGridsquare();
+            string gridsquare = WellingtonCoordinateModel.StrGridsquare();
 
-            var expectedResult = new DDMCoordinate(WellingtonCoordinateModel.strAttainableDDM());
+            var expectedResult = new DDMCoordinate(WellingtonCoordinateModel.StrAttainableDDM());
             DDMCoordinate actualResult = cc.ConvertGridsquareToDDM(gridsquare);
 
             decimal latDiff = Math.Abs(expectedResult.GetShortDegreesLat() - actualResult.GetShortDegreesLat());
@@ -176,7 +177,7 @@ namespace CoordinateConversionUtility.Tests
             var ddm = new DDMCoordinate(degreesLat, minutesLat, degreesLon, minutesLon);
             var cc = new GridDdmExpert();
 
-            string expectedResult = MunichCoordinatesModel.strGridSquare();
+            string expectedResult = MunichCoordinatesModel.StrGridSquare();
             string actualResult = cc.ConvertDDMtoGridsquare(ddm);
 
             Assert.AreEqual(expectedResult, actualResult);
@@ -193,7 +194,7 @@ namespace CoordinateConversionUtility.Tests
             var ddm = new DDMCoordinate(degreesLat, minutesLat, degreesLon, minutesLon);
             var cc = new GridDdmExpert();
 
-            string expectedResult = WellingtonCoordinateModel.strGridsquare();
+            string expectedResult = WellingtonCoordinateModel.StrGridsquare();
             string actualResult = cc.ConvertDDMtoGridsquare(ddm);
 
             Assert.AreEqual(expectedResult, actualResult);

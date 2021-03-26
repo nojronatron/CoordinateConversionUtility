@@ -1,4 +1,4 @@
-﻿namespace CoordinateConversionUtility_UnitTests.TestModels
+﻿namespace CC_Unittests.TestModels
 {
     public class MunichCoordinatesModel : RootCoordinateModel
     {
@@ -14,11 +14,11 @@
             DmsSecondsLon = 30.0m;
         }
 
-        public static string strGridSquare()
+        public static string StrGridSquare()
         {
             return $"JN58td";
         }
-        public static string strDD()
+        public static string StrDD()
         {
             return $"{ 48.14690:f5}{ DegreesSymbol }, { 11.60833:f5}{ DegreesSymbol }";
         }
@@ -26,7 +26,7 @@
         /// Calculated DDM test program output against.
         /// </summary>
         /// <returns></returns>
-        public static string strDDM()
+        public static string StrDDM()
         {
             return $"48{ DegreesSymbol }08.81{ MinutesSymbol }{ NS }, " +
                    $"11{ DegreesSymbol }36.49{ MinutesSymbol }{ EW }";
@@ -36,13 +36,13 @@
         /// Coordinates that point to the middle of the gridsquare
         /// </summary>
         /// <returns></returns>
-        public static string strArrlDDM()
+        public static string StrArrlDDM()
         {
             return $"48{ DegreesSymbol }07.75{ MinutesSymbol }{ NS }, " +
                    $"11{ DegreesSymbol }37.50{ MinutesSymbol }{ EW }";
         }
 
-        public static string strDMS()
+        public static string StrDMS()
         {
             return $"N 48{ DegreesSymbol }08{ MinutesSymbol }48.60{ SecondsSymbol}, " +
                    $"E 11{ DegreesSymbol }36{ MinutesSymbol }29.40{ SecondsSymbol }";

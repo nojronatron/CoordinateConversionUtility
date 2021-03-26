@@ -1,9 +1,10 @@
-﻿using CoordinateConversionUtility_UnitTests.TestModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using CC_Unittests.TestModels;
+using CoordinateConversionLibrary.Models;
 using NUnit.Framework;
 
-namespace CoordinateConversionUtility.Models.Tests
+namespace CC_Unittests.Models
 {
     [TestFixture()]
     public class DMSCoordinateTests : UnitTestsBase
