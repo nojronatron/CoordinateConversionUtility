@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CoordinateConverterCmd5
+namespace CoordinateConverterCmd
 {
     internal class UserGuide
     {

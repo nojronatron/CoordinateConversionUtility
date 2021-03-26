@@ -466,5 +466,66 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
+        [Test()]
+        public void ValidEvenMultipleLat()
+        {
+            decimal nearestEvenMult = 2.5m;
+            bool expectedResult = true;
+            
+            bool actualResult = ConversionHelper.ValidEvenMultipleLat(nearestEvenMult);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+        [Test()]
+        public void ValidEvenMultipleLon()
+        {
+            decimal nearestEvenMult = 5.0m;
+            bool expectedResult = true;
+
+            bool actualResult = ConversionHelper.ValidEvenMultipleLon(nearestEvenMult);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+        [Test()]
+        public void ValidRemainderLat()
+        {
+            decimal remainderLat = 4.6m;
+            bool expectedResult = true;
+
+            bool actualResult = ConversionHelper.ValidRemainderLat(remainderLat);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+        [Test()]
+        public void ValidRemainderLon()
+        {
+            decimal remainderLon = 16.5m;
+            bool expectedResult = true;
+
+            bool actualResult = ConversionHelper.ValidRemainderLon(remainderLon);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+        [Test()]
+        public void ValidRemainderLat_Negative()
+        {
+            decimal remainderLat = -24.6m;
+            bool expectedResult = false;
+
+            bool actualResult = ConversionHelper.ValidRemainderLat(remainderLat);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+        [Test()]
+        public void ValidRemainderLon_Negative()
+        {
+            decimal remainderLon = -36.5m;
+            bool expectedResult = false;
+
+            bool actualResult = ConversionHelper.ValidRemainderLon(remainderLon);
+
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+
     }
 }

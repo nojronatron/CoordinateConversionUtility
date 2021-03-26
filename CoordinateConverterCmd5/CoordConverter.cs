@@ -1,9 +1,10 @@
-﻿using CoordinateConversionUtility;
-using CoordinateConversionUtility.Helpers;
+﻿using CoordinateConversionLibrary;
+using CoordinateConversionLibrary.Helpers;
+using CoordinateConversionLibrary.Models;
 using System;
 using System.Collections.Generic;
 
-namespace CoordinateConverterCmd5
+namespace CoordinateConverterCmd
 {
     internal class CoordConverter
     {
@@ -97,7 +98,7 @@ namespace CoordinateConverterCmd5
                                     else
                                     {
                                         var cc = new GridDdmExpert();
-                                        CoordinateConversionUtility.Models.DDMCoordinate ddm = cc.ConvertGridsquareToDDM(validGrid);
+                                        DDMCoordinate ddm = cc.ConvertGridsquareToDDM(validGrid);
                                         result = ddm.ToString();
                                     }
                                 }

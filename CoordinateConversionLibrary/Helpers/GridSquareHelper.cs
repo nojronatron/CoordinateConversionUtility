@@ -111,17 +111,22 @@ namespace CoordinateConversionLibrary.Helpers
         /// <returns></returns>
         internal static string GetFourthGridsquareCharacter(decimal RemainderLat, int LatDirection)
         {
+            decimal calcResult = 0.0m;
+
             if (LatDirection != 0 && ConversionHelper.ValidRemainderLat(RemainderLat))
             {
                 if (LatDirection < 0)
                 {
-                    return $"{ RemainderLat + 9 }";
+                    calcResult = RemainderLat + 9;
                 }
 
                 if (LatDirection > 0)
                 {
-                    return $"{ RemainderLat }";
+                    calcResult = RemainderLat;
                 }
+
+                int result = (int)calcResult;
+                return result.ToString();
             }
 
             return "?";
@@ -129,7 +134,7 @@ namespace CoordinateConversionLibrary.Helpers
 
         /// <summary>
         /// Takes remaining longitude minutes and returns a string character representing the third gridsquare character.
-        /// Will output any minutes longitude remaining after gridsquare calculation.
+        /// Output decimal represents remaining degrees expressed in minutes longitude.
         /// </summary>
         /// <param name="RemainderLon"></param>
         /// <param name="LonDirection"></param>

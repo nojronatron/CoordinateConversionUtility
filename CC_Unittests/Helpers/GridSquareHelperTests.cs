@@ -57,9 +57,9 @@ namespace CC_Unittests.Helpers
         [Test()]
         public void Test_FourthGridSquareCharacter()
         {
-            decimal latRemainder = 1.0m;
+            decimal latRemainder = 7.0m;
             short latDirection = 1;
-            var expectedResult = "1.0";
+            var expectedResult = "7";
 
             string actualResult = GridSquareHelper.GetFourthGridsquareCharacter(latRemainder, latDirection);
 
@@ -68,43 +68,100 @@ namespace CC_Unittests.Helpers
         [Test()]
         public void Test_FourthGridSquareCharacter_Negative()
         {
-            decimal latRemainder = -1.0m;
-            short latDirection = 1;
-            var expectedResult = "-1.0";
+            decimal latRemainder = -2.0m;
+            short latDirection = -1;
+            string expectedResult = "7";
 
             string actualResult = GridSquareHelper.GetFourthGridsquareCharacter(latRemainder, latDirection);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
-
         [Test()]
         public void Test_ThirdGridSquareCharacter()
         {
-            decimal minsRemLon;
-            string actualResult = GridSquareHelper.GetThirdGridsquareCharacter(1.0m, -1, out minsRemLon);
+            decimal remainingLonDegrees = 3m;
+            short lonDirection = 1;
 
-            Assert.Fail();
+            decimal expectedOut = 60m;
+            string expectedResult = "1";
+
+            string actualResult = GridSquareHelper.GetThirdGridsquareCharacter(remainingLonDegrees, lonDirection, out decimal actualOut);
+
+            Assert.AreEqual(expectedOut, actualOut);
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+        [Test()]
+        public void Test_ThirdGridSquareCharacter_Negative()
+        {
+            decimal remainingLonDegrees = -5m;
+            short lonDirection = -1;
+
+            decimal expectedOut = 60m;
+            string expectedResult = "7";
+
+            string actualResult = GridSquareHelper.GetThirdGridsquareCharacter(remainingLonDegrees, lonDirection, out decimal actualOut);
+
+            Assert.AreEqual(expectedOut, actualOut);
+            Assert.AreEqual(expectedResult, actualResult);
         }
         [Test()]
         public void Test_SecondGridSquareCharacter()
         {
-            decimal remainderLat;
-            var gsh = new GridSquareHelper();
-            string actualResult = gsh.GetSecondGridsquareCharacter(47.8m, 1, out remainderLat);
+            decimal latDegrees = 47.0m;
+            short latDirection = 1;
+            
+            string expectedResult = "N";
+            decimal expectedOut = 7.0m;
 
-            Assert.Fail();
+            var gsh = new GridSquareHelper();
+            string actualResult = gsh.GetSecondGridsquareCharacter(latDegrees, latDirection, out decimal actualOut);
+
+            Assert.AreEqual(expectedOut, actualOut);
+            Assert.AreEqual(expectedResult, actualResult);
+        }
+        [Test()]
+        public void Test_SecondGridSquareCharacter_Negative()
+        {
+            decimal latDegrees = -47.0m;
+            short latDirection = -1;
+            
+            string expectedResult = "E";
+            decimal expectedOut = -7.0m;
+
+            var gsh = new GridSquareHelper();
+            string actualResult = gsh.GetSecondGridsquareCharacter(latDegrees, latDirection, out decimal actualOut);
+
+            Assert.AreEqual(expectedOut, actualOut);
+            Assert.AreEqual(expectedResult, actualResult);
         }
         [Test()]
         public void TestFirstGridSquareCharacter()
         {
-            decimal remainderLon;
+            decimal lonDegrees = 122.0m;
+            short lonDirection = 1;
+            string expectedResult = "P";
+            decimal expectedOutRemainder = 2m;
+            
             var gsh = new GridSquareHelper();
-            string actualResult = gsh.GetFirstGridsquareCharacter(122.0m, -1, out remainderLon);
+            string actualResult = gsh.GetFirstGridsquareCharacter(lonDegrees, lonDirection, out decimal actualOutRemainder);
 
-            Assert.Fail();
+            Assert.AreEqual(expectedOutRemainder, actualOutRemainder);
+            Assert.AreEqual(expectedResult, actualResult);
         }
+        [Test()]
+        public void TestFirstGridSquareCharacter_Negative()
+        {
+            decimal lonDegrees = -122.0m;
+            short lonDirection = -1;
+            string expectedResult = "C";
+            decimal expectedOutRemainder = -2m;
 
+            var gsh = new GridSquareHelper();
+            string actualResult = gsh.GetFirstGridsquareCharacter(lonDegrees, lonDirection, out decimal actualOutRemainder);
 
+            Assert.AreEqual(expectedOutRemainder, actualOutRemainder);
+            Assert.AreEqual(expectedResult, actualResult);
+        }
 
         [Test()]
         public void Test_GridSquareHelper()

@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\CoordinateConversionLibrary\CoordinateConversionLibrary.csproj" />
-    <ProjectReference Include="..\CoordinateConverterCmd5\CoordinateConverterCmd5.csproj" />
+    <ProjectReference Include="..\CoordinateConverterCmd5\CoordinateConverterCmd.csproj" />
   </ItemGroup>
 
 </Project>

@@ -3,11 +3,11 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <StartupObject>CoordinateConverterCmd5.CoordConverter</StartupObject>
+    <StartupObject>CoordinateConverterCmd.CoordConverter</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CoordinateConversionUtility\CoordinateConversionUtility.csproj" />
+    <ProjectReference Include="..\CoordinateConversionLibrary\CoordinateConversionLibrary.csproj" />
   </ItemGroup>
 
 </Project>

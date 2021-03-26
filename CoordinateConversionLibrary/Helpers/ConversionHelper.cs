@@ -82,21 +82,41 @@ namespace CoordinateConversionLibrary.Helpers
             return 0;
         }
 
+        /// <summary>
+        /// Checks nearestEvenMultiple decimal is within the range -60 and +60 and returns true, otherwise returns false.
+        /// </summary>
+        /// <param name="nearestEvenMultiple"></param>
+        /// <returns></returns>
         internal static bool ValidEvenMultipleLat(decimal nearestEvenMultiple)
         {
             return (nearestEvenMultiple >= -60.0m && nearestEvenMultiple <= 60.0m);
         }
 
+        /// <summary>
+        /// Checks nearestEvenMultiple decimal is within the range -120 to +120 and returns true, otherwise returns false.
+        /// </summary>
+        /// <param name="nearestEvenMultiple"></param>
+        /// <returns></returns>
         internal static bool ValidEvenMultipleLon(decimal nearestEvenMultiple)
         {
             return (nearestEvenMultiple >= -120.0m && nearestEvenMultiple <= 120.0m);
         }
 
+        /// <summary>
+        /// Checks remainderLattitude decimal is no less than -10 and no more than +10 and returns true, otherwise returns false.
+        /// </summary>
+        /// <param name="remainderLattitude"></param>
+        /// <returns></returns>
         internal static bool ValidRemainderLat(decimal remainderLattitude)
         {
             return (remainderLattitude >= -10.0m && remainderLattitude <= 10.0m);
         }
 
+        /// <summary>
+        /// Checks remainderLongitude decimal is no less than -20 and no more than +20 and returns true, otherwise returns false.
+        /// </summary>
+        /// <param name="remainderLongitude"></param>
+        /// <returns></returns>
         internal static bool ValidRemainderLon(decimal remainderLongitude)
         {
             return (remainderLongitude >= -20.0m && remainderLongitude <= 20.0m);
