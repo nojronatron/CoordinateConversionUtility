@@ -72,9 +72,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\CoordinateConversionUtility\CoordinateConversionUtility.csproj">
-      <Project>{b68ed709-28b9-43a8-87aa-5a55fcfff413}</Project>
-      <Name>CoordinateConversionUtility</Name>
+    <ProjectReference Include="..\CoordinateConversionLibrary\CoordinateConversionLibrary.csproj">
+      <Project>{0d383162-4e07-495e-b694-520bf1a5c3c2}</Project>
+      <Name>CoordinateConversionLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

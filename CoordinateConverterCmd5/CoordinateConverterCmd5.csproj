@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+    <StartupObject>CoordinateConverterCmd5.CoordConverter</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CoordinateConversionUtility\CoordinateConversionUtility.csproj" />
+  </ItemGroup>
+
+</Project>
