@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-[assembly: InternalsVisibleTo("CoordinateConversionUtility_UnitTests")]
+[assembly: InternalsVisibleTo("CC_Unittests")]
 
 namespace CoordinateConversionLibrary.Helpers
 {
