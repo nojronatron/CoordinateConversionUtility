@@ -11,8 +11,10 @@ The initial idea for this project came for a QST magazine article titled "Conver
 REQUIREMENTS
 Dot NET 5.0
 Keyboard, mouse, and monitor.
-CoordinateConversionLibrary.dll: Core utility, must be in PATH for .exe to find and use it.
 CoordinateConverterCmd.exe: PowerShell or Command user-interface.
+CoordinateConversionLibrary.dll: Library of conversion functions and objects.
+CoordianteConverterCmd.runtimeconfig.json: Required DotNet 5.0 stand-alone package.
+CoordinateConversionLibrary.dll, CoordinateConverterCmd.dll, CoordinateConverterCmd.runtimeconfig.json: All must be in PATH for .exe to find and use.
 
 UNDER THE COVERS
 The core converting functionality is in CoordinateConversionLibrary.dll.
