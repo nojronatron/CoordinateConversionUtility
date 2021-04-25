@@ -18,9 +18,8 @@ namespace CoordinateConversionLibrary.Helpers
         private static string DashHelpPattern => @"-h|--help";
         private static string DdPattern => @"(-??\s*?[0-9]{1,3}\.[0-9]*)";
         private static string DwPattern => @"([nsew]\s*?[0-9]{1,3}\s*?[0-9]{1,2}\.[0-9]{1,4})";
-        //private static string DdmPattern => @"([0-9]{1,3}\s*?[0-9]{1,2}\.[0-9]{1,2}[nsew])";
         private static string DdmPattern => @"([0-9]{1,3}\s*[0-9]{1,2}(\.[0-9]{1,2})?\s*[nsew])";
-        private static string DmsPattern => @"(\s*[nsew]\s*[0-9]{1,3})\s*([0-9]{1,2})\s*([0-9]{1,2}(\.[0-9]{1,2})?)\s*"; //  troubleshooting match failures on input with many spaces
+        private static string DmsPattern => @"(\s*[nsew]\s*[0-9]{1,3})\s*([0-9]{1,2})\s*([0-9]{1,2}(\.[0-9]{1,2})?)\s*";
 
         private static TimeSpan Timespan => new(0, 0, 1);
 

@@ -177,9 +177,48 @@ namespace CC_Unittests.Helpers
         }
 
         [Test()]
-        public void Test_IsDMS()
+        public void Test_IsDmsAlpha()
         {
-            string testDMSinput = "S  34 54 36.0, W 56 12 42.08";
+            string testDMSinput = "S 34 54 36.0, W 56 12 42.08";
+            bool expectedResult = true;
+            string expectedValidatedDMS = MontevideoCoordinateModel.StrDMS();
+
+            bool actualResult = InputHelper.ParseAsDMSCoordinate(testDMSinput, out string actualValidatedDMS);
+
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedValidatedDMS, actualValidatedDMS);
+        }
+
+        [Test()]
+        public void Test_IsDmsBravo()
+        {
+            string testDMSinput = "  S  34   54  36.0  ,  W  56  12  42.08  ";
+            bool expectedResult = true;
+            string expectedValidatedDMS = MontevideoCoordinateModel.StrDMS();
+
+            bool actualResult = InputHelper.ParseAsDMSCoordinate(testDMSinput, out string actualValidatedDMS);
+
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedValidatedDMS, actualValidatedDMS);
+        }
+
+        [Test()]
+        public void Test_IsDmsCharlie()
+        {
+            string testDMSinput = "S34 54 36.0, W56 12 42.08";
+            bool expectedResult = true;
+            string expectedValidatedDMS = MontevideoCoordinateModel.StrDMS();
+
+            bool actualResult = InputHelper.ParseAsDMSCoordinate(testDMSinput, out string actualValidatedDMS);
+
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedValidatedDMS, actualValidatedDMS);
+        }
+
+        [Test()]
+        public void Test_IsDmsDelta()
+        {
+            string testDMSinput = "S 34 5436.0, W 56 1242.08";
             bool expectedResult = true;
             string expectedValidatedDMS = MontevideoCoordinateModel.StrDMS();
 
