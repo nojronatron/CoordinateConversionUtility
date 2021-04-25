@@ -118,8 +118,8 @@ namespace CC_Unittests.Helpers
 
             bool actualResult = InputHelper.ParseAsDDCoordinate(testDDinput, out string actualValidatedDD);
 
-            Assert.AreNotEqual(actualResult, expectedResult);
-            Assert.AreNotEqual(actualValidatedDD, expectedValidatedDD);
+            Assert.AreNotEqual(expectedResult, actualResult);
+            Assert.AreNotEqual(expectedValidatedDD, actualValidatedDD);
         }
 
         [Test()]
@@ -131,8 +131,8 @@ namespace CC_Unittests.Helpers
 
             bool actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
 
-            Assert.AreEqual(actualResult, expectedResult);
-            Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedValidatedDDM, actualValidatedDDM);
         }
 
         [Test()]
@@ -144,8 +144,8 @@ namespace CC_Unittests.Helpers
 
             bool actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
 
-            Assert.AreEqual(actualResult, expectedResult);
-            Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedValidatedDDM, actualValidatedDDM);
         }
 
 
@@ -158,8 +158,8 @@ namespace CC_Unittests.Helpers
 
             bool actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
 
-            Assert.AreEqual(actualResult, expectedResult);
-            Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedValidatedDDM, actualValidatedDDM);
         }
 
 
@@ -172,8 +172,8 @@ namespace CC_Unittests.Helpers
 
             bool actualResult = InputHelper.ParseAsDDMCoordinate(testDirewolfInput, true, out string actualValidatedDDM);
 
-            Assert.AreEqual(actualResult, expectedResult);
-            Assert.AreEqual(actualValidatedDDM, expectedValidatedDDM);
+            Assert.AreEqual(expectedResult,actualResult);
+            Assert.AreEqual(expectedValidatedDDM, actualValidatedDDM);
         }
 
         [Test()]
@@ -185,8 +185,171 @@ namespace CC_Unittests.Helpers
 
             bool actualResult = InputHelper.ParseAsDMSCoordinate(testDMSinput, out string actualValidatedDMS);
 
-            Assert.AreEqual(actualResult, expectedResult);
-            Assert.AreEqual(actualValidatedDMS, expectedValidatedDMS);
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedValidatedDMS, actualValidatedDMS);
+        }
+
+        [Test()]
+        public void Test_DirewolfCoordFixer_Alpha()
+        {
+            string[] testDDMinputs = new string[] { "N47 48.7500", " W122 17.5000" };
+            bool[] expectedResults = new bool[] { true, true };
+            string[] expectedArray = new string[] { "N47", "48.7500", "W122", "17.5000" };
+
+            bool[] actualResults = new bool[2];
+            string[] fixedItems1 = new string[2];
+            string[] fixedItems2 = new string[2];
+
+
+            actualResults[0] = InputHelper.DDMCoordFixer(testDDMinputs[0], out fixedItems1);
+            actualResults[1] = InputHelper.DDMCoordFixer(testDDMinputs[1], out fixedItems2);
+
+            string[] actualArray = new string[4]
+            {
+                fixedItems1[0],
+                fixedItems1[1],
+                fixedItems2[0],
+                fixedItems2[1]
+            };
+
+            for (int i = 0; i < expectedResults.Length; i++)
+            {
+                Assert.AreEqual(expectedArray[i], actualArray[i]);
+            }
+            for (int j = 0; j < expectedResults.Length; j++)
+            {
+                Assert.AreEqual(expectedResults[j], actualResults[j]);
+            }
+        }
+
+        [Test()]
+        public void Test_DdmCoordFixer_Alpha()
+        {
+            string[] testDDMinputs = new string[] { "4748.75 N", "122 17.50 W" };
+            bool[] expectedResults = new bool[] { true, true };
+            string[] expectedArray = new string[] { "47", "48.75 N", "122", "17.50 W" };
+
+            bool[] actualResults = new bool[2];
+            string[] fixedItems1 = new string[2];
+            string[] fixedItems2 = new string[2];
+            
+
+            actualResults[0] = InputHelper.DDMCoordFixer(testDDMinputs[0], out fixedItems1);
+            actualResults[1] = InputHelper.DDMCoordFixer(testDDMinputs[1], out fixedItems2);
+
+            string[] actualArray = new string[4]
+            {
+                fixedItems1[0],
+                fixedItems1[1],
+                fixedItems2[0],
+                fixedItems2[1]
+            };
+
+            for(int i=0; i < expectedResults.Length; i++)
+            {
+                Assert.AreEqual(expectedArray[i], actualArray[i]);
+            }
+            for(int j=0; j < expectedResults.Length; j++)
+            {
+                Assert.AreEqual(expectedResults[j], actualResults[j]);
+            }
+        }
+
+        [Test()]
+        public void Test_DdmCoordFixer_Bravo()
+        {
+            string[] testDDMinputs = new string[] { "47 48.75N", "122 17.50W" };
+            bool[] expectedResults = new bool[] { true, true };
+            string[] expectedArray = new string[] { "47", "48.75N", "122", "17.50W" };
+
+            bool[] actualResults = new bool[2];
+            string[] fixedItems1 = new string[2];
+            string[] fixedItems2 = new string[2];
+
+
+            actualResults[0] = InputHelper.DDMCoordFixer(testDDMinputs[0], out fixedItems1);
+            actualResults[1] = InputHelper.DDMCoordFixer(testDDMinputs[1], out fixedItems2);
+
+            string[] actualArray = new string[4]
+            {
+                fixedItems1[0],
+                fixedItems1[1],
+                fixedItems2[0],
+                fixedItems2[1]
+            };
+
+            for (int i = 0; i < expectedResults.Length; i++)
+            {
+                Assert.AreEqual(expectedArray[i], actualArray[i]);
+            }
+            for (int j = 0; j < expectedResults.Length; j++)
+            {
+                Assert.AreEqual(expectedResults[j], actualResults[j]);
+            }
+        }
+        [Test()]
+        public void Test_DdmCoordFixer_Charlie()
+        {
+            string[] testDDMinputs = new string[] { "4748.75N", "122 17.50 W " };
+            bool[] expectedResults = new bool[] { true, true };
+            string[] expectedArray = new string[] { "47", "48.75N", "122", "17.50 W" };
+
+            bool[] actualResults = new bool[2];
+            string[] fixedItems1 = new string[2];
+            string[] fixedItems2 = new string[2];
+
+
+            actualResults[0] = InputHelper.DDMCoordFixer(testDDMinputs[0], out fixedItems1);
+            actualResults[1] = InputHelper.DDMCoordFixer(testDDMinputs[1], out fixedItems2);
+
+            string[] actualArray = new string[4]
+            {
+                fixedItems1[0],
+                fixedItems1[1],
+                fixedItems2[0],
+                fixedItems2[1]
+            };
+
+            for (int i = 0; i < expectedResults.Length; i++)
+            {
+                Assert.AreEqual(expectedArray[i], actualArray[i]);
+            }
+            for (int j = 0; j < expectedResults.Length; j++)
+            {
+                Assert.AreEqual(expectedResults[j], actualResults[j]);
+            }
+        }
+        [Test()]
+        public void Test_DdmCoordFixer_Delta()
+        {
+            string[] testDDMinputs = new string[] { "  47  48.75  N  ", "  122  17.50  W  " };
+            bool[] expectedResults = new bool[] { true, true };
+            string[] expectedArray = new string[] { "47", "48.75  N", "122", "17.50  W" };
+
+            bool[] actualResults = new bool[2];
+            string[] fixedItems1 = new string[2];
+            string[] fixedItems2 = new string[2];
+
+
+            actualResults[0] = InputHelper.DDMCoordFixer(testDDMinputs[0], out fixedItems1);
+            actualResults[1] = InputHelper.DDMCoordFixer(testDDMinputs[1], out fixedItems2);
+
+            string[] actualArray = new string[4]
+            {
+                fixedItems1[0],
+                fixedItems1[1],
+                fixedItems2[0],
+                fixedItems2[1]
+            };
+
+            for (int i = 0; i < expectedResults.Length; i++)
+            {
+                Assert.AreEqual(expectedArray[i], actualArray[i]);
+            }
+            for (int j = 0; j < expectedResults.Length; j++)
+            {
+                Assert.AreEqual(expectedResults[j], actualResults[j]);
+            }
         }
     }
 }
