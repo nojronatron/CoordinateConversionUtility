@@ -1,5 +1,6 @@
 ﻿using CoordinateConversionLibrary.Models;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17,8 +18,8 @@ namespace CoordinateConversionLibrary.Helpers
         private static string DashHelpPattern => @"-h|--help";
         private static string DdPattern => @"(-??\s*?[0-9]{1,3}\.[0-9]*)";
         private static string DwPattern => @"([nsew]\s*?[0-9]{1,3}\s*?[0-9]{1,2}\.[0-9]{1,4})";
-        private static string DdmPattern => @"([0-9]{1,3}\s*?[0-9]{1,2}\.[0-9]{1,2}[nsew])";
-        private static string DmsPattern => @"([nsew]\s*?[0-9]{1,3})\s*?([0-9]{1,2})\s*?([0-9]{1,2}\.[0-9]{1,2})";
+        private static string DdmPattern => @"([0-9]{1,3}\s*[0-9]{1,2}(\.[0-9]{1,2})?\s*[nsew])";
+        private static string DmsPattern => @"(\s*[nsew]\s*[0-9]{1,3})\s*([0-9]{1,2})\s*([0-9]{1,2}(\.[0-9]{1,2})?)\s*";
 
         private static TimeSpan Timespan => new(0, 0, 1);
 
@@ -264,10 +265,18 @@ namespace CoordinateConversionLibrary.Helpers
                 {
                     latDegrees = validLattitude;
                 }
+                else
+                {
+                    return false;
+                }
 
                 if (DDCoordinate.ValidateIsLonDegrees(ddLongitudeRaw, out decimal validLongitude))
                 {
                     lonDegrees = validLongitude;
+                }
+                else
+                {
+                    return false;
                 }
 
                 var tempDDCoordinate = new DDCoordinate(latDegrees, lonDegrees);
@@ -283,12 +292,34 @@ namespace CoordinateConversionLibrary.Helpers
         }
 
         /// <summary>
-        /// Takes a string and attempts to parse with RegEx. Directional NSEW required.
-        /// Set param direwolf true if accepting output from DIREWOLF app.
-        /// If parseable (probably valid), returns True and out a pretty DDMCoordinate string.
-        /// If not parseable, returns False and sets the out string empty.
+        /// Takes a string lattitude (or longitude) and attempts to separate the integer component from the decimal component based on the decimal point position.
+        /// Returns true and out string[] the separated components if there is a decimal point, otherwise returns false and string[] will both be string.Empty.
         /// </summary>
-        /// <param name="DdmNSEW"></param>
+        /// <param name="latOrLonToParse"></param>
+        /// <param name="fixedLatOrLon"></param>
+        /// <returns></returns>
+        public static bool DDMCoordFixer(string latOrLonToParse, out string[] fixedLatOrLon)
+        {
+            var decimalIdx = latOrLonToParse.IndexOf('.');
+
+            if (decimalIdx >= 0)
+            {
+                var integerPart = latOrLonToParse.Substring(0, decimalIdx - 2);
+                var decimalPart = latOrLonToParse.Substring(decimalIdx - 2);
+                fixedLatOrLon = new string[] { integerPart.Trim(), decimalPart.Trim() };
+                return true;
+            }
+
+            fixedLatOrLon = new string[] { string.Empty, string.Empty };
+            return false;
+        }
+
+        /// <summary>
+        /// Takes a string and attempts to parse with RegEx.
+        /// Set param direwolf to true if accepting output from DIREWOLF app.
+        /// Returns true and out a pretty validDDM string if parseable, otherwise false and out string.Empty.
+        /// </summary>
+        /// <param name="coordinateToParse"></param>
         /// <param name="direwolf"></param>
         /// <param name="validDDM"></param>
         /// <returns></returns>
@@ -310,86 +341,107 @@ namespace CoordinateConversionLibrary.Helpers
 
             if (patternMatches.Count == 2)
             {
-                string ddmLattitudeRaw;
-                string firstPatternMatch = LimitInputSpacing(patternMatches[0].Value);
-                firstPatternMatch = firstPatternMatch.ToUpper(currentCulture);
+                string[] patternMatch =
+                {
+                    LimitInputSpacing(patternMatches[0].Value),
+                    LimitInputSpacing(patternMatches[1].Value)
+                };
 
-                string ddmLongitudeRaw;
-                string secondPatternMatch = LimitInputSpacing(patternMatches[1].Value);
-                secondPatternMatch = secondPatternMatch.ToUpper(currentCulture);
+                var coordinates = new List<string>(4)
+                {
+                    patternMatch[0], "", patternMatch[1], ""
+                };
 
-                if (firstPatternMatch.IndexOf("N", StringComparison.CurrentCultureIgnoreCase) > -1 || firstPatternMatch.IndexOf("S", StringComparison.CurrentCultureIgnoreCase) > -1)
+                for (int i = 0; i < coordinates.Capacity; i += 2)
                 {
-                    ddmLattitudeRaw = firstPatternMatch;
-                    ddmLongitudeRaw = secondPatternMatch;
-                }
-                else if (firstPatternMatch.IndexOf("E", StringComparison.CurrentCultureIgnoreCase) > -1 || firstPatternMatch.IndexOf("W", StringComparison.CurrentCultureIgnoreCase) > -1)
-                {
-                    ddmLongitudeRaw = firstPatternMatch;
-                    ddmLattitudeRaw = secondPatternMatch;
-                }
-                else
-                {
-                    return false;
+                    if (DDMCoordFixer(coordinates[i], out string[] fixedItem))
+                    {
+                        coordinates[i] = fixedItem[0].ToUpper(currentCulture);
+                        coordinates[i + 1] = fixedItem[1].ToUpper(currentCulture);
+                    }
                 }
 
-                int nsPolarity = ConversionHelper.ExtractPolarityNS(ddmLattitudeRaw);
-                int ewPolarity = ConversionHelper.ExtractPolarityEW(ddmLongitudeRaw);
+                int nsPolarity = 0;
+                int ewPolarity = 0;
+
+                for (int j = 0; j < coordinates.Capacity; j++)
+                {
+                    int nsIdx = -1;
+                    string item = coordinates[j];
+
+                    if (item.Contains("N"))
+                    {
+                        nsIdx = item.IndexOf("N", StringComparison.CurrentCultureIgnoreCase);
+                        nsPolarity = 1;
+                        coordinates[j] = item.Remove(nsIdx, 1);
+                    }
+                    if (item.Contains("S"))
+                    {
+                        nsIdx = item.IndexOf("S", StringComparison.CurrentCultureIgnoreCase);
+                        nsPolarity = -1;
+                        coordinates[j] = item.Remove(nsIdx, 1);
+                    }
+
+                    int ewIdx = -1;
+
+                    if (item.Contains("E"))
+                    {
+                        ewIdx = item.IndexOf("E", StringComparison.CurrentCultureIgnoreCase);
+                        ewPolarity = 1;
+                        coordinates[j] = item.Remove(ewIdx, 1);
+                    }
+                    if (item.Contains("W"))
+                    {
+                        ewIdx = item.IndexOf("W", StringComparison.CurrentCultureIgnoreCase);
+                        ewPolarity = -1;
+                        coordinates[j] = item.Remove(ewIdx, 1);
+                    }
+                }
 
                 if (nsPolarity == 0 || ewPolarity == 0)
                 {
                     return false;
                 }
 
-                int nsIdx;
-
-                if (nsPolarity > 0)
-                {
-                    nsIdx = ddmLattitudeRaw.ToUpper(currentCulture).IndexOf("N", StringComparison.CurrentCultureIgnoreCase);
-                }
-                else
-                {
-                    nsIdx = ddmLattitudeRaw.ToUpper(currentCulture).IndexOf("S", StringComparison.CurrentCultureIgnoreCase);
-                }
-
-                ddmLattitudeRaw = ddmLattitudeRaw.Remove(nsIdx, 1);
-                ddmLattitudeRaw = ddmLattitudeRaw.Trim();
-                int ewIdx;
-
-                if (ewPolarity > 0)
-                {
-                    ewIdx = ddmLongitudeRaw.ToUpper(currentCulture).IndexOf("E", StringComparison.CurrentCultureIgnoreCase);
-                }
-                else
-                {
-                    ewIdx = ddmLongitudeRaw.ToUpper(currentCulture).IndexOf("W", StringComparison.CurrentCultureIgnoreCase);
-                }
-
-                ddmLongitudeRaw = ddmLongitudeRaw.Remove(ewIdx, 1);
-                ddmLongitudeRaw = ddmLongitudeRaw.Trim();
                 decimal latDegrees = default;
                 decimal latMinutes = default;
                 decimal lonDegrees = default;
                 decimal lonMinutes = default;
 
-                if (DDMCoordinate.ValidateIsLatDegrees(ddmLattitudeRaw.Split(' ')[0], out decimal validLattitude))
+                if (DDMCoordinate.ValidateIsLatDegrees(coordinates[0], out decimal validLattitude))
                 {
                     latDegrees = Math.Abs(validLattitude) * nsPolarity;
                 }
+                else
+                {
+                    return false;
+                }
 
-                if (DDMCoordinate.ValidateIsMinutes(ddmLattitudeRaw.Split(' ')[1], out decimal validLatMins))
+                if (DDMCoordinate.ValidateIsMinutes(coordinates[1], out decimal validLatMins))
                 {
                     latMinutes = Math.Abs(validLatMins);
                 }
+                else
+                {
+                    return false;
+                }
 
-                if (DDMCoordinate.ValidateIsLonDegrees(ddmLongitudeRaw.Split(' ')[0], out decimal validLongitude))
+                if (DDMCoordinate.ValidateIsLonDegrees(coordinates[2], out decimal validLongitude))
                 {
                     lonDegrees = Math.Abs(validLongitude) * ewPolarity;
                 }
+                else
+                {
+                    return false;
+                }
 
-                if (DDMCoordinate.ValidateIsMinutes(ddmLongitudeRaw.Split(' ')[1], out decimal validLonMins))
+                if (DDMCoordinate.ValidateIsMinutes(coordinates[3], out decimal validLonMins))
                 {
                     lonMinutes = Math.Abs(validLonMins);
+                }
+                else
+                {
+                    return false;
                 }
 
                 var tempDDMCoordinate = new DDMCoordinate(latDegrees, latMinutes, lonDegrees, lonMinutes);
@@ -472,30 +524,54 @@ namespace CoordinateConversionLibrary.Helpers
                 {
                     latDegrees = Math.Abs(validLatDegrees) * nsPolarity;
                 }
+                else
+                {
+                    return false;
+                }
 
                 if (DMSCoordinate.ValidateIsMinutes(dmsLatMinsRaw, out decimal validLatMins))
                 {
                     latMinutes = Math.Abs(validLatMins);
+                }
+                else
+                {
+                    return false;
                 }
 
                 if (DMSCoordinate.ValidateIsSeconds(dmsLatSecsRaw, out decimal validLatSecs))
                 {
                     latSeconds = Math.Abs(validLatSecs);
                 }
+                else
+                {
+                    return false;
+                }
 
                 if (DMSCoordinate.ValidateIsLonDegrees(dmsLonDegreesRaw, out decimal validLonDegrees))
                 {
                     lonDegrees = Math.Abs(validLonDegrees) * ewPolarity;
+                }
+                else
+                {
+                    return false;
                 }
 
                 if (DMSCoordinate.ValidateIsMinutes(dmsLonMinsRaw, out decimal validLonMins))
                 {
                     lonMinutes = Math.Abs(validLonMins);
                 }
+                else
+                {
+                    return false;
+                }
 
                 if (DMSCoordinate.ValidateIsSeconds(dmsLonSecsRaw, out decimal validLonSecs))
                 {
                     lonSeconds = Math.Abs(validLonSecs);
+                }
+                else
+                {
+                    return false;
                 }
 
                 var tempDMSCoordinate = new DMSCoordinate(latDegrees, latMinutes, latSeconds, lonDegrees, lonMinutes, lonSeconds);
