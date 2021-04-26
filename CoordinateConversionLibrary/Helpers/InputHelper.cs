@@ -16,7 +16,7 @@ namespace CoordinateConversionLibrary.Helpers
         private static string DmsCommandPattern => @"(-dms)";
         private static string GridCommandPattern => @"(-grid)";
         private static string DashHelpPattern => @"-h|--help";
-        private static string DdPattern => @"(-??\s*?[0-9]{1,3}\.[0-9]*)";
+        private static string DdPattern => @"(-?\s*[0-9]{1,3}(\.[0-9]{0,5})?)";    //  the decimal point might be missing but is still a valid coordinate
         private static string DwPattern => @"([nsew]\s*?[0-9]{1,3}\s*?[0-9]{1,2}\.[0-9]{1,4})";
         private static string DdmPattern => @"([0-9]{1,3}\s*[0-9]{1,2}(\.[0-9]{1,2})?\s*[nsew])";
         private static string DmsPattern => @"(\s*[nsew]\s*[0-9]{1,3})\s*([0-9]{1,2})\s*([0-9]{1,2}(\.[0-9]{1,2})?)\s*";
@@ -354,10 +354,26 @@ namespace CoordinateConversionLibrary.Helpers
 
                 for (int i = 0; i < coordinates.Capacity; i += 2)
                 {
-                    if (DDMCoordFixer(coordinates[i], out string[] fixedItem))
+                    if (DDMCoordFixer(coordinates[i], out string[] fixedItems))
                     {
-                        coordinates[i] = fixedItem[0].ToUpper(currentCulture);
-                        coordinates[i + 1] = fixedItem[1].ToUpper(currentCulture);
+                        coordinates[i] = fixedItems[0].ToUpper(currentCulture);
+                        coordinates[i + 1] = fixedItems[1].ToUpper(currentCulture);
+                    }
+                    else
+                    {
+                        string thisCoord;
+                        int spaceIdx = -1;
+                        if (coordinates[i].Length > 0)
+                        {
+                            thisCoord = coordinates[i];
+                            spaceIdx = thisCoord.IndexOf(' ');
+                            coordinates[i] = thisCoord.Substring(0, spaceIdx);
+                            coordinates[i + 1] = thisCoord.Substring(spaceIdx+1);
+                        }
+                        else
+                        { 
+                            return false;
+                        }
                     }
                 }
 
