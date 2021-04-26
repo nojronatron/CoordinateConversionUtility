@@ -1,11 +1,12 @@
-﻿using CC_Unittests.TestModels;
+﻿using CC_Unittests.Models;
+using CC_Unittests.TestModels;
 using CoordinateConversionLibrary.Helpers;
 using NUnit.Framework;
 
 namespace CC_Unittests.Helpers
 {
     [TestFixture()]
-    public class InputHelperTests
+    public class InputHelperTests : UnitTestsBase
     {
         [Test()]
         public void Test_GetCommand_Grid_Succeeds()
@@ -123,6 +124,20 @@ namespace CC_Unittests.Helpers
         }
 
         [Test()]
+        public void Test_IsDD_NoDecimal()
+        {
+            string ddInput = "47,-122";
+
+            bool expectedResult = true;
+            string expectedValidatedDD = $"47.00000{ DegreesSymbol }, -122.00000{ DegreesSymbol }";
+
+            bool actualResult = InputHelper.ParseAsDDCoordinate(ddInput, out string actualValidatedDD);
+
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedValidatedDD, actualValidatedDD);
+        }
+
+        [Test()]
         public void Test_IsDDM_DDM()
         {
             string testDDMinput = "34 54.60S, 56 12.70W";
@@ -162,6 +177,18 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedValidatedDDM, actualValidatedDDM);
         }
 
+        [Test()]
+        public void Test_IsDDM_NoDecimal()
+        {
+            string testDDMinput = "34 54S, 56 12W";
+            bool expectedResult = true;
+            string expectedValidatedDDM = $"34{ DegreesSymbol }54.00{ MinutesSymbol }S, 56{ DegreesSymbol }12.00{ MinutesSymbol }W";
+
+            bool actualResult = InputHelper.ParseAsDDMCoordinate(testDDMinput, false, out string actualValidatedDDM);
+
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedValidatedDDM, actualValidatedDDM);
+        }
 
         [Test()]
         public void Test_IsDDM_Direwolf()
@@ -221,6 +248,20 @@ namespace CC_Unittests.Helpers
             string testDMSinput = "S 34 5436.0, W 56 1242.08";
             bool expectedResult = true;
             string expectedValidatedDMS = MontevideoCoordinateModel.StrDMS();
+
+            bool actualResult = InputHelper.ParseAsDMSCoordinate(testDMSinput, out string actualValidatedDMS);
+
+            Assert.AreEqual(expectedResult, actualResult);
+            Assert.AreEqual(expectedValidatedDMS, actualValidatedDMS);
+        }
+
+        [Test()]
+        public void Test_IsDMS_NoDecimal()
+        {
+            string testDMSinput = "S34 54 25, W56 12 50";
+            bool expectedResult = true;
+            string expectedValidatedDMS = $"S 34{ DegreesSymbol }54{ MinutesSymbol }25.0{ SecondsSymbol }" +
+                                          $", W 56{ DegreesSymbol }12{ MinutesSymbol }50.0{ SecondsSymbol }";
 
             bool actualResult = InputHelper.ParseAsDMSCoordinate(testDMSinput, out string actualValidatedDMS);
 

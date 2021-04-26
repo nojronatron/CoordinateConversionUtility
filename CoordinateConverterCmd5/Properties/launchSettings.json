@@ -1,8 +1,7 @@
 {
   "profiles": {
     "CoordinateConverterCmd": {
-      "commandName": "Project",
-      "commandLineArgs": "-ddm \" 4748.75 N,122  17.50  W\""
+      "commandName": "Project"
     }
   }
 }
