@@ -176,8 +176,8 @@ namespace CoordinateConversionLibrary.Models
                     LonSecsValid = false;
                 }
 
-                int north = ConversionHelper.ExtractPolarityNS(dmsLatAndLon);
-                int east = ConversionHelper.ExtractPolarityEW(dmsLatAndLon);
+                short north = dmsLat.IndexOf('N') > -1 ? (short)1 : (short)-1;
+                short east = dmsLon.IndexOf('E') > -1 ? (short)1 : (short)-1;
                 DegreesLattitude *= north;
                 DegreesLongitude *= east;
             }
@@ -185,7 +185,7 @@ namespace CoordinateConversionLibrary.Models
 
         internal static bool ValidateSeconds(decimal secondsLatOrLon)
         {
-            return DDMCoordinate.ValidateMinutes(secondsLatOrLon);
+            return ValidateMinutes(secondsLatOrLon);
         }
 
         public static bool ValidateIsSeconds(string secondsLatOrLon, out decimal validatedSeconds)
@@ -193,7 +193,7 @@ namespace CoordinateConversionLibrary.Models
             if (decimal.TryParse(secondsLatOrLon, out decimal seconds))
             {
 
-                if (DDMCoordinate.ValidateMinutes(seconds))
+                if (ValidateMinutes(seconds))
                 {
                     validatedSeconds = seconds;
                     return true;
@@ -227,10 +227,10 @@ namespace CoordinateConversionLibrary.Models
 
         public override string ToString()
         {
-            return $"{ ConversionHelper.GetNSEW(DegreesLattitude, 1) } { Math.Abs(GetShortDegreesLat()) }{ DegreesSymbol }" +
+            return $"{ NS } { Math.Abs(GetShortDegreesLat()) }{ DegreesSymbol }" +
                    $"{ GetShortMinutesLattitude():00}{ MinutesSymbol }" +
                    $"{ Math.Round(SecondsLattitude, 1):00.0}{ SecondsSymbol }, " +
-                   $"{ ConversionHelper.GetNSEW(DegreesLongitude, 2) } { Math.Abs(GetShortDegreesLon()) }{ DegreesSymbol }" +
+                   $"{ EW } { Math.Abs(GetShortDegreesLon()) }{ DegreesSymbol }" +
                    $"{ GetShortMinutesLongitude():00}{ MinutesSymbol }" +
                    $"{ Math.Round(SecondsLongitude, 1):00.0}{ SecondsSymbol }";
         }

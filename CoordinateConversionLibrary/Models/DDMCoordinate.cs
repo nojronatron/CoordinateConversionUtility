@@ -93,6 +93,17 @@ namespace CoordinateConversionLibrary.Models
                 LatIsValid = false;
                 LonIsValid = false;
             }
+            string[] ddms = ddmLatAndLon.Split(CommaSymbol);
+            if (
+                (!ddms[0].Contains('N') && !ddms[0].Contains('S')) ||
+                (!ddms[1].Contains('E') && !ddms[1].Contains('W'))
+                )
+            {
+                DegreesLattitude = 0.0m;
+                DegreesLongitude = 0.0m;
+                LatIsValid = false;
+                LonIsValid = false;
+            }
             else
             {
                 char[] splitChars = { CommaSymbol, DegreesSymbol, MinutesSymbol };
@@ -127,8 +138,8 @@ namespace CoordinateConversionLibrary.Models
                     MinutesLongitude = decLonMinutes;
                 }
 
-                int north = ConversionHelper.ExtractPolarityNS($"{ strDdmLatAndLon[2] }");
-                int east = ConversionHelper.ExtractPolarityEW($"{ strDdmLatAndLon[5] }");
+                short north = ddms[0].IndexOf('N') > -1 ? (short)1 : (short)-1;
+                short east = ddms[1].IndexOf('E') > -1 ? (short)1 : (short)-1;
                 DegreesLattitude = tempDegreesLat * north;
                 DegreesLongitude = tempDegreesLon * east;
             }
@@ -143,7 +154,7 @@ namespace CoordinateConversionLibrary.Models
         {
             if (decimal.TryParse(minutesLatOrLon, out decimal minutes))
             {
-                if (DDMCoordinate.ValidateMinutes(minutes))
+                if (ValidateMinutes(minutes))
                 {
                     validatedMinutes = minutes;
                     return true;
@@ -167,9 +178,9 @@ namespace CoordinateConversionLibrary.Models
         public override string ToString()
         {
             return $"{ Math.Abs(GetShortDegreesLat())}{ DegreesSymbol }" +
-                   $"{ Math.Round(MinutesLattitude, 2):00.00}{ MinutesSymbol }{ ConversionHelper.GetNSEW(DegreesLattitude, 1) }, " +
+                   $"{ Math.Round(MinutesLattitude, 2):00.00}{ MinutesSymbol }{ NS }, " +
                    $"{ Math.Abs(GetShortDegreesLon())}{ DegreesSymbol }" +
-                   $"{ Math.Round(MinutesLongitude, 2):00.00}{ MinutesSymbol }{ ConversionHelper.GetNSEW(DegreesLongitude, 2) }";
+                   $"{ Math.Round(MinutesLongitude, 2):00.00}{ MinutesSymbol }{ EW }";
         }
 
         public override bool Equals(object obj)

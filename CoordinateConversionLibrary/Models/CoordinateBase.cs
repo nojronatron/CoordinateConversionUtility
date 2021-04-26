@@ -9,7 +9,8 @@ namespace CoordinateConversionLibrary.Models
         internal decimal _degreesLongitude;
         internal bool LatIsValid { get; set; }
         internal bool LonIsValid { get; set; }
-
+        internal string NS => (DegreesLattitude > -1) ? "N" : "S";
+        internal string EW => (DegreesLongitude > -1) ? "E" : "W";
         internal decimal DegreesLattitude
         {
             get
@@ -18,7 +19,7 @@ namespace CoordinateConversionLibrary.Models
             }
             set
             {
-                if (CoordinateBase.ValidateLatDegrees(value))
+                if (ValidateLatDegrees(value))
                 {
                     _degreesLattitude = value;
                     LatIsValid = true;
@@ -39,7 +40,7 @@ namespace CoordinateConversionLibrary.Models
             }
             set
             {
-                if (CoordinateBase.ValidateLonDegrees(value))
+                if (ValidateLonDegrees(value))
                 {
                     _degreesLongitude = value;
                     LonIsValid = true;
@@ -87,7 +88,7 @@ namespace CoordinateConversionLibrary.Models
 
             if (decimal.TryParse(number, out decimal lattitude))
             {
-                if (CoordinateBase.ValidateLatDegrees(lattitude))
+                if (ValidateLatDegrees(lattitude))
                 {
                     validLatDegrees = lattitude;
                     return true;
@@ -109,7 +110,7 @@ namespace CoordinateConversionLibrary.Models
 
             if (decimal.TryParse(number, out decimal longitude))
             {
-                if (CoordinateBase.ValidateLonDegrees(longitude))
+                if (ValidateLonDegrees(longitude))
                 {
                     validLonDegrees = longitude;
                     return true;
