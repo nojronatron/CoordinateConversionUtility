@@ -13,9 +13,12 @@ namespace CoordinateConverterCmd
             if (args == null || args.Length == 0)
             {
                 PrintUsageInstructions();
+                return;
             }
 
-            else if (args.Length == 1)
+            string errorMessage = "Invalid input.";
+
+            if (args.Length == 1)
             {
                 string currentArg = args[0].Trim().ToUpper();
 
@@ -29,12 +32,11 @@ namespace CoordinateConverterCmd
                     if (InputHelper.IsGridsquare(currentArg, out string argGridsquare))
                     {
                         var ccu = new GridDdmExpert();
-                        Console.WriteLine(ccu.ConvertGridsquareToDDM(argGridsquare).ToString());
+                        PrintResult(ccu.ConvertGridsquareToDDM(argGridsquare).ToString());
                     }
                     else
                     {
-                        Console.WriteLine("Command not recognized.");
-                        PrintUsageInstructions();
+                        PrintResult(errorMessage);
                     }
                 }
 
@@ -42,13 +44,16 @@ namespace CoordinateConverterCmd
                 {
                     if (InputHelper.ParseAsDDMCoordinate(currentArg, false, out string validDDM))
                     {
-                        Console.WriteLine(validDDM);
+                        PrintResult(validDDM);
+                    }
+                    else
+                    {
+                        PrintResult(errorMessage);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input.");
-                    PrintUsageInstructions();
+                    PrintResult(errorMessage);
                 }
 
             }
@@ -84,7 +89,10 @@ namespace CoordinateConverterCmd
                                         result = validDWDDM;
                                     }
                                 }
-
+                                else
+                                {
+                                    result = errorMessage;
+                                }
                                 break;
                             }
                         case "-grid":
@@ -102,6 +110,10 @@ namespace CoordinateConverterCmd
                                         result = ddm.ToString();
                                     }
                                 }
+                                else
+                                {
+                                    result = errorMessage;
+                                }
                                 break;
                             }
                         case "-dms":
@@ -116,6 +128,10 @@ namespace CoordinateConverterCmd
                                     {
                                         result = validDMS;
                                     }
+                                }
+                                else
+                                {
+                                    result = errorMessage;
                                 }
                                 break;
                             }
@@ -132,6 +148,10 @@ namespace CoordinateConverterCmd
                                         result = validDDM;
                                     }
                                 }
+                                else
+                                {
+                                    result = errorMessage;
+                                }
                                 break;
                             }
                         case "-dd":
@@ -147,26 +167,32 @@ namespace CoordinateConverterCmd
                                         result = validDD;
                                     }
                                 }
+                                else
+                                {
+                                    result = errorMessage;
+                                }
                                 break;
                             }
                         default:
                             {
-                                //  -h, --help, or something else
-                                Console.WriteLine("Invalid input.");
-                                PrintUsageInstructions();
+                                PrintResult(errorMessage);
                                 break;
                             }
                     }
 
-                    Console.WriteLine(result);
+                    PrintResult(result);
                 }
 
             }
             else
             {
-                Console.WriteLine("Invalid input.");
-                PrintUsageInstructions();
+                PrintResult(errorMessage);
             }
+        }
+
+        private static void PrintResult(string message)
+        {
+            Console.WriteLine(message);
         }
 
         private static void PrintUsageInstructions()
