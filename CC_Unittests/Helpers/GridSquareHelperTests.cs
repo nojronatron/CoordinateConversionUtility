@@ -1,12 +1,12 @@
 ﻿using CoordinateConversionLibrary.Helpers;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CC_Unittests.Helpers
 {
-    [TestFixture()]
+    [TestClass]
     public class GridSquareHelperTests
     {
-        [Test()]
+        [TestMethod]
         public void Test_SixthGridSquareCharacter()
         {
             short latDirection = 1;
@@ -18,7 +18,7 @@ namespace CC_Unittests.Helpers
 
             Assert.AreEqual(expectedResult.ToUpper(), actualResult.ToUpper());
         }
-        [Test()]
+        [TestMethod]
         public void Test_SixthGridSquareCharacter_Negative()
         {
             short latDirection = -1;
@@ -30,7 +30,7 @@ namespace CC_Unittests.Helpers
 
             Assert.AreEqual(expectedResult.ToUpper(), actualResult.ToUpper());
         }
-        [Test()]
+        [TestMethod]
         public void Test_FifthGridSquareCharacter()
         {
             short lonDirection = 1;
@@ -42,7 +42,7 @@ namespace CC_Unittests.Helpers
 
             Assert.AreEqual(expectedResult.ToUpper(), actualResult.ToUpper());
         }
-        [Test()]
+        [TestMethod]
         public void Test_FifthGridSquareCharacter_Negative()
         {
             short lonDirection = -1;
@@ -54,7 +54,7 @@ namespace CC_Unittests.Helpers
 
             Assert.AreEqual(expectedResult.ToUpper(), actualResult.ToUpper());
         }
-        [Test()]
+        [TestMethod]
         public void Test_FourthGridSquareCharacter()
         {
             decimal latRemainder = 7.0m;
@@ -65,7 +65,7 @@ namespace CC_Unittests.Helpers
 
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [Test()]
+        [TestMethod]
         public void Test_FourthGridSquareCharacter_Negative()
         {
             decimal latRemainder = -2.0m;
@@ -76,7 +76,7 @@ namespace CC_Unittests.Helpers
 
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [Test()]
+        [TestMethod]
         public void Test_ThirdGridSquareCharacter()
         {
             decimal remainingLonDegrees = 3m;
@@ -90,7 +90,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedOut, actualOut);
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [Test()]
+        [TestMethod]
         public void Test_ThirdGridSquareCharacter_Negative()
         {
             decimal remainingLonDegrees = -5m;
@@ -104,12 +104,12 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedOut, actualOut);
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [Test()]
+        [TestMethod]
         public void Test_SecondGridSquareCharacter()
         {
             decimal latDegrees = 47.0m;
             short latDirection = 1;
-            
+
             string expectedResult = "N";
             decimal expectedOut = 7.0m;
 
@@ -119,12 +119,12 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedOut, actualOut);
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [Test()]
+        [TestMethod]
         public void Test_SecondGridSquareCharacter_Negative()
         {
             decimal latDegrees = -47.0m;
             short latDirection = -1;
-            
+
             string expectedResult = "E";
             decimal expectedOut = -7.0m;
 
@@ -134,21 +134,21 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedOut, actualOut);
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [Test()]
+        [TestMethod]
         public void TestFirstGridSquareCharacter()
         {
             decimal lonDegrees = 122.0m;
             short lonDirection = 1;
             string expectedResult = "P";
             decimal expectedOutRemainder = 2m;
-            
+
             var gsh = new GridSquareHelper();
             string actualResult = gsh.GetFirstGridsquareCharacter(lonDegrees, lonDirection, out decimal actualOutRemainder);
 
             Assert.AreEqual(expectedOutRemainder, actualOutRemainder);
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [Test()]
+        [TestMethod]
         public void TestFirstGridSquareCharacter_Negative()
         {
             decimal lonDegrees = -122.0m;
@@ -163,7 +163,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void Test_GridSquareHelper()
         {
             var gsh = new GridSquareHelper();
@@ -171,7 +171,7 @@ namespace CC_Unittests.Helpers
             Assert.IsTrue(gsh.GetType().Name == "GridSquareHelper");
         }
 
-        [Test()]
+        [TestMethod]
         public void Test_ValidateGridsquareInput_Pass()
         {
             var gsh = new GridSquareHelper();
@@ -185,7 +185,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedValidatedGrid, actualValidatedGrid);
         }
 
-        [Test()]
+        [TestMethod]
         public void Test_ValidateGridsquareInput_Spaces_Pass()
         {
             var gsh = new GridSquareHelper();

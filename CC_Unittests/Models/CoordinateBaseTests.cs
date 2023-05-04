@@ -1,12 +1,12 @@
 ﻿using CoordinateConversionLibrary.Models;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CC_Unittests.Models
 {
-    [TestFixture()]
+    [TestClass]
     public class CoordinateBaseTests
     {
-        [Test()]
+        [TestMethod]
         public void ValidateLattitude()
         {
             bool expectedResult = true;
@@ -20,7 +20,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutput, actualOutput);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateLongitude()
         {
             bool expectedresult = true;
@@ -34,7 +34,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutput, actualOutput);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsLatDegreesTest0()
         {
             string testInput = "0";
@@ -47,7 +47,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsLatDegreesTestNeg90()
         {
             string testInput = "-90";
@@ -60,7 +60,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsLatDegreesTest90()
         {
             string testInput = "90";
@@ -73,7 +73,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsLatDegreesTest91()
         {
             string testInput = "91";
@@ -86,7 +86,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsLatDegreesTestNeg100000()
         {
             string testInput = "-100000";
@@ -99,7 +99,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsLonDegreesTest0()
         {
             string testInput = "0";
@@ -112,7 +112,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsLonDegreesTestNeg180()
         {
             string testInput = "-180";
@@ -125,7 +125,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsLonDegreesTest181()
         {
             string testInput = "181";
@@ -138,7 +138,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsLonDegreesTestNeg0()
         {
             string testInput = "-0";
@@ -151,7 +151,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsLonDegreesTest90()
         {
             string testInput = "90";
@@ -164,7 +164,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsValid_CannotValidateBaseInstance_Test()
         {
             bool expectedResult = false;

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using CC_Unittests.TestModels;
 using CoordinateConversionLibrary.Models;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CC_Unittests.Models
 {
-    [TestFixture()]
+    [TestClass]
     public class DDMCoordinateTests : UnitTestsBase
     {
-        [Test()]
+        [TestMethod]
         public void DefaultCtorCreatesInvalidDMSCoordinate_Test()
         {
             var ddm = new DDMCoordinate();
@@ -32,7 +32,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateMinutes()
         {
             bool expectedResultMins = true;
@@ -45,8 +45,8 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResultMins, actualresultMins);
             Assert.AreEqual(expectedOutputMins, actualMinsOutput);
         }
-        
-        [Test()]
+
+        [TestMethod]
         public void DefaultCTOR_Test()
         {
             var ddmCoord = new DDMCoordinate();
@@ -57,7 +57,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(expectedResult == actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DD_Test()
         {
             var mvcm = new MontevideoCoordinateModel();
@@ -91,7 +91,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DDM_Test()
         {
             var mvcm = new MontevideoCoordinateModel();
@@ -127,7 +127,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DMS_Test()
         {
             var mvcm = new MontevideoCoordinateModel();
@@ -166,7 +166,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdmToDDM_NW_Test()
         {
             var wdccm = new WashingtondcCoordinateModel();
@@ -203,7 +203,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdmStringToDDM_NE_Test()
         {
             var mcm = new MunichCoordinatesModel();
@@ -240,7 +240,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdmToDDM_SE_Test()
         {
             var wcm = new WellingtonCoordinateModel();
@@ -277,7 +277,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdmToDDM_SW_Test()
         {
             var mvcm = new MontevideoCoordinateModel();
@@ -314,7 +314,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsValid_90_180_Passes_Test()
         {
             decimal lattitude = 90.0m;
@@ -327,7 +327,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsValid_InvalidLat_Test()
         {
             decimal lattitude = 91.0m;
@@ -340,7 +340,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsValid_InvalidLon_Test()
         {
             decimal lattitude = 90.0m;
@@ -354,7 +354,7 @@ namespace CC_Unittests.Models
         }
 
 
-        [Test()]
+        [TestMethod]
         public void DdToDDM_NE_Test()
         {
             var mcm = new MunichCoordinatesModel();
@@ -390,7 +390,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdToDDM_NW_Test()
         {
             var sccm = new SanClementeCoordinatesModel();
@@ -426,7 +426,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdToDDM_SE_Test()
         {
             var wcm = new WellingtonCoordinateModel();
@@ -462,7 +462,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdToDDM_SW_Test()
         {
             var mvcm = new MontevideoCoordinateModel();
@@ -498,7 +498,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DmsToDDM_NW_Test()
         {
             var wdccm = new WashingtondcCoordinateModel();
@@ -535,7 +535,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DmsToDDM_NE_Test()
         {
             var mcm = new MunichCoordinatesModel();
@@ -572,7 +572,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DmsToDDM_SE_Test()
         {
             var wcm = new WellingtonCoordinateModel();
@@ -609,7 +609,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DmsToDDM_SW_Test()
         {
             var mvcm = new MontevideoCoordinateModel();

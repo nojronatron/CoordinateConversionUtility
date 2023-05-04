@@ -1,14 +1,14 @@
 ﻿using CC_Unittests.Models;
 using CC_Unittests.TestModels;
 using CoordinateConversionLibrary.Helpers;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CC_Unittests.Helpers
 {
-    [TestFixture()]
+    [TestClass]
     public class ConversionHelperTests : UnitTestsBase
     {
-        [Test()]
+        [TestMethod]
         public void ExtractPolarityTest()
         {
             int expectedNorthResult = 1;
@@ -24,7 +24,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedZeroResult, actualZeroResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ExtractPolarityNSTest()
         {
             int expectedPositiveResult = 1;
@@ -40,7 +40,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedZeroResult, actualZeroResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ExtractPolarityEWTest()
         {
             int expectedPositiveResult = 1;
@@ -56,7 +56,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedZeroResult, actualZeroResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetNSEW_Test()
         {
             string expectedLattitudeResult = "N";
@@ -77,7 +77,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedCombinedResult, actualCombinedResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetNSEW2_Test1()
         {
             string expectedNorthResult = "N";
@@ -95,7 +95,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedNonResult, actualLattitudeNonResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetNSEW2_Test2()
         {
             string expectedSouthResult = "S";
@@ -113,7 +113,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedNonResult, actualLongitudeNonResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsValidTest()
         {
             decimal lattitude = 48.1467m;
@@ -125,7 +125,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsNotValidTest_Lat()
         {
             decimal lattitude = 93.1467m;
@@ -137,7 +137,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsNotValidTest_Lon()
         {
             decimal lattitude = 48.1467m;
@@ -150,7 +150,7 @@ namespace CC_Unittests.Helpers
         }
 
 
-        [Test()]
+        [TestMethod]
         public void IsNotValidTest_NegativeLat()
         {
             decimal lattitude = -93.1467m;
@@ -162,7 +162,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsNotValidTest_NegativeLon()
         {
             decimal lattitude = 48.1467m;
@@ -174,7 +174,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void LatDecimalIsValid_PassingPosAndNeg()
         {
             decimal positiveLat = 48.1467m;
@@ -191,7 +191,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, zeroLatActualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void LonDecimalIsValid_PassingPosAndNeg()
         {
             decimal positiveLon = 179.1467m;
@@ -208,7 +208,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, zeroLonActualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void LatDecimalIsValid_FalseScenarios()
         {
             decimal test1 = 90.000001m;
@@ -235,7 +235,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, test6Actual);
         }
 
-        [Test()]
+        [TestMethod]
         public void LonDecimalIsValid_FalseScenarios()
         {
             decimal test1 = 180.000001m;
@@ -262,7 +262,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, test6Actual);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetLatDegrees_North_Pass()
         {
             var LTH = new LookupTablesHelper();
@@ -286,7 +286,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedLatDirection, actualLatDirection);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetLatDegrees_South_Pass()
         {
             var LTH = new LookupTablesHelper();
@@ -310,7 +310,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedLatDirection, actualLatDirection);
         }
 
-        [Test()]
+        [TestMethod]
         public void AddLatDegrees_North_Pass()
         {
             decimal startingLat = 40.0m;
@@ -324,7 +324,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void AddLonDegrees_West_Pass()
         {
             decimal startingLat = -120.0m;
@@ -338,7 +338,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetLatMinutes_North_Pass()
         {
             var LTH = new LookupTablesHelper();
@@ -366,7 +366,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedAdjLatDegrees, actualAdjLatDegrees);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetLonMinutes_West_Pass()
         {
             var LTH = new LookupTablesHelper();
@@ -394,7 +394,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedAdjLatDegrees, actualAdjLonDegrees);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetNearestEvenMultiple_Lat_Pass()
         {
             decimal minutesInput = 49.52m;
@@ -406,7 +406,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetNearestEvenMultiple_NegativeLat_Pass()
         {
             decimal minutesInput = -54.60m;
@@ -418,7 +418,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetNearestEvenMultiple_Lat_ZeroIsZero()
         {
             decimal minutesInput = 0.0m;
@@ -430,7 +430,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetNearestEvenMultiple_Lon_Pass()
         {
             decimal minutesInput = 36.50m;
@@ -442,7 +442,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetNearestEvenMultiple_NegativeLon_Pass()
         {
             decimal minutesInput = -17.60m;
@@ -454,7 +454,7 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetNearestEvenMultiple_ZeroIsZero()
         {
             decimal minutesInput = 0.0m;
@@ -466,17 +466,17 @@ namespace CC_Unittests.Helpers
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidEvenMultipleLat()
         {
             decimal nearestEvenMult = 2.5m;
             bool expectedResult = true;
-            
+
             bool actualResult = ConversionHelper.ValidEvenMultipleLat(nearestEvenMult);
 
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [Test()]
+        [TestMethod]
         public void ValidEvenMultipleLon()
         {
             decimal nearestEvenMult = 5.0m;
@@ -486,7 +486,7 @@ namespace CC_Unittests.Helpers
 
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [Test()]
+        [TestMethod]
         public void ValidRemainderLat()
         {
             decimal remainderLat = 4.6m;
@@ -496,7 +496,7 @@ namespace CC_Unittests.Helpers
 
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [Test()]
+        [TestMethod]
         public void ValidRemainderLon()
         {
             decimal remainderLon = 16.5m;
@@ -506,7 +506,7 @@ namespace CC_Unittests.Helpers
 
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [Test()]
+        [TestMethod]
         public void ValidRemainderLat_Negative()
         {
             decimal remainderLat = -24.6m;
@@ -516,7 +516,7 @@ namespace CC_Unittests.Helpers
 
             Assert.AreEqual(expectedResult, actualResult);
         }
-        [Test()]
+        [TestMethod]
         public void ValidRemainderLon_Negative()
         {
             decimal remainderLon = -36.5m;
