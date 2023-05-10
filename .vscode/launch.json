@@ -9,7 +9,7 @@
       "type": "coreclr",
       "request": "launch",
       "preLaunchTask": "build",
-      "program": "${workspaceFolder}/bin/Debug/net6.0/CC_Unittests.dll",
+      "program": "${workspaceFolder}/CoordinateConverterCmd5/bin/Debug/net6.0/CoordinateConverterCmd.dll",
       "args": [],
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
