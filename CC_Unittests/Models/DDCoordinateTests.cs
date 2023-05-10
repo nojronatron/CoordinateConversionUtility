@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using CC_Unittests.TestModels;
 using CoordinateConversionLibrary.Models;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CC_Unittests.Models
 {
-    [TestFixture()]
+    [TestClass]
     public class DDCoordinateTests : UnitTestsBase
     {
-        [Test()]
+        [TestMethod]
         public void DefaultCtorCreatesInvalidDMSCoordinate_Test()
         {
             var ddm = new DDMCoordinate();
@@ -26,7 +26,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void DefaultCTOR_Test()
         {
             var ddCoord = new DDCoordinate();
@@ -37,7 +37,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(expectedResult == actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DD_Test()
         {
             var mvcm = new MunichCoordinatesModel();
@@ -63,7 +63,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DDM_Test()
         {
             var mcm = new MunichCoordinatesModel();
@@ -91,7 +91,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DMS_Test()
         {
             var mcm = new MunichCoordinatesModel();
@@ -121,7 +121,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdStringToDD_NE_Test()
         {
             var dd = new DDCoordinate(MunichCoordinatesModel.StrDD());
@@ -147,7 +147,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdStringToDD_NW_Test()
         {
             var dd = new DDCoordinate(WashingtondcCoordinateModel.StrDD());
@@ -173,7 +173,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdStringToDD_SE_Test()
         {
             var dd = new DDCoordinate(WellingtonCoordinateModel.StrDD());
@@ -199,7 +199,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdStringToDD_SW_Test()
         {
             var dd = new DDCoordinate(MontevideoCoordinateModel.StrDD());
@@ -225,7 +225,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdToDD_NE_Test()
         {
             var mcm = new MunichCoordinatesModel();
@@ -251,7 +251,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdToDD_NW_Test()
         {
             var wdccm = new WashingtondcCoordinateModel();
@@ -277,7 +277,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdToDD_SE_Test()
         {
             var wcm = new WellingtonCoordinateModel();
@@ -303,7 +303,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdToDD_SW_Test()
         {
             var mvcm = new MontevideoCoordinateModel();
@@ -329,7 +329,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdmToDD_NW_Test()
         {
             var wdccm = new WashingtondcCoordinateModel();
@@ -357,7 +357,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdmToDD_NE_Test()
         {
             var mcm = new MunichCoordinatesModel();
@@ -385,7 +385,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdmToDD_SE_Test()
         {
             var wcm = new WellingtonCoordinateModel();
@@ -413,7 +413,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DdmToDD_SW_Test()
         {
             var mvcm = new MontevideoCoordinateModel();
@@ -441,7 +441,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DmsToDD_NW_Test()
         {
             var wdccm = new WashingtondcCoordinateModel();
@@ -470,7 +470,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DmsToDD_NE_Test()
         {
             var mcm = new MunichCoordinatesModel();
@@ -499,7 +499,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DmsToDD_SE_Test()
         {
             var wcm = new WellingtonCoordinateModel();
@@ -528,7 +528,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void DmsToDD_SW_Test()
         {
             var mvcm = new MontevideoCoordinateModel();
@@ -557,7 +557,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonDiff >= 0 && lonDiff <= DegreeAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetShortDegreesLonTest()
         {
             var mcm = new MunichCoordinatesModel();
@@ -569,7 +569,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetShortDegreesLatTest()
         {
             var mcm = new MunichCoordinatesModel();
@@ -581,7 +581,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetFractionalLattitudeTest()
         {
             var mcm = new MunichCoordinatesModel();
@@ -593,7 +593,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetFractionalLongitudeTest()
         {
             var mcm = new MunichCoordinatesModel();
@@ -605,7 +605,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsValid_90_180_Passes_Test()
         {
             decimal lattitude = 90.0m;
@@ -618,7 +618,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsValid_InvalidLat_Test()
         {
             decimal lattitude = 91.0m;
@@ -631,7 +631,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsValid_InvalidLon_Test()
         {
             decimal lattitude = 90.0m;

@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 namespace CoordinateConverterCmd
 {
-    internal class CoordConverter
+    public class CoordConverter
     {
-        private static void Main(string[] args)
+        public static void Main(string[] args)
         {
             if (args == null || args.Length == 0)
             {

@@ -2,16 +2,16 @@
 using CC_Unittests.TestModels;
 using CoordinateConversionLibrary;
 using CoordinateConversionLibrary.Models;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CC_Unittests
 {
-    [TestFixture()]
+    [TestClass]
     public class CoordinateConverterTests : UnitTestsBase
     {
-        [Test()]
+        [TestMethod]
         public void CoordinateConverterCTORTest()
         {
             var cc = new GridDdmExpert();
@@ -22,7 +22,7 @@ namespace CC_Unittests
             Assert.AreEqual(expectedType, actualType);
         }
 
-        [Test()]
+        [TestMethod]
         public void ConvertGridsquareToDDMTestNW()
         {
             var sccm = new SanClementeCoordinatesModel();
@@ -54,7 +54,7 @@ namespace CC_Unittests
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void ConvertGridsquareToDDMTestNE()
         {
             var mcm = new MunichCoordinatesModel();
@@ -86,7 +86,7 @@ namespace CC_Unittests
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void ConvertGridsquareToDDMTestSW()
         {
             var cc = new GridDdmExpert();
@@ -117,7 +117,7 @@ namespace CC_Unittests
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void ConvertGridsquareToDDMTestSE()
         {
             var mvcm = new MontevideoCoordinateModel();
@@ -149,7 +149,7 @@ namespace CC_Unittests
             Assert.IsTrue(lonMinsDiff >= 0 && lonMinsDiff <= LonMinsAccuracyThreshold);
         }
 
-        [Test()]
+        [TestMethod]
         public void ConvertDDMtoGridsquareTest_NW()
         {
             var sccm = new SanClementeCoordinatesModel();
@@ -166,7 +166,7 @@ namespace CC_Unittests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ConvertDDMtoGridsquareTest_NE()
         {
             var mcm = new MunichCoordinatesModel();
@@ -183,7 +183,7 @@ namespace CC_Unittests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ConvertDDMtoGridsquareTest_SE()
         {
             var wcm = new WellingtonCoordinateModel();
@@ -200,7 +200,7 @@ namespace CC_Unittests
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ConvertDDMtoGridsquareTest_SW()
         {
             var mcm = new MontevideoCoordinateModel();

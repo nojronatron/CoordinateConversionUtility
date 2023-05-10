@@ -1,12 +1,12 @@
 ﻿using CoordinateConversionLibrary.Helpers;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CC_Unittests.Helpers
 {
-    [TestFixture()]
+    [TestClass]
     public class LookupTablesHelperTests
     {
-        [Test()]
+        [TestMethod]
         public void Test_LookupTablesHelper()
         {
             string expectedResult = "CoordinateConversionLibrary.Helpers.LookupTablesHelper";
@@ -16,7 +16,7 @@ namespace CC_Unittests.Helpers
             Assert.IsTrue(actualResult.GetType().FullName == expectedResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void Test_GenerateTableLookups()
         {
             bool expectedResult = true;

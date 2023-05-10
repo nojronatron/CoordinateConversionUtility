@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using CC_Unittests.TestModels;
 using CoordinateConversionLibrary.Models;
-using NUnit.Framework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CC_Unittests.Models
 {
-    [TestFixture()]
+    [TestClass]
     public class DMSCoordinateTests : UnitTestsBase
     {
-        [Test()]
+        [TestMethod]
         public void DefaultCtorCreatesInvalidDMSCoordinate_Test()
         {
             var dms = new DMSCoordinate();
@@ -38,7 +38,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsSecsOrMinsTest0()
         {
             string testInput = "0";
@@ -51,7 +51,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsSecsOrMinsTest60()
         {
             string testInput = "60";
@@ -64,7 +64,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsSecsOrMinsTestNeg61()
         {
             string testInput = "-61";
@@ -77,7 +77,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsSecsOrMinsTestNeg59()
         {
             string testInput = "-50";
@@ -90,7 +90,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutResult, actualOutResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void ValidateIsSecsOrMinsTest10000()
         {
             string testInput = "10000";
@@ -104,7 +104,7 @@ namespace CC_Unittests.Models
         }
 
 
-        [Test()]
+        [TestMethod]
         public void ValidateSeconds()
         {
             bool expectedResultSecs = true;
@@ -118,7 +118,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedOutputSecs, actualOutputSecs);
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DDtoDMS_NW_Test()
         {
             var sccm = new SanClementeCoordinatesModel();
@@ -159,7 +159,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonSecsDiff >= 0 && lonSecsDiff <= 1.0m);
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DDtoDMS_NE_Test()
         {
             var mcm = new MunichCoordinatesModel();
@@ -200,7 +200,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonSecsDiff >= 0 && lonSecsDiff <= 1.0m);
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DDtoDMS_SE_Test()
         {
             var wcm = new WellingtonCoordinateModel();
@@ -241,7 +241,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonSecsDiff >= 0 && lonSecsDiff <= 1.0m);
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DDtoDMS_SW_Test()
         {
             var mvcm = new MontevideoCoordinateModel();
@@ -282,7 +282,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonSecsDiff >= 0 && lonSecsDiff <= 1.0m);
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DDMtoDMS_Test()
         {
             var lcm = new LynnwoodCoordinatesModel();
@@ -328,7 +328,7 @@ namespace CC_Unittests.Models
 
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DmsToDMS_Test()
         {
             var lcm = new LynnwoodCoordinatesModel();
@@ -368,7 +368,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(lonSecsDiff >= 0 && lonSecsDiff <= 1.0m);
         }
 
-        [Test()]
+        [TestMethod]
         public void CTOR_DmsStringToDMS_Test()
         {
             string expectedResult = SanClementeCoordinatesModel.StrDMS();
@@ -384,7 +384,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedCount, actualCount);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetShortMinutesLattitudeTest()
         {
             var mcm = new MunichCoordinatesModel();
@@ -404,7 +404,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(minutesLatDiff <= 0.1m);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetShortMinutesLongitudeTest()
         {
             var wcm = new WellingtonCoordinateModel();
@@ -423,7 +423,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(minutesLonDiff <= 0.1m);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetSecondsLattitude()
         {
             var mvcm = new MontevideoCoordinateModel();
@@ -442,7 +442,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(secondsLatDiff <= 1m);
         }
 
-        [Test()]
+        [TestMethod]
         public void GetSecondsLongitude()
         {
             var sccm = new SanClementeCoordinatesModel();
@@ -461,7 +461,7 @@ namespace CC_Unittests.Models
             Assert.IsTrue(secondsLonDiff <= 1m);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsValid_90_180_Passes_Test()
         {
             decimal lattitude = 90.0m;
@@ -474,7 +474,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsValid_InvalidLat_Test()
         {
             decimal lattitude = 91.0m;
@@ -487,7 +487,7 @@ namespace CC_Unittests.Models
             Assert.AreEqual(expectedResult, actualResult);
         }
 
-        [Test()]
+        [TestMethod]
         public void IsValid_InvalidLon_Test()
         {
             decimal lattitude = 90.0m;
